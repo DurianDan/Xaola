@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  postgres_xaola:
+    container_name: postgres_xaola
+    restart: unless-stopped
+    build: 
+      context: .
+    env_file: .env
+    volumes:
+       - ./data:/var/lib/postgresql/data
+       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
