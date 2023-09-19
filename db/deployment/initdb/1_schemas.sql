@@ -1,10 +1,10 @@
 -- Install plpython3u if not already installed
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
--- Create the first schema if it doesn't exist
-CREATE SCHEMA IF NOT EXISTS scraped;
+-- Connect to the xaola database
+\c xaola;
 
--- Create the second schema if it doesn't exist
+CREATE SCHEMA IF NOT EXISTS scraped;
 CREATE SCHEMA IF NOT EXISTS analytics;
 
 -- Grant necessary privileges to schemas (adjust as needed)

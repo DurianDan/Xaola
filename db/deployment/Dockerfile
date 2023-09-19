@@ -4,3 +4,7 @@ FROM postgres:15
 RUN apt-get update && \
     apt-get -y install \
         postgresql-plpython3-15
+
+ADD .env /docker-entrypoint-initdb.d
+
+

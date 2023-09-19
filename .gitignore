@@ -4,3 +4,4 @@ db/deployment/data
 .vscode/
 
 dumb.py
+dumb/
