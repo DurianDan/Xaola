@@ -1,0 +1,1 @@
+from . import scraped_tables

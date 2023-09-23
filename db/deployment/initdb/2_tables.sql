@@ -73,7 +73,7 @@ CREATE TABLE scraped.shopify_category_rank_log (
 );
 
 -- Create shopify_app_description in scraped
-CREATE TABLE scraped.shopify_app_description (
+CREATE TABLE scraped.shopify_app_description_log (
     id SERIAL PRIMARY KEY,
     app_id INT NOT NULL,
     description TEXT,

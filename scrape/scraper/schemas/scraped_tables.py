@@ -1,9 +1,10 @@
 from .base_scraped_table import BaseScrapedTable, DateType
+from pydantic import HttpUrl
 from typing import List
 
 class ShopifyProvider(BaseScrapedTable):
     name: str
-    shopify_page: str
+    shopify_page: HttpUrl
     apps_published: int
     avg_rating: float
     updated_at: DateType|None=None
@@ -11,25 +12,27 @@ class ShopifyProvider(BaseScrapedTable):
 
 class ShopifyAppCategory(BaseScrapedTable):
     name: str
-    parent_category_id: int|None
-    shopify_page: str
+    parent_category_id: HttpUrl|int|None
+    shopify_page: HttpUrl
     category_type: str
     updated_at: DateType|None=None
 
 
-class ShopifyAppInfo(BaseScrapedTable):
-    shopify_page: str
+class ShopifyAppDetail(BaseScrapedTable):
+    shopify_page: HttpUrl
     name: str
     review_count: int
-    provider_id: int
-    category_id: int
+    provider_id: int|HttpUrl
+    category_id: int|HttpUrl|None
     updated_at: DateType|None=None
 
 
 class ShopifyAppReviews(BaseScrapedTable):
-    cfg_eq_fields: List[List[str]|str]|None = None
+    _eq_fields: List[List[str]|str]|None = [
+        ['reviewer', 'location', 'content']
+    ]
 
-    app_id: int
+    app_id: int|HttpUrl
     last_updated_page: int
     reviewer: str
     location: str
@@ -40,24 +43,28 @@ class ShopifyAppReviews(BaseScrapedTable):
 
 
 class ShopifyPricingPlan(BaseScrapedTable):
-    cfg_eq_fields: List[List[str]|str]|None = None
+    _eq_fields: List[List[str]|str]|None = [
+        ["plan_name", "price", "offer"]
+    ]
 
     plan_name: str
     price: str
     offer: str
-    app_id: int
+    app_id: int|HttpUrl
 
 
 class ShopifyCategoryRankLog(BaseScrapedTable):
-    cfg_eq_fields: List[List[str]|str]|None = None
+    _eq_fields: List[List[str]|str]|None = [
+        ["rank", 'app_id', 'category_id']
+    ]
 
-    category_id: int
+    category_id: int|HttpUrl
     rank: int
-    app_id: int
+    app_id: int|HttpUrl
 
 
-class ShopifyAppDescription(BaseScrapedTable):
-    cfg_eq_fields: List[List[str]|str]|None = None
+class ShopifyAppDescriptionLog(BaseScrapedTable):
+    _eq_fields: List[List[str]|str]|None = ["description"]
 
-    app_id: int
+    app_id: int|HttpUrl
     description: str
