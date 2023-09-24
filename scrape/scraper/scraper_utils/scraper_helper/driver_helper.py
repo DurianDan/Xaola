@@ -17,7 +17,6 @@ from functools import wraps
 from typing import Callable, Any, List, Literal
 
 
-
 class DriverHelper(SeleniumHelper):
     def __init__(
         self,
@@ -28,7 +27,7 @@ class DriverHelper(SeleniumHelper):
 
     def current_url(self) -> str:
         return self.driver.current_url
-    
+
     def reopen_driver(self, retry_count: int = 1, reconnect_vpn: bool = True):
         """
         `retry_count` is the times that the driver has been quit and reopen,
