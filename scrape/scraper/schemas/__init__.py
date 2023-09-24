@@ -1,1 +1,1 @@
-from . import scraped_tables
+from . import scraped_tables, scraped_result
