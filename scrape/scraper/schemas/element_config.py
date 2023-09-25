@@ -6,7 +6,14 @@ ElementIndicator = Tuple[
 ]
 
 
-class ShopifyReviewsElements(BaseModel):
+class ShopifyCommonElements(BaseModel):
+    top_navbar_element: ElementIndicator = [
+        "xpath",
+        '//*[@id="AppStoreNavbar"]/nav',
+    ]
+
+
+class ShopifyReviewsElements(ShopifyCommonElements):
     review_content_elements: ElementIndicator = [
         "xpath",
         '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[2]',
@@ -43,8 +50,8 @@ class ShopifyReviewsElements(BaseModel):
     ]
 
 
-class ShopifyAppElements(BaseModel):
-    brand_name_element: ElementIndicator = (
+class ShopifyAppElements(ShopifyCommonElements):
+    provider_href_element: ElementIndicator = (
         [
             "xpath",
             '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[3]/div/a',
@@ -58,10 +65,6 @@ class ShopifyAppElements(BaseModel):
         "xpath",
         '//*[@id="adp-reviews"]/div/div/h2',
     ]
-    top_navbar_element: ElementIndicator = [
-        "xpath",
-        '//*[@id="AppStoreNavbar"]/nav',
-    ]
     pricing_plan_element: ElementIndicator = (
         ["xpath", '//*[@id="adp-pricing"]/div[2]/div[2]/div/div[*]'],
     )
@@ -70,7 +73,7 @@ class ShopifyAppElements(BaseModel):
     )
 
 
-class ShopifyProviderElements(BaseModel):
+class ShopifyProviderElements(ShopifyCommonElements):
     name_line_element: ElementIndicator = [
         "xpath",
         '//*[@id="PartnersShow"]/main/div/section/div[1]/h1',
@@ -85,7 +88,7 @@ class ShopifyProviderElements(BaseModel):
     ]
 
 
-class ShopifySolutionElements(BaseModel):
+class ShopifySolutionElements(ShopifyCommonElements):
     title: ElementIndicator = [
         "xpath",
         "/html/body/div[2]/center/div/div/div/div/div[1]/div[2]/div/div/div[3]/div/div[1]/div[2]/div/div[1]/div[1]/div/div[2]/div/div/h2/span/a",
@@ -141,9 +144,13 @@ class ShopifySolutionElements(BaseModel):
     ]
 
 
-class SitemapConfig(BaseModel):
-    sitemap_url: HttpUrl = "https://apps.shopify.com/sitemap"
+class SitemapElement(ShopifyCommonElements):
     provider_area_element_path: ElementIndicator = [
         "xpath",
         '//*[@id="ToolsSitemap"]/main/div/div[3]/div[*]',
     ]
+
+
+class ShopifyCategoryElements(ShopifyCommonElements):
+    # TODO: find element on category pages
+    pass

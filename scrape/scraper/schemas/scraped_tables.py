@@ -67,3 +67,23 @@ class ShopifyAppDescriptionLog(BaseScrapedTable):
 
     app_id: int | HttpUrl
     description: str
+
+
+class ShopifyCommunityUserStats(BaseScrapedTable):
+    community_user_page: HttpUrl
+    community_user_name: str
+    community_user_type: str
+    posts_count: int
+    solutions_count: int
+    likes_count: int
+    topics_started_count: int
+    provider_id: int | None | HttpUrl
+    updated_at: DateType | None = None
+
+
+class ShopifyCommunityUserStatsLog(BaseScrapedTable):
+    community_user_id: int
+    posts_count: int
+    solutions_count: int
+    likes_count: int
+    topics_started_count: int

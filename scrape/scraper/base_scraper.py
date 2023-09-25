@@ -1,5 +1,6 @@
 from typing import Literal
 from abc import abstractmethod
+from pydantic import BaseModel
 
 from scraper_utils.scraper_helper import DriverHelper
 from schemas.scraped_result import ScrapedResult
@@ -9,11 +10,11 @@ class BaseScraper:
     def __init__(
         self,
         driver_helper: DriverHelper | None,
-        landing_page: str,
+        scrape_config: BaseModel,
         scraped_data: ScrapedResult | None = None,
     ) -> None:
         self.driver_helper = driver_helper
-        self.landing_page = landing_page
+        self.scrape_config = scrape_config
         self.scraped_data = scraped_data if scraped_data else ScrapedResult()
 
     def cleaned_url(self, url: str) -> str:

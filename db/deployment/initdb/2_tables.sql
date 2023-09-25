@@ -80,3 +80,30 @@ CREATE TABLE scraped.shopify_app_description_log (
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (app_id) REFERENCES scraped.shopfy_app_info(id)
 );
+
+
+CREATE TABLE scraped.shopify_community_user_stats(
+    id SERIAL PRIMARY KEY,
+    community_user_page TEXT NOT NULL,
+    community_user_name VARCHAR(50) NOT NULL,
+    community_user_type VARCHAR(50) NOT NULL,
+    posts_count INTEGER NOT NULL,
+    solutions_count INTEGER NOT NULL,
+    likes_count INTEGER NOT NULL,
+    topics_started_count INTEGER NOT NULL,
+    provider_id INT,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (provider_id) REFERENCES scraped.shopify_provider(id),
+);
+
+CREATE TABLE scraped.shopify_community_user_stats_log(
+    id SERIAL PRIMARY KEY,
+    community_user_id INT NOT NULL,
+    posts_count INTEGER NOT NULL,
+    solutions_count INTEGER NOT NULL,
+    likes_count INTEGER NOT NULL,
+    topics_started_count INTEGER NOT NULL,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (community_user_id) REFERENCES scraped.shopify_community_user_stats_log(id),
+)
