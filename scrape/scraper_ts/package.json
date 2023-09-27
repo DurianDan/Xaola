@@ -1,0 +1,17 @@
+{
+  "name": "shopify_scraper",
+  "version": "1.0.0",
+  "description": "scrape Shopify",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dst/index.js",
+    "build-run": "npm run build && npm start"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "puppeteer": "^21.3.5"
+  }
+}
