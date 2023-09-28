@@ -11,7 +11,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.199",
     "lodash": "^4.17.21",
+    "lodash.difference": "^4.5.0",
     "puppeteer": "^21.3.5"
   }
 }
