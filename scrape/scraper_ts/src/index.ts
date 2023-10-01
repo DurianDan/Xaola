@@ -1,4 +1,4 @@
-import puppeteer, { Page } from 'puppeteer';
+import puppeteer, { Page, Browser } from 'puppeteer';
 // import pl from "nodejs-polars";
 
 type Miliseconds = number;
@@ -25,7 +25,11 @@ async function appsInfo(page: Page): Promise<any> {
 
 async function scrape() {
     try {
-        const browser = await puppeteer.launch({ headless: false });
+        const browser = await puppeteer.launch(
+            {
+                headless: false,
+                args: ['--incognito', '--start-maximized']
+            });
         const page = await browser.newPage();
         const URL = 'https://apps.shopify.com/tiktok/reviews';
         await page.setViewport({
