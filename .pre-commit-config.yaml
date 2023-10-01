@@ -5,7 +5,13 @@ repos:
       - id: black
         args: ["--line-length", "80"]
         files: '\.py$'
-
+  - repo: local
+    hooks:
+      - id: npm-format
+        name: "Format Scrapper"
+        entry: npm run format
+        language: system
+        files: '^scrape/scraper_ts/.*\.(js|jsx)$'
   # - repo: https://github.com/sqlfluff/sqlfluff
   #   rev: 2.3.2
   #   hooks:
