@@ -1,5 +1,5 @@
--- Create shopify_provider in scraped
-CREATE TABLE scraped.shopify_provider (
+-- Create shopify_partner in scraped
+CREATE TABLE scraped.shopify_partner (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     shopify_page TEXT NOT NULL,
@@ -27,11 +27,11 @@ CREATE TABLE scraped.shopfy_app_info (
     shopify_page TEXT NOT NULL,
     name VARCHAR(255),
     review_count INTEGER,
-    provider_id INT,
+    partner_id INT,
     category_id INT,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (provider_id) REFERENCES scraped.shopify_provider(id),
+    FOREIGN KEY (partner_id) REFERENCES scraped.shopify_partner(id),
     FOREIGN KEY (category_id) REFERENCES scraped.shopify_app_category(id)
 );
 
@@ -91,10 +91,10 @@ CREATE TABLE scraped.shopify_community_user_stats(
     solutions_count INTEGER NOT NULL,
     likes_count INTEGER NOT NULL,
     topics_started_count INTEGER NOT NULL,
-    provider_id INT,
+    partner_id INT,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (provider_id) REFERENCES scraped.shopify_provider(id),
+    FOREIGN KEY (partner_id) REFERENCES scraped.shopify_partner(id),
 );
 
 CREATE TABLE scraped.shopify_community_user_stats_log(
