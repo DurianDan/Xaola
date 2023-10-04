@@ -3,7 +3,7 @@ import BaseScrapedTable from './BaseScrapedTable';
 type HttpUrl = string;
 type scrapeBlocks = '<error>' | '<not-permitted>' | '<not-scraped-yet>';
 
-class ShopifyProvider extends BaseScrapedTable {
+class ShopifyPartner extends BaseScrapedTable {
     name: string | scrapeBlocks = '<not-scraped-yet>';
     shopify_page: HttpUrl | scrapeBlocks = '<not-scraped-yet>';
     apps_published: number | scrapeBlocks = '<not-scraped-yet>';
@@ -20,7 +20,7 @@ class ShopifyAppDetail extends BaseScrapedTable {
     shopify_page: HttpUrl | scrapeBlocks = '<not-scraped-yet>';
     name: string | scrapeBlocks = '<not-scraped-yet>';
     review_count: number | scrapeBlocks = '<not-scraped-yet>';
-    provider_id: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>';
+    partner_id: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>';
     category_id: number | HttpUrl | null | scrapeBlocks = null;
 }
 class ShopifyAppReviews extends BaseScrapedTable {
@@ -81,7 +81,7 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
     solutions_count: number | scrapeBlocks = '<not-scraped-yet>';
     likes_count: number | scrapeBlocks = '<not-scraped-yet>';
     topics_started_count: number | scrapeBlocks = '<not-scraped-yet>';
-    provider_id: number | null | HttpUrl | scrapeBlocks = null;
+    partner_id: number | null | HttpUrl | scrapeBlocks = null;
 }
 
 class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
@@ -103,7 +103,7 @@ class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
 }
 
 export {
-    ShopifyProvider,
+    ShopifyPartner as ShopifyProvider,
     ShopifyAppCategory,
     ShopifyAppDescriptionLog,
     ShopifyAppDetail,
