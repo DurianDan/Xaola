@@ -1,7 +1,7 @@
 import * as scrapedTables from './ScrapedTable';
 
 interface ScrapeResult {
-    shpfProvider?: Array<scrapedTables.ShopifyProvider>;
+    shpfPartner?: Array<scrapedTables.ShopifyPartner>;
     shpfAppCategory?: Array<scrapedTables.ShopifyAppCategory>;
     shpfAppDescriptionLog?: Array<scrapedTables.ShopifyAppDescriptionLog>;
     shpfAppDetail?: Array<scrapedTables.ShopifyAppDetail>;

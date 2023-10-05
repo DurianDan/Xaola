@@ -27,6 +27,7 @@ interface BusinessProfile{
 }
 
 class ShopifyPageURL{
+    sitemap: HttpUrl = 'https://apps.shopify.com/sitemap'
     appsMarketPlace: HttpUrl = 'https://apps.shopify.com/'
     appPartnerPrefix: HttpUrl = 'https://apps.shopify.com/partners/'
     communityPrefix: HttpUrl = 'https://community.shopify.com'

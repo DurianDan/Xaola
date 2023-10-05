@@ -103,7 +103,7 @@ class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
 }
 
 export {
-    ShopifyPartner as ShopifyProvider,
+    ShopifyPartner,
     ShopifyAppCategory,
     ShopifyAppDescriptionLog,
     ShopifyAppDetail,
