@@ -1,9 +1,15 @@
 import { difference as arrDiff } from 'lodash';
 
 class BaseScrapedTable {
-    public id: number | null = null;
-    public createdOn: Date | null = new Date();
-    public _eqFields: string[] = ['shopify_page'];
+    public _eqFields: string[] = ['shopify_page']
+
+    constructor(
+        public id: number | null = null,
+        public createdOn: Date | null = new Date(),
+    ){
+        this.id = id
+        this.createdOn = createdOn
+    }
 
     /**
      * Check if 2 `BaseScrapedTable` can be compared, based on their `_eqFields`

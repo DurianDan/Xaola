@@ -43,7 +43,7 @@ CREATE TABLE scraped.shopify_app_reviews (
     reviewer VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    days_spend_on_app FLOAT NOT NULL,
+    days_spent_on_app FLOAT NOT NULL,
     rating INT NOT NULL,
     review_date TIMESTAMP NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
