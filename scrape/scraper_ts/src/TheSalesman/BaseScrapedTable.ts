@@ -1,14 +1,14 @@
 import { difference as arrDiff } from 'lodash';
 
 class BaseScrapedTable {
-    public _eqFields: string[] = ['shopify_page']
+    public _eqFields: string[] = ['shopify_page'];
 
     constructor(
         public id: number | null = null,
-        public createdOn: Date | null = new Date(),
-    ){
-        this.id = id
-        this.createdOn = createdOn
+        public createdOn: Date,
+    ) {
+        this.id = id;
+        this.createdOn = createdOn;
     }
 
     /**
