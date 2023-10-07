@@ -39,9 +39,9 @@ class ScrapedElement {
 }
 
 class PuppetMaster {
-    public page: Page | null = null;
-
+    
     constructor(
+        public page: Page,
         public browser: Browser,
         public defaultGotoOptions: GoToOptions = { waitUntil: 'networkidle2' },
         public defaultViewport: Viewport = {
@@ -52,6 +52,7 @@ class PuppetMaster {
     ) {
         this.browser = browser;
         this.defaultViewport = defaultViewport;
+        this.page = page 
     }
 
     /**
@@ -63,17 +64,6 @@ class PuppetMaster {
             setTimeout(resolve, duration);
         });
     }
-
-    async init(customViewport?: Viewport): Promise<Page | void> {
-        try {
-            this.page = await this.browser.newPage();
-            await this.page.setViewport(customViewport ?? this.defaultViewport);
-            return this.page;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
         this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions);
     }
@@ -81,7 +71,7 @@ class PuppetMaster {
     checkPage(): Page {
         if (this.page === null || this.page === undefined) {
             throw new Error(
-                'Undefined `page`, needs to call this.init() first',
+                'Undefined `page`, created page first',
             );
         } else {
             return this.page;
