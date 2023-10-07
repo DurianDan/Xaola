@@ -110,7 +110,7 @@ class PuppetMaster {
         const hrefsTexts = await this.page.$$eval('a', (as) =>
             as.map((a) => ({
                 href: a.href,
-                text: a.textContent?.trim() as string,
+                text: a.textContent as string,
             })),
         );
         return hrefsTexts;
