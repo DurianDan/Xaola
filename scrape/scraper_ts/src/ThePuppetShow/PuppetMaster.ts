@@ -18,28 +18,30 @@ class ScrapedElement {
             throw error;
         }
     }
-    async getAttribute(attributeName: string): Promise<string>{
+    async getAttribute(attributeName: string): Promise<string> {
         const attributeValue = await this.element.evaluate(
-            (a) => a.getAttribute(attributeName), this.element
+            (a) => a.getAttribute(attributeName),
+            this.element,
+        );
+        if (attributeValue) {
+            return attributeValue;
+        } else {
+            throw new Error(
+                `Cant get attribute '${attributeName}', it might not exist!!!`,
             );
-        if (attributeValue){
-            return attributeValue
-        }else{
-            throw new Error(`Cant get attribute '${attributeName}', it might not exist!!!`)
         }
     }
-    async href():Promise<string>{
-        return (await this.getAttribute('href'))
+    async href(): Promise<string> {
+        return await this.getAttribute('href');
     }
-    async hrefAndText():Promise<{href: string, text: string}>{
+    async hrefAndText(): Promise<{ href: string; text: string }> {
         const href = await this.href();
         const text = await this.text();
-        return {href, text}
+        return { href, text };
     }
 }
 
 class PuppetMaster {
-    
     constructor(
         public page: Page,
         public browser: Browser,
@@ -52,7 +54,7 @@ class PuppetMaster {
     ) {
         this.browser = browser;
         this.defaultViewport = defaultViewport;
-        this.page = page 
+        this.page = page;
     }
 
     /**
@@ -70,9 +72,7 @@ class PuppetMaster {
 
     checkPage(): Page {
         if (this.page === null || this.page === undefined) {
-            throw new Error(
-                'Undefined `page`, created page first',
-            );
+            throw new Error('Undefined `page`, created page first');
         } else {
             return this.page;
         }
@@ -105,6 +105,15 @@ class PuppetMaster {
             (ele) => new ScrapedElement(ele as ElementHandle),
         );
         return scrapedElements;
+    }
+    async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {
+        const hrefsTexts = await this.page.$$eval('a', (as) =>
+            as.map((a) => ({
+                href: a.href,
+                text: a.textContent?.trim() as string,
+            })),
+        );
+        return hrefsTexts;
     }
 }
 
