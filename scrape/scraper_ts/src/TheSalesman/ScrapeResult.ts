@@ -1,15 +1,15 @@
 import * as scrapedTables from './ScrapedTable';
 
 interface ScrapeResult {
-    shpfPartner?: Array<scrapedTables.ShopifyPartner>;
-    shpfAppCategory?: Array<scrapedTables.ShopifyAppCategory>;
-    shpfAppDescriptionLog?: Array<scrapedTables.ShopifyAppDescriptionLog>;
-    shpfAppDetail?: Array<scrapedTables.ShopifyAppDetail>;
-    shpfAppReviews?: Array<scrapedTables.ShopifyAppReviews>;
-    shpfCategoryRankLog?: Array<scrapedTables.ShopifyCategoryRankLog>;
-    shpfCommunityUserStats?: Array<scrapedTables.ShopifyCommunityUserStats>;
-    shpfCommunityUserStatsLog?: Array<scrapedTables.ShopifyCommunityUserStatsLog>;
-    shpfPricingPlan?: Array<scrapedTables.ShopifyPricingPlan>;
+    shopifyPartner?: Array<scrapedTables.ShopifyPartner>;
+    shopifyAppCategory?: Array<scrapedTables.ShopifyAppCategory>;
+    shopifyAppDescriptionLog?: Array<scrapedTables.ShopifyAppDescriptionLog>;
+    shopifyAppDetail?: Array<scrapedTables.ShopifyAppDetail>;
+    shopifyAppReviews?: Array<scrapedTables.ShopifyAppReviews>;
+    shopifyCategoryRankLog?: Array<scrapedTables.ShopifyCategoryRankLog>;
+    shopifyCommunityUserStats?: Array<scrapedTables.ShopifyCommunityUserStats>;
+    shopifyCommunityUserStatsLog?: Array<scrapedTables.ShopifyCommunityUserStatsLog>;
+    shopifyPricingPlan?: Array<scrapedTables.ShopifyPricingPlan>;
 }
 
 export default ScrapeResult;
