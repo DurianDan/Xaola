@@ -91,7 +91,7 @@ class SitemapTrick implements PuppetTrick {
         }
         return tmpScrapedResult;
     }
-    async extractUpdateBasicCategoryInfo(): Promise<ScrapeResult> {
+    async extractBasicCategoryInfo(): Promise<ScrapeResult> {
         const allHrefTexts = await this.puppetMaster.allTagAHrefsTexts();
         const tmpScrapedResult = {
             shopifyAppDetail: allHrefTexts.map(
@@ -101,9 +101,29 @@ class SitemapTrick implements PuppetTrick {
         };
         return tmpScrapedResult;
     }
+    updateBasicPartnerAppsDetail(
+        {shopifyAppDetail: tmpAppsDetail, shopifyPartner: tmpPartner}: ScrapeResult
+    ): void{
+        this.scrapedResults.shopifyAppDetail?.push(...tmpAppsDetail??[])
+        this.scrapedResults.shopifyPartner?.push(...tmpPartner??[])
+    }
+    updateBasicCategoryInfo(
+        {shopifyAppCategory: tmpCategories}: ScrapeResult
+    ): void{
+        this.scrapedResults.shopifyAppCategory?.push(...tmpCategories??[])
+    }
     async scrape(): Promise<ScrapeResult> {
         await this.puppetMaster.goto(this.urls.sitemap);
-        return {};
+        const partnerElements: ScrapedElement[] = await this.scrapePartnersElements()
+        for (const element of partnerElements){
+            this.updateBasicPartnerAppsDetail(
+                (await this.extractBasicPartnerAppDetailFromPartnerElement(element))
+            )
+        }
+        this.updateBasicCategoryInfo(
+            (await this.extractBasicCategoryInfo())
+        )
+        return this.scrapedResults
     }
 }
 
