@@ -1,12 +1,20 @@
 import { PuppeteerLaunchOptions } from "puppeteer";
 
 const defaultLaunchOptions: PuppeteerLaunchOptions = {
-    headless: false,
+    headless: "new", // equivalent to headless: true
     args: [
         '--no-sandbox',
         '--incognito',
-        '--start-maximized',
     ],
 }
 
-export { defaultLaunchOptions };
+const debugLaunchOptions: PuppeteerLaunchOptions = {
+        headless: false,
+        args: [
+            '--no-sandbox',
+            '--incognito',
+            '--start-maximized',
+        ],
+    }
+    
+export { defaultLaunchOptions, debugLaunchOptions };
