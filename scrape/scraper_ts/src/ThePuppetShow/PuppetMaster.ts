@@ -84,8 +84,8 @@ class PuppetMaster {
         parentElement?: ScrapedElement,
     ): Promise<ScrapedElement[]> {
         const elements = parentElement
-            ? await parentElement.element.$$(xpath)
-            : await this.checkPage().$$(xpath);
+            ? await parentElement.element.$$('xpath/' + xpath)
+            : await this.checkPage().$x(xpath);
 
         const scrapedElements = elements.map(
             (ele) => new ScrapedElement(ele as ElementHandle),
