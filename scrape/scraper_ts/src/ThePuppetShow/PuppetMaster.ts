@@ -67,9 +67,11 @@ class PuppetMaster {
         });
     }
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
-        this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions);
+        await Promise.all([
+            this.page.waitForNavigation(),
+            this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions)
+            ])
     }
-
     checkPage(): Page {
         if (this.page === null || this.page === undefined) {
             throw new Error('Undefined `page`, created page first');
@@ -77,22 +79,6 @@ class PuppetMaster {
             return this.page;
         }
     }
-
-    async xpathElement(
-        xpath: XpathExpression,
-        parentElement?: ScrapedElement,
-    ): Promise<ScrapedElement> {
-        const element = parentElement
-            ? await parentElement.element.$(xpath)
-            : await this.checkPage().$(xpath);
-
-        if (element) {
-            return new ScrapedElement(element);
-        } else {
-            throw `null/undefined element: ${xpath}`;
-        }
-    }
-
     async xpathElements(
         xpath: XpathExpression,
         parentElement?: ScrapedElement,
@@ -105,6 +91,19 @@ class PuppetMaster {
             (ele) => new ScrapedElement(ele as ElementHandle),
         );
         return scrapedElements;
+    }
+    async xpathElement(
+        xpath: XpathExpression,
+        parentElement?: ScrapedElement,
+    ): Promise<ScrapedElement> {
+        const elements = await this.xpathElements(xpath, parentElement);
+        const resultElement = elements[0];
+        
+        if (resultElement) {
+            return resultElement;
+        } else {
+            throw `null/undefined element: ${xpath}`;
+        }
     }
     async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {
         const hrefsTexts = await this.page.$$eval('a', (as) =>
