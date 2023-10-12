@@ -23,7 +23,6 @@ class ScrapedElement {
             (a) => a.getAttribute(attributeName),
             this.element,
         );
-        console.log("this is `attributeValue`" + attributeValue);
         
         if (attributeValue) {
             return attributeValue;
@@ -115,6 +114,9 @@ class PuppetMaster {
             })),
         );
         return hrefsTexts;
+    }
+    async close(): Promise<void>{
+        await this.browser.close()
     }
 }
 
