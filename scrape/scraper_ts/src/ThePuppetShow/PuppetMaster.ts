@@ -18,16 +18,18 @@ class ScrapedElement {
             throw error;
         }
     }
-    async getAttribute(attributeName: string): Promise<string> {
+    async getAttribute(attributeName: string): Promise<string> {        
         const attributeValue = await this.element.evaluate(
             (a) => a.getAttribute(attributeName),
             this.element,
         );
+        console.log("this is `attributeValue`" + attributeValue);
+        
         if (attributeValue) {
             return attributeValue;
         } else {
             throw new Error(
-                `Cant get attribute '${attributeName}', it might not exist!!!`,
+                `Cant get attribute, it might not exist!!!`,
             );
         }
     }
