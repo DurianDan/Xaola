@@ -33,7 +33,7 @@ class ScrapedElement {
         }
     }
     async href(): Promise<string> {
-        return await this.getAttribute('href');
+        return (await this.getAttribute('href'));
     }
     async hrefAndText(): Promise<{ href: string; text: string }> {
         const href = await this.href();

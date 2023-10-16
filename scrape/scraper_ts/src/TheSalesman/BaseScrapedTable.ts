@@ -35,7 +35,7 @@ class BaseScrapedTable {
     }
 
     /**
-     * Compare 2 `BaseScrapedTable`, if they are equal, based on their _eqFields
+     * Compare 2 `BaseScrapedTable`, if they are equal, based on their `_eqFields`
      * @param row:BaseScrapedTable
      * @param other:BaseScrapedTable
      * @returns true if the 2 obj are equal, false if otherwise
