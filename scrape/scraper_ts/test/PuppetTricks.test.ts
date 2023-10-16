@@ -9,3 +9,5 @@ test('Check SitemapTrick', async () => {
     // const sitemapTrick = new SitemapTrick(puppetMaster, {})
     // const all sitemapTrick
 })
+
+/** @todo: implement proper SitemapTrick test*/ 

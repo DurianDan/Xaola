@@ -1,4 +1,4 @@
-import { Page, Browser, Viewport, GoToOptions, ElementHandle } from 'puppeteer';
+import { Page, Browser, Viewport, GoToOptions, ElementHandle, JSHandle } from 'puppeteer';
 
 type Miliseconds = number;
 type XpathExpression = string;
@@ -8,32 +8,23 @@ class ScrapedElement {
     constructor(public element: ElementHandle) {
         this.element = element;
     }
-    async text(): Promise<string> {
-        try {
-            const elementValue = (await (
-                await this.element.getProperty('textContent')
-            ).jsonValue()) as string;
-            return elementValue;
-        } catch (error) {
-            throw error;
-        }
-    }
-    async getAttribute(attributeName: string): Promise<string> {        
-        const attributeValue = await this.element.evaluate(
-            (a) => a.getAttribute(attributeName),
-            this.element,
-        );
+    async getProperty(propertyName: string): Promise<string> {        
+        const valueHandle: JSHandle = await this.element.getProperty(propertyName);
+        const propertyValue = await valueHandle.jsonValue() as string
         
-        if (attributeValue) {
-            return attributeValue;
+        if (propertyValue) {
+            return propertyValue;
         } else {
             throw new Error(
-                `Cant get attribute, it might not exist!!!`,
+                `Cant get attribute "${propertyName}", it might not exist!!!`,
             );
         }
     }
+    async text(): Promise<string> {
+        return await this.getProperty("textContent")
+    }
     async href(): Promise<string> {
-        return (await this.getAttribute('href'));
+        return (await this.getProperty('href'));
     }
     async hrefAndText(): Promise<{ href: string; text: string }> {
         const href = await this.href();

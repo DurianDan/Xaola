@@ -1,96 +1,56 @@
+import { Browser, Page } from "puppeteer";
 import { PuppetMaster } from "../src/ThePuppetShow/PuppetMaster"
 import { debugLaunchOptions, defaultLaunchOptions } from "../src/TheSalesman/config/browser";
 import initPuppet from "../src/initPupper"
 
-describe("Check ScrapedElement", ()=>{
-    let puppetMaster: PuppetMaster;
+let puppetMaster: PuppetMaster;
+const timeLimit = 15000;
+const githubAccount = "https://github.com/DurianDan";
+const githubAccountNameXpath = '//span[@class="p-name vcard-fullname d-block overflow-hidden"]';
+const tabsXpath = '/html/body/div[1]/div[4]/main/div[1]/div/div/div[2]/div/nav/a[*]';
+let expectedTabHrefTexts = [
+    ["Overview", githubAccount ],
+    ["Repositories", githubAccount + "?tab=repositories"],
+    ["Projects", githubAccount + "?tab=projects"],
+    ["Packages", githubAccount + "?tab=packages"],
+    ["Stars", githubAccount + "?tab=stars"]
+].map(([text, href]) => {return {href, text}});
 
-    beforeAll(async () => {
-        const { page, browser } = await initPuppet(defaultLaunchOptions);
-        puppetMaster = new PuppetMaster(page, browser);
-    });
+beforeAll(async() => {
+    const {page, browser} = await initPuppet(debugLaunchOptions);
+    puppetMaster = new PuppetMaster(page, browser);
+    await puppetMaster.goto(githubAccount);
+}, timeLimit)
 
-    afterAll(async () => {
-        await puppetMaster.close();
-    });
+afterAll(async () => {await puppetMaster.close()})
 
-    const githubAccount = "https://github.com/DurianDan";
-    const githubAccountNameXpath = '//span[@class="p-name vcard-fullname d-block overflow-hidden"]';
-    const tabsXpath = '//nav[@aria-label="User profile"]/a[*]';
-    let expectedTabHrefTexts = [
-        ["Overview", githubAccount],
-        ["Repositories", githubAccount+ "?tab=repositories"],
-        ["Projects", githubAccount+ "?tab=projects"],
-        ["Packages", githubAccount+ "?tab=packages"],
-        ["Stars", githubAccount+ "?tab=stars"]
-    ].map((href, text) => {return {href, text}});
+test("1. xpathElement()", async()=>{
+    const extractedNameElement = await puppetMaster.xpathElement(githubAccountNameXpath)
+    const extractedName = (await extractedNameElement.text()).trim()
+    expect(extractedName).toBe("Huy Vu Nguyen")
+}, timeLimit)
 
-    test("1. text()", async ()=>{
-        await puppetMaster.goto(githubAccount);
-        const extractedNameElement = await puppetMaster.xpathElement(githubAccountNameXpath)
-        expect((await extractedNameElement.text()).trim()).toBe("Huy Vu Nguyen")
-    })
-    test("2. getAttribute()", async ()=>{
-        await puppetMaster.goto(githubAccount);
-        const tabsElement = await puppetMaster.xpathElements(tabsXpath)
-        const extractedTabHrefTexts = await Promise.all(
-            (
-                tabsElement.slice(0,5).map(async ele => { // choose only the first 5 elements because they are duplicated after that.
-                    const rawHrefTexts = await ele.hrefAndText();
-                    // Some tab names contain dynamic numbers => remove them using `split`,
-                    rawHrefTexts.text = rawHrefTexts.text.split("\n")[0].trim()
-                    return rawHrefTexts
-                })
-            )
+test("2. getProperty() => hrefAndTexts()", async()=>{
+    const tabsElement = await puppetMaster.xpathElements(tabsXpath)
+    const extractedTabHrefTexts = await Promise.all(
+        (
+            tabsElement.map(async ele => { // choose only the first 5 elements because they are duplicated after that.
+                const rawHrefTexts = await ele.hrefAndText();
+                // Some tab names contain dynamic numbers => remove them using `split`,
+                rawHrefTexts.text = rawHrefTexts.text.trim().split("\n")[0]
+                return rawHrefTexts
+            })
         )
-        expect(extractedTabHrefTexts).toBe(expectedTabHrefTexts)
-    })
-    test("3. href()", async ()=>{
-        await puppetMaster.goto(githubAccount);
-        const overViewElement = await puppetMaster.xpathElement(tabsXpath)
-        expect((await overViewElement.href())).toBe(githubAccount);
-    })
-    test("4. hrefAndText()", async ()=>{
-        await puppetMaster.goto(githubAccount);
-        const overViewElement = await puppetMaster.xpathElement(tabsXpath)
-        expect((await overViewElement.hrefAndText())).toBe({href: githubAccount, text: "Overview"});
-    })
-})
+    )
+    expect(extractedTabHrefTexts).toStrictEqual(expectedTabHrefTexts)
+}, timeLimit)
 
-// test('Check `PuppetMaster` Functions', async () => {
-    
+test("3. href()",async() => {
+    const overViewElement = await puppetMaster.xpathElement(tabsXpath)
+    expect(await overViewElement.href()).toBe(githubAccount);
 
-//     let extractedGithubAccountName = null;
-//     let expectedGithubAccountName = "Huy Vu Nguyen";
-
-//     let extractedTabHrefTexts: {href: string, text: string}[] = [];
-//     let expectedTabHrefTexts = [
-//         ["Overview", githubAccount],
-//         ["Repositories", githubAccount+ "?tab=repositories"],
-//         ["Projects", githubAccount+ "?tab=projects"],
-//         ["Packages", githubAccount+ "?tab=packages"],
-//         ["Stars", githubAccount+ "?tab=stars"]
-//     ].map((href, text) => {return {href, text}});
-
-//     try{
-//         await puppetMaster.goto(githubAccount)
-//         const nameElement = await puppetMaster.xpathElement(githubAccountNameXpath)
-//         extractedGithubAccountName = (await nameElement.text()).trim()
-
-//         const tabsElement = await puppetMaster.xpathElements(tabsXpath)
-//         extractedTabHrefTexts = await Promise.all(
-//             (
-//                 tabsElement.slice(0,5).map(async ele => { // choose only the first 5 elements because they are duplicated after that.
-//                     const rawHrefTexts = await ele.hrefAndText();
-//                     // Some tab names contain dynamic numbers => remove them using `split`,
-//                     rawHrefTexts.text = rawHrefTexts.text.split("\n")[0].trim()
-//                     return rawHrefTexts
-//                 })
-//             )
-//         )
-//     }finally{
-//         await browser.close();
-//     }
-//     expect(extractedGithubAccountName).toBe(expectedGithubAccountName);
-//     expect(extractedTabHrefTexts).toBe(expectedTabHrefTexts)
-// }, 10000)
+    console.log("4. hrefAndText()");
+    let hrefText = await overViewElement.hrefAndText()
+    hrefText.text = hrefText.text.trim();
+    expect(hrefText).toStrictEqual({href: githubAccount, text: "Overview"});
+}, timeLimit)
