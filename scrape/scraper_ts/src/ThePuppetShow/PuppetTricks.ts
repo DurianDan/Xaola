@@ -19,6 +19,7 @@ interface PuppetTrick {
     scrapedResults: ScrapeResult;
     elements: ElementsCfg.XpathPageConfig;
     scrape(): Promise<ScrapeResult>;
+    accessPage(): Promise<boolean>;
 }
 
 class SitemapTrick implements PuppetTrick {
@@ -112,8 +113,12 @@ class SitemapTrick implements PuppetTrick {
     ): void{
         this.scrapedResults.shopifyAppCategory?.push(...tmpCategories??[])
     }
-    async scrape(): Promise<ScrapeResult> {
+    async accessPage(): Promise<boolean> {
         await this.puppetMaster.goto(this.urls.sitemap);
+        return true;
+    }
+    async scrape(): Promise<ScrapeResult> {
+        await this.accessPage();
         const partnerElements: ScrapedElement[] = await this.scrapePartnersElements()
         for (const element of partnerElements){
             this.updateBasicPartnerAppsDetail(

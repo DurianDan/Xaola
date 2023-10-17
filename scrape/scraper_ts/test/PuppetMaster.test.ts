@@ -1,6 +1,5 @@
-import { Browser, Page } from "puppeteer";
 import { PuppetMaster } from "../src/ThePuppetShow/PuppetMaster"
-import { debugLaunchOptions, defaultLaunchOptions } from "../src/TheSalesman/config/browser";
+import { debugLaunchOptions } from "../src/TheSalesman/config/browser";
 import initPuppet from "../src/initPupper"
 
 let puppetMaster: PuppetMaster;
