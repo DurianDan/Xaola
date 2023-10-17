@@ -47,8 +47,10 @@ test("2. getProperty() => hrefAndTexts()", async()=>{
 test("3. href()",async() => {
     const overViewElement = await puppetMaster.xpathElement(tabsXpath)
     expect(await overViewElement.href()).toBe(githubAccount);
+}, timeLimit)
 
-    console.log("4. hrefAndText()");
+test("4. hrefAndText()", async() => {
+    const overViewElement = await puppetMaster.xpathElement(tabsXpath)
     let hrefText = await overViewElement.hrefAndText()
     hrefText.text = hrefText.text.trim();
     expect(hrefText).toStrictEqual({href: githubAccount, text: "Overview"});
