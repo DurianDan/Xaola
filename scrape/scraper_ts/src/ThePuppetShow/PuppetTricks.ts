@@ -133,3 +133,8 @@ class SitemapTrick implements PuppetTrick {
 }
 
 export { SitemapTrick };
+
+/** @todo implement `AppLandingPageTrick`  */
+// class AppLandingPageTrick implements PuppetTrick{
+
+// }

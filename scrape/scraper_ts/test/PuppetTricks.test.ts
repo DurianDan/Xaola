@@ -1,5 +1,5 @@
 import { PuppetMaster } from "../src/ThePuppetShow/PuppetMaster"
-import { defaultLaunchOptions } from "../src/TheSalesman/config/browser";
+import { debugLaunchOptions, defaultLaunchOptions } from "../src/TheSalesman/config/browser";
 import initPuppet from "../src/initPupper"
 import { SitemapTrick } from "../src/ThePuppetShow/PuppetTricks";
 
@@ -9,7 +9,7 @@ const commonTimeLimit = 15000;
 const scrapeSitemapTimeLimit = 1000*60*30
 
 beforeAll(async() => {
-    const {page, browser} = await initPuppet(defaultLaunchOptions);
+    const {page, browser} = await initPuppet(debugLaunchOptions);
     puppetMaster = new PuppetMaster(page, browser);
     sitemapTrick = new SitemapTrick(puppetMaster, {});
 }, commonTimeLimit)
@@ -25,5 +25,7 @@ describe("Check SitemapTrick", ()=>{
         const result = await sitemapTrick.scrape();
         expect(result.shopifyPartner?.length??0 > 5000).toBe(true);
         expect(result.shopifyAppDetail?.length??0 > 8000).toBe(true);
+        console.log(result.shopifyAppCategory);
+        expect(result.shopifyAppCategory?.length??50 > 8000).toBe(true);
     }, scrapeSitemapTimeLimit)
 })
