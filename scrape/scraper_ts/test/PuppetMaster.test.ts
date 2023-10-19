@@ -3,7 +3,7 @@ import { debugLaunchOptions } from "../src/TheSalesman/config/browser";
 import initPuppet from "../src/initPupper"
 
 let puppetMaster: PuppetMaster;
-const timeLimit = 15000;
+const timeLimit = 20000;
 const githubAccount = "https://github.com/DurianDan";
 const githubAccountNameXpath = '//span[@class="p-name vcard-fullname d-block overflow-hidden"]';
 const tabsXpath = '/html/body/div[1]/div[4]/main/div[1]/div/div/div[2]/div/nav/a[*]';

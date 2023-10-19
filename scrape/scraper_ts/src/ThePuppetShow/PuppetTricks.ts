@@ -9,17 +9,34 @@ import { PuppetMaster, ScrapedElement } from './PuppetMaster';
 import * as ElementsCfg from '../TheSalesman/config/elements';
 import {
     ShopifyPartner,
-    ShopifyAppCategory,
     ShopifyAppDetail,
+    ShopifyAppDescriptionLog,
+    ShopifyAppCategory,
+    ShopifyPricingPlan,
 } from '../TheSalesman/ScrapedTable';
+import { PartnerUrlConfig } from '../TheSalesman/AudienceProfile';
 
 interface PuppetTrick {
     urls: ShopifyPageURL;
     puppetMaster: PuppetMaster;
     scrapedResults: ScrapeResult;
     elements: ElementsCfg.XpathPageConfig;
+    /**
+     * Execute all necessary operations to scrape the loaded URL
+     * @returns {ScrapeResult}
+     */
     scrape(): Promise<ScrapeResult>;
+    /**
+     * To make the Puppeteer `page` to access the desired URL.
+     * @returns {boolean}
+     */
     accessPage(): Promise<boolean>;
+    /**
+     * Checks the parsed `ScrapeResult`, if it is `undefined` or lacking certain attributes, and automatically adds those attributes or creates a whole new `ScrapeResult`
+     * @param {any} result:`ScrapeResult` object to be check
+     * @returns {ScrapeResult}
+     */
+    checkScrapedResults(result: ScrapeResult): ScrapeResult;
 }
 
 class SitemapTrick implements PuppetTrick {
@@ -38,7 +55,7 @@ class SitemapTrick implements PuppetTrick {
         );
         return results as ScrapedElement[];
     }
-    checkScrapedResults(result: ScrapeResult) {
+    checkScrapedResults(result: ScrapeResult): ScrapeResult {
         // check if need fields has been initiated inside `this.scrapedResult`
         result.shopifyAppCategory = result.shopifyAppCategory ?? [];
         result.shopifyAppDetail = result.shopifyAppDetail ?? [];
@@ -132,9 +149,99 @@ class SitemapTrick implements PuppetTrick {
     }
 }
 
-export { SitemapTrick };
-
 /** @todo implement `AppLandingPageTrick`  */
-// class AppLandingPageTrick implements PuppetTrick{
+class AppLandingPageTrick implements PuppetTrick{
+    public urls: ShopifyPageURL;
+    public elements = ElementsCfg.shopifyAppElements;
+    constructor(
+        partnerUrlConfig: PartnerUrlConfig,
+        public puppetMaster: PuppetMaster,
+        public scrapedResults: ScrapeResult,
+    ) {
+        this.puppetMaster = puppetMaster;
+        this.urls = new ShopifyPageURL(partnerUrlConfig)
+        this.scrapedResults = this.checkScrapedResults(scrapedResults);
+    }
+    checkScrapedResults(result: ScrapeResult): ScrapeResult {
+        result.shopifyAppDescriptionLog = result.shopifyAppDescriptionLog??[];
+        result.shopifyAppDetail = result.shopifyAppDetail??[];
+        result.shopifyPricingPlan = result.shopifyPricingPlan??[];
+        return result;
+    }
+    async extractDescription():Promise<string>{
+        const element = await this.puppetMaster.xpathElement(this.elements.descriptionElement)
+        return (await element.text()).trim()
+    }
+    async extractAppName():Promise<string>{
+        const element = await this.puppetMaster.xpathElement(this.elements.appNameElement)
+        return (await element.text()).trim()
+    }
+    async extractReviewCount():Promise<number>{
+        const element = await this.puppetMaster.xpathElement(this.elements.reviewCountElement)
+        const countLine = (await element.text()).trim()
+        return Number(countLine.replace(",",""))
+    }
+    async extractAvgRating():Promise<number>{
+        const element = await this.puppetMaster.xpathElement(this.elements.avgRatingElement)
+        const rateStr = (await element.text()).match(/(\d.\d)/)
+        if (rateStr){
+            return Number(rateStr)
+        }else{
+            throw new Error(`This is not a float ${rateStr}`)
+        }
+    }
+    async extractPartnerInfo(): Promise<{partnerName: string, partnerURL: string}>{
+        const partnerHrefElement = await this.puppetMaster.xpathElement(this.elements.partnerHrefElement)
+        const partnerHrefText = await partnerHrefElement.hrefAndText()
+        return {
+            partnerName: partnerHrefText.text,
+            partnerURL: partnerHrefText.href
+        }
+    }
+    extractCurrentAppURL(): string{
+        return this.puppetMaster.page.url();
+    }
+    async extractAppDescriptionLogs():Promise<ShopifyAppDescriptionLog>{
+        const scrapedOn = new Date();
+        const appCurrentURL = this.extractCurrentAppURL()
+        const description = await this.extractDescription()
+        return new ShopifyAppDescriptionLog(null, scrapedOn,appCurrentURL, description)
+    }
+    async extractBasicPartnerDetail(): Promise<ShopifyPartner>{
+        const partnerInfo = await this.extractPartnerInfo();
+        return new ShopifyPartner(
+            null,
+            new Date(),
+            partnerInfo.partnerName,
+            partnerInfo.partnerURL
+        )
+    }
+    async extractAppDetail({shopifyPage: partnerPage}: ShopifyPartner):Promise<ShopifyAppDetail>{
+        return new ShopifyAppDetail(
+            null,
+            new Date(),
+            this.extractCurrentAppURL(),
+            (await this.extractAppName()),
+            (await this.extractAvgRating()),
+            (await this.extractReviewCount()),
+            partnerPage,
+        )
+    }
+    async extractPricingPlans(): Promise<ShopifyPricingPlan[]>{
+        const pricingPlanElements = await this.puppetMaster.xpathElements(
+            this.elements.pricingPlanElement
+            )
+        return [];
+    }
 
-// }
+    async accessPage(): Promise<boolean> {
+        this.puppetMaster.goto(this.urls.appLandingPage.toString())
+        return true;
+    }
+    async scrape(): Promise<ScrapeResult> {
+        /** @todo implements scraping the whole page */  
+        return this.scrapedResults    
+    }
+}
+
+export { SitemapTrick, AppLandingPageTrick };

@@ -10,7 +10,7 @@ interface ShopifyCommunityLanguageUrlSuffix {
     japanese: string;
 }
 
-interface AudienceProfile {
+interface PartnerUrlConfig {
     partnerUrlId?: string;
     appUrlId?: string;
     communityUrlId?: number;
@@ -18,4 +18,4 @@ interface AudienceProfile {
     categoryUrlId?: string;
 }
 
-export { AudienceProfile, ShopifyCommunityLanguageUrlSuffix };
+export { PartnerUrlConfig, ShopifyCommunityLanguageUrlSuffix };

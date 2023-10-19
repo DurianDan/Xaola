@@ -6,10 +6,10 @@ import { SitemapTrick } from "../src/ThePuppetShow/PuppetTricks";
 let puppetMaster: PuppetMaster;
 let sitemapTrick: SitemapTrick;
 const commonTimeLimit = 15000;
-const scrapeSitemapTimeLimit = 1000*60*30
+const scrapeSitemapTimeLimit = 1000*60*60
 
 beforeAll(async() => {
-    const {page, browser} = await initPuppet(debugLaunchOptions);
+    const {page, browser} = await initPuppet(defaultLaunchOptions);
     puppetMaster = new PuppetMaster(page, browser);
     sitemapTrick = new SitemapTrick(puppetMaster, {});
 }, commonTimeLimit)

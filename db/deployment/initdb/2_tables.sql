@@ -25,14 +25,13 @@ CREATE TABLE scraped.shopify_app_category (
 CREATE TABLE scraped.shopfy_app_info (
     id SERIAL PRIMARY KEY,
     shopify_page TEXT NOT NULL,
-    name VARCHAR(255),
+    app_name VARCHAR(255),
     review_count INTEGER,
+    avg_rating FLOAT,
     partner_id INT,
-    category_id INT,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (partner_id) REFERENCES scraped.shopify_partner(id),
-    FOREIGN KEY (category_id) REFERENCES scraped.shopify_app_category(id)
 );
 
 -- Create shopify_app_reviews in scraped

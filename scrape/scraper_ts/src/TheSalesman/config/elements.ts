@@ -1,15 +1,10 @@
 type XpathExpression = string;
-type XpathPageConfig = {
-    [key: string]:
-        | XpathExpression
-        | ((bodyDisplayIdx: number) => XpathExpression);
-};
 
-const shopifyCommonElements: XpathPageConfig = {
+const shopifyCommonElements = {
     topNavbarElement: '//*[@id="AppStoreNavbar"]/nav',
 };
 
-const shopifyReviewsElements: XpathPageConfig = {
+const shopifyReviewsElements = {
     reviewContentElements:
         '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[2]',
     ratingElements:
@@ -29,17 +24,23 @@ const shopifyReviewsElements: XpathPageConfig = {
         '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]/div[2]',
 };
 
-const shopifyAppElements: XpathPageConfig = {
+const shopifyAppElements = {
+    avgRatingElement: '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[1]/span',
+    reviewCountElement: '//*[@id="reviews-link"]',
     partnerHrefElement:
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[3]/div/a',
     appNameElement:
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[1]/div[2]/h1',
     pageCountElement: '//*[@id="adp-reviews"]/div/div/h2',
-    pricingPlanElement: '//*[@id="adp-pricing"]/div[2]/div[2]/div/div[*]',
+    pricingPlans: {
+        planName: '//*[@id="adp-pricing"]/div[2]/div[1]/div[*]/div[1]/div[1]/p[1]',
+        priceLine: '//*[@id="adp-pricing"]/div[2]/div[1]/div[*]/div[1]/div[1]/h3[1]',
+        
+    },
     descriptionElement: '//*[@id="app-details"]',
 };
 
-const shopifyPartnerElements: XpathPageConfig = {
+const shopifyPartnerElements = {
     nameLineElement: '//*[@id="PartnersShow"]/main/div/section/div[1]/h1',
     avgRatingElement:
         '//*[@id="PartnersShow"]/main/div/section/div[1]/div/span[3]',
@@ -47,7 +48,7 @@ const shopifyPartnerElements: XpathPageConfig = {
         '//*[@id="PartnersShow"]/main/div/section/div[1]/div/span[1]',
 };
 
-const shopifySolutionElements: XpathPageConfig = {
+const shopifySolutionElements = {
     title: '/html/body/div[2]/center/div/div/div/div/div[1]/div[2]/div/div/div[3]/div/div[1]/div[2]/div/div[1]/div[1]/div/div[2]/div/div/h2/span/a',
     date: '//*[@id="messageview2"]/div[2]/div/div[1]/div[2]/div/div/div/span/span[1]',
     likesCount:
@@ -75,15 +76,23 @@ const shopifySolutionElements: XpathPageConfig = {
         '/html/body/div[2]/center/div/div/div/div/div[1]/div[2]/div/div/div[3]/div/div[{idx}]/div[2]/div/div[1]/div[1]/div/div[2]/div/div/h2/span/a',
 };
 
-const sitemapElements: XpathPageConfig = {
+const sitemapElements = {
     partnerAreaElementPath: '//*[@id="ToolsSitemap"]/main/div/div[3]/div[*]',
 };
 
-const shopifyCategoryElements: XpathPageConfig = {
+const shopifyCategoryElements = {
     /**
      * @todo find elements on category pages
      * */
 };
+
+type XpathPageConfig = typeof  shopifyCommonElements
+    | typeof shopifyReviewsElements
+    | typeof shopifyAppElements
+    | typeof shopifyPartnerElements
+    | typeof shopifySolutionElements
+    | typeof sitemapElements
+    | typeof shopifyCategoryElements
 
 export {
     shopifyCommonElements,

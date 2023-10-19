@@ -6,7 +6,7 @@
 // ShopifyCategoryElements
 import { URL } from 'url';
 import {
-    AudienceProfile,
+    PartnerUrlConfig,
     ShopifyCommunityLanguageUrlSuffix,
 } from '../AudienceProfile';
 type HttpUrl = string;
@@ -33,7 +33,7 @@ class ShopifyPageURL {
             '/c/shopify-community-zh-cn/ct-p/zh-cn?profile.language=zh-CN',
     };
 
-    constructor(public businessIdentifiers: AudienceProfile) {
+    constructor(public businessIdentifiers: PartnerUrlConfig) {
         this.businessIdentifiers = businessIdentifiers;
     }
     normalizeUrl(prefix: string | URL, suffix: string): URL {

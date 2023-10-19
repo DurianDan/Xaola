@@ -41,13 +41,14 @@ class ShopifyAppDetail extends BaseScrapedTable {
         public id: number | null = null,
         public createdOn: Date,
         public shopifyPage: HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public name: string | scrapeBlocks = '<not-scraped-yet>',
+        public appName: string | scrapeBlocks = '<not-scraped-yet>',
         public reviewCount: number | scrapeBlocks = '<not-scraped-yet>',
+        public avgRating: number | scrapeBlocks = '<not-scraped-yet>',
         public partnerId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
         public categoryId: number | HttpUrl | null | scrapeBlocks = null,
     ) {
         super(id, createdOn);
-        this.name = name;
+        this.appName = appName;
         this.reviewCount = reviewCount;
         this.partnerId = partnerId;
         this.categoryId = categoryId;
