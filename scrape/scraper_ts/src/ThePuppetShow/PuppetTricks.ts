@@ -227,13 +227,59 @@ class AppLandingPageTrick implements PuppetTrick{
             partnerPage,
         )
     }
-    async extractPricingPlans(): Promise<ShopifyPricingPlan[]>{
-        const pricingPlanElements = await this.puppetMaster.xpathElements(
-            this.elements.pricingPlanElement
-            )
-        return [];
+    deriveCleanPlanOffer(rawOfferString: string): string{
+        const splitted = rawOfferString.trim().split("\n");
+        let cleanedString = "";
+        for (const stringPiece of splitted){
+            const trimmedStringPiece = stringPiece.trim();
+            if (trimmedStringPiece != ""){
+                cleanedString = `${cleanedString}\n${trimmedStringPiece}`;
+            }
+        }
+        return cleanedString;
     }
-
+    async derivePlanPriceName(
+        priceNameElement: ScrapedElement
+    ): Promise<{planName: string, price: string}>{
+        const priceLine = await (await this.puppetMaster.xpathElement(
+            this.elements.pricingPlans.priceElementTag,
+            priceNameElement
+            )).text()
+        const planName = await (await this.puppetMaster.xpathElement(
+            this.elements.pricingPlans.nameElementTag,
+            priceNameElement
+            )).text()
+        const additionalPriceOptionElement =  (await this.puppetMaster.xpathElements(
+            this.elements.pricingPlans.additionalPriceOptionElementTag,
+            priceNameElement
+            ))[0]
+        const additionalPriceOption = additionalPriceOptionElement? (await additionalPriceOptionElement.text()).trim(): ""
+        return {
+            price: planName.trim(),
+            planName: `${priceLine.trim()}\n${additionalPriceOption}`.trim()
+        }
+    }
+    async derivePlanDetail(
+        planElement: ScrapedElement
+    ): Promise<ShopifyPricingPlan>{
+        const {planName, price} = await this.derivePlanPriceName( await this.puppetMaster.xpathElement(
+            this.elements.pricingPlans.priceNameElementTag,
+            planElement
+            ))
+        const planOffer = this.deriveCleanPlanOffer(await (await this.puppetMaster.xpathElement(
+            this.elements.pricingPlans.planOfferElementTag,
+            planElement
+            )).text())
+        return new ShopifyPricingPlan(null, new Date(), planName, price, planOffer)
+    }
+    async extractPricingPlans(): Promise<ShopifyPricingPlan[]>{
+        const planElements = await this.puppetMaster.xpathElements(
+            this.elements.pricingPlans.planElement
+            )
+        return await Promise.all(planElements.map(async (plan) =>{
+            return await this.derivePlanDetail(plan)
+        }));
+    }
     async accessPage(): Promise<boolean> {
         this.puppetMaster.goto(this.urls.appLandingPage.toString())
         return true;
