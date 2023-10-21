@@ -45,13 +45,11 @@ class ShopifyAppDetail extends BaseScrapedTable {
         public reviewCount: number | scrapeBlocks = '<not-scraped-yet>',
         public avgRating: number | scrapeBlocks = '<not-scraped-yet>',
         public partnerId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public categoryId: number | HttpUrl | null | scrapeBlocks = null,
     ) {
         super(id, createdOn);
         this.appName = appName;
         this.reviewCount = reviewCount;
         this.partnerId = partnerId;
-        this.categoryId = categoryId;
     }
 }
 class ShopifyAppReviews extends BaseScrapedTable {
