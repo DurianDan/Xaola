@@ -78,7 +78,7 @@ class AppLandingPageTrick implements BaseTrick{
             partnerInfo.partnerURL
         )
     }
-    async extractAppDetail({shopifyPage: partnerPage}: ShopifyPartner):Promise<ShopifyAppDetail>{
+    async extractAppDetail(partnerPage: string):Promise<ShopifyAppDetail>{
         return new ShopifyAppDetail(
             null,
             new Date(),
@@ -126,7 +126,8 @@ class AppLandingPageTrick implements BaseTrick{
         }
     }
     async derivePlanDetail(
-        planElement: ScrapedElement
+        planElement: ScrapedElement,
+        appURL: string
     ): Promise<ShopifyPricingPlan>{
         const {planName, price} = await this.derivePlanPriceName( await this.puppetMaster.xpathElement(
             this.elements.pricingPlans.priceNameElementTag,
@@ -136,14 +137,14 @@ class AppLandingPageTrick implements BaseTrick{
             this.elements.pricingPlans.planOfferElementTag,
             planElement
             )).text())
-        return new ShopifyPricingPlan(null, new Date(), planName, price, planOffer)
+        return new ShopifyPricingPlan(null, new Date(), planName, price, planOffer, appURL)
     }
-    async extractPricingPlans(): Promise<ShopifyPricingPlan[]>{
+    async extractPricingPlans(appURL: string): Promise<ShopifyPricingPlan[]>{
         const planElements = await this.puppetMaster.xpathElements(
             this.elements.pricingPlans.planElement
             )
         return await Promise.all(planElements.map(async (plan) =>{
-            return await this.derivePlanDetail(plan)
+            return await this.derivePlanDetail(plan, appURL)
         }));
     }
     async accessPage(): Promise<boolean> {
@@ -151,10 +152,16 @@ class AppLandingPageTrick implements BaseTrick{
         return true;
     }
     async scrape(): Promise<ScrapeResult> {
-        /** @todo implements scraping the whole page */  
         await this.puppetMaster.goto(this.urls.appLandingPage.toString());
-        const pricingPlans = 
-        return this.scrapedResults    
+        const partnerBasicInfo = await this.extractBasicPartnerDetail();
+        const appDetails = await this.extractAppDetail(partnerBasicInfo.shopifyPage);
+        const pricingPlans = await this.extractPricingPlans(appDetails.shopifyPage);
+        const description = await this.extractAppDescriptionLogs();
+        this.scrapedResults.shopifyPartner?.push(partnerBasicInfo);
+        this.scrapedResults.shopifyAppDetail?.push(appDetails);
+        this.scrapedResults.shopifyPricingPlan?.push(...pricingPlans);
+        this.scrapedResults.shopifyAppDescriptionLog?.push(description);
+        return this.scrapedResults
     }
 }
 

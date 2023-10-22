@@ -1,8 +1,3 @@
-/** @todo Implements page scraping for individual Shopify URL.
- * 0. finish URL Config first
- * 1. Sitemap
- * 2. Nested Categories in Advertising Categories*/
-
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import { PuppetMaster } from '../PuppetMaster';
