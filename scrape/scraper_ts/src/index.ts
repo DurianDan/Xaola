@@ -1,27 +1,8 @@
 import puppeteer, { Page, Browser } from 'puppeteer';
-// import pl from "nodejs-polars";
-
-type Miliseconds = number;
-async function delay(duration: Miliseconds) {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, duration);
-    });
-}
-
-async function appsInfo(page: Page): Promise<any> {
-    try {
-        const appElement = await page.$x(
-            `//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[2]/div[1]/div[1]/div[2]`,
-        );
-        const appName = (
-            await appElement[0].getProperty('textContent')
-        ).jsonValue();
-        return appName;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-}
+import { PuppetMaster } from './ThePuppetShow/PuppetMaster';
+import { ShopifyPageURL } from './TheSalesman/config/pages';
+import { sitemapElements } from './TheSalesman/config/elements';
+import SitemapTrick from './ThePuppetShow/PuppetTricks/SitemapTrick';
 
 async function scrape() {
     try {
@@ -30,15 +11,17 @@ async function scrape() {
             args: ['--incognito', '--start-maximized'],
         });
         const page = await browser.newPage();
-        const URL = 'https://apps.shopify.com/tiktok/reviews';
-        await page.setViewport({
-            width: 1280,
-            height: 800,
-            deviceScaleFactor: 1,
-        });
-        await page.goto(URL, { waitUntil: 'networkidle2' });
-        await delay(1500);
-        console.log(await appsInfo(page));
+        const puppetMaster = new PuppetMaster(page, browser);
+        const urls = new ShopifyPageURL({});
+
+        const sitemapTrick = new SitemapTrick(puppetMaster, {});
+        await sitemapTrick.accessPage()
+        const partners = await sitemapTrick.scrapePartnersElements();
+        console.log(partners.length);
+        
+        const partnerInfo = await sitemapTrick.extractBasicPartnerAppDetailFromPartnerElement(partners[0]);
+        console.log(partnerInfo);
+        
     } catch (error) {
         console.log(error);
     }

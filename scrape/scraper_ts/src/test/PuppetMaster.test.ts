@@ -1,6 +1,6 @@
-import { PuppetMaster } from "../src/ThePuppetShow/PuppetMaster"
-import { debugLaunchOptions } from "../src/TheSalesman/config/browser";
-import initPuppet from "../src/initPupper"
+import { PuppetMaster } from "../ThePuppetShow/PuppetMaster"
+import { debugLaunchOptions } from "../TheSalesman/config/browser";
+import initPuppet from "../initPupper"
 
 let puppetMaster: PuppetMaster;
 const timeLimit = 20000;
