@@ -11,6 +11,7 @@ import {
 } from '../../TheSalesman/ScrapedTable';
 import { PartnerUrlConfig } from '../../TheSalesman/AudienceProfile';
 import BaseTrick from './BaseTrick';
+import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 
 
 class AppLandingPageTrick implements BaseTrick{
@@ -20,12 +21,15 @@ class AppLandingPageTrick implements BaseTrick{
         partnerUrlConfig: PartnerUrlConfig,
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
+        public watcher: BaseWatcher
     ) {
         this.puppetMaster = puppetMaster;
         this.urls = new ShopifyPageURL(partnerUrlConfig)
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
+        this.watcher = watcher
     }
     checkScrapedResults(result: ScrapeResult): ScrapeResult {
+        this.watcher.checkInfo(result, {msg: "Empty `ScrapeResult`, will return a new scrape result"})
         result.shopifyAppDescriptionLog = result.shopifyAppDescriptionLog??[];
         result.shopifyAppDetail = result.shopifyAppDetail??[];
         result.shopifyPricingPlan = result.shopifyPricingPlan??[];
@@ -33,20 +37,31 @@ class AppLandingPageTrick implements BaseTrick{
     }
     async extractDescription():Promise<string>{
         const element = await this.puppetMaster.xpathElement(this.elements.descriptionElement)
-        return (await element.text()).trim()
+        this.watcher.checkError(element, {msg: `Cant find description element: ${this.elements.descriptionElement}`})
+        const description = (await element.text()).trim()
+        this.watcher.checkWarn(description, {msg: `Cant find description element: ${this.elements.descriptionElement}`})
+        return description
     }
     async extractAppName():Promise<string>{
         const element = await this.puppetMaster.xpathElement(this.elements.appNameElement)
-        return (await element.text()).trim()
+        this.watcher.checkError(element, {msg: `Cant find appName element: ${this.elements.appNameElement}`})
+        const appName = (await element.text()).trim()
+        this.watcher.checkWarn(appName, {msg: `Cant find appName element: ${this.elements.descriptionElement}`})
+        return appName
+
     }
     async extractReviewCount():Promise<number>{
         const element = await this.puppetMaster.xpathElement(this.elements.reviewCountElement)
+        this.watcher.checkError(element, {msg: `Cant find description element: ${this.elements.reviewCountElement}`})
         const countLine = (await element.text()).trim()
+        this.watcher.checkWarn(countLine, {msg: `Cant find description element: ${this.elements.reviewCountElement}`})
         return Number(countLine.replace(",",""))
     }
     async extractAvgRating():Promise<number>{
         const element = await this.puppetMaster.xpathElement(this.elements.avgRatingElement)
+        this.watcher.checkError(element, {msg: `Cant find avgRating element: ${this.elements.avgRatingElement}`})
         const rateStr = (await element.text()).match(/(\d.\d)/)
+        this.watcher.checkError(rateStr,{msg:"Cant extract float number from this string: "+rateStr+" "})
         if (rateStr){
             return Number(rateStr)
         }else{

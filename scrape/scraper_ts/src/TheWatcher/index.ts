@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { WatchConfig, BaseWatcher, WatchThings } from "./BaseWatcher";
 
 class ConsoleWatcher implements BaseWatcher{
@@ -17,11 +18,6 @@ class ConsoleWatcher implements BaseWatcher{
     log(msg: string): void {
         console.log(msg);
     }
-    checkInfo(toCheck: any, watchThings: WatchThings): void {
-        if (!toCheck){
-            this.log(this.generateMessage(watchThings))
-        }
-    }
     info(watchThings: WatchThings): void {
         if (
             this.config.level
@@ -38,6 +34,24 @@ class ConsoleWatcher implements BaseWatcher{
     warn(watchThings: WatchThings): void {
         if (this.config.level==="warn"){
             this.log(this.generateMessage(watchThings))
+        }
+    }
+    checkObjectToLog(toCheck: any): boolean {
+        return !toCheck || isEmpty(toCheck) || toCheck === ""
+    }
+    checkInfo(toCheck: any, watchThings: WatchThings): void {
+        if (this.checkObjectToLog(toCheck)){
+            this.info(watchThings)
+        }
+    }
+    checkError(toCheck: any, watchThings: WatchThings): void {
+        if (this.checkObjectToLog(toCheck)){
+            this.error(watchThings)
+        }        
+    }
+    checkWarn(toCheck: any, watchThings: WatchThings): void {
+        if (this.checkObjectToLog(toCheck)){
+            this.info(watchThings)
         }
     }
 }

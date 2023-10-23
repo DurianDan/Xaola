@@ -24,12 +24,14 @@ interface BaseWatcher{
      */
     log(msg: string): void;
     /**
-     * Check an object to be undefined/null, if it is, log the custom messages
+     * Check an object to be undefined/null/empty-object/blank-string
      * @param {any} toCheck:any object to check
-     * @param {any} watchThings:WatchThings
-     * @returns {any}
+     * @returns {any} boolean: true if needs to be log
      */
-    checkInfo(toCheck: any, watchThings:WatchThings): void
+    checkObjectToLog(toCheck: any):boolean;
+    checkInfo(toCheck:any, watchThings:WatchThings): void
+    checkWarn(toCheck: any, watchThings:WatchThings): void
+    checkError(toCheck: any, watchThings:WatchThings): void
     info(watchThings: WatchThings):void;
     warn(watchThings: WatchThings):void;
     error(watchThings: WatchThings):void;

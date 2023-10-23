@@ -2,17 +2,14 @@ import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import PuppetMaster from '../PuppetMaster';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
+import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 
 export default interface BaseTrick {
     urls: ShopifyPageURL;
     puppetMaster: PuppetMaster;
     scrapedResults: ScrapeResult;
     elements: ElementsCfg.XpathPageConfig;
-    /**
-     * Automatically log, based on this.logConfig
-     * @returns void
-     */
-    log: (msg: string, err: Error)=>void;
+    watcher: BaseWatcher;
     /**
      * Execute all necessary operations to scrape the loaded URL
      * @returns {ScrapeResult}
