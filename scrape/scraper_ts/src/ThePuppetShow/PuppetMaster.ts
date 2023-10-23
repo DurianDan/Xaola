@@ -5,7 +5,6 @@ type Miliseconds = number;
 type XpathExpression = string;
 type HttpUrl = string;
 
-
 export default class PuppetMaster {
     constructor(
         public page: Page,
@@ -34,8 +33,8 @@ export default class PuppetMaster {
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
         await Promise.all([
             this.page.waitForNavigation(),
-            this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions)
-            ])
+            this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions),
+        ]);
     }
     checkPage(): Page {
         if (this.page === null || this.page === undefined) {
@@ -63,7 +62,7 @@ export default class PuppetMaster {
     ): Promise<ScrapedElement> {
         const elements = await this.xpathElements(xpath, parentElement);
         const resultElement = elements[0];
-        
+
         if (resultElement) {
             return resultElement;
         } else {
@@ -79,7 +78,7 @@ export default class PuppetMaster {
         );
         return hrefsTexts;
     }
-    async close(): Promise<void>{
-        await this.browser.close()
+    async close(): Promise<void> {
+        await this.browser.close();
     }
-};
+}

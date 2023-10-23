@@ -4,10 +4,11 @@ class ScrapedElement {
     constructor(public element: ElementHandle) {
         this.element = element;
     }
-    async getProperty(propertyName: string): Promise<string> {        
-        const valueHandle: JSHandle = await this.element.getProperty(propertyName);
-        const propertyValue = await valueHandle.jsonValue() as string
-        
+    async getProperty(propertyName: string): Promise<string> {
+        const valueHandle: JSHandle =
+            await this.element.getProperty(propertyName);
+        const propertyValue = (await valueHandle.jsonValue()) as string;
+
         if (propertyValue) {
             return propertyValue;
         } else {
@@ -17,10 +18,10 @@ class ScrapedElement {
         }
     }
     async text(): Promise<string> {
-        return await this.getProperty("textContent")
+        return await this.getProperty('textContent');
     }
     async href(): Promise<string> {
-        return (await this.getProperty('href'));
+        return await this.getProperty('href');
     }
     async hrefAndText(): Promise<{ href: string; text: string }> {
         const href = await this.href();

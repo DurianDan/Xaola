@@ -25,7 +25,8 @@ const shopifyReviewsElements = {
 };
 
 const shopifyAppElements = {
-    avgRatingElement: '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[1]/span',
+    avgRatingElement:
+        '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[1]/span',
     reviewCountElement: '//*[@id="reviews-link"]',
     partnerHrefElement:
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[3]/div/a',
@@ -35,10 +36,10 @@ const shopifyAppElements = {
     pricingPlans: {
         planElement: '//*[@id="adp-pricing"]/div[2]/div[1]/div[*]/div[1]',
         priceNameElementTag: '//div[1]',
-        nameElementTag: "//p[1]",
-        priceElementTag: "//h3[1]",
-        additionalPriceOptionElementTag: "//p[2]",
-        planOfferElementTag: "//ul[1]"
+        nameElementTag: '//p[1]',
+        priceElementTag: '//h3[1]',
+        additionalPriceOptionElementTag: '//p[2]',
+        planOfferElementTag: '//ul[1]',
     },
     descriptionElement: '//*[@id="app-details"]',
 };
@@ -89,13 +90,14 @@ const shopifyCategoryElements = {
      * */
 };
 
-type XpathPageConfig = typeof  shopifyCommonElements
+type XpathPageConfig =
+    | typeof shopifyCommonElements
     | typeof shopifyReviewsElements
     | typeof shopifyAppElements
     | typeof shopifyPartnerElements
     | typeof shopifySolutionElements
     | typeof sitemapElements
-    | typeof shopifyCategoryElements
+    | typeof shopifyCategoryElements;
 
 export {
     shopifyCommonElements,

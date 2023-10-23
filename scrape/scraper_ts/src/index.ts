@@ -12,13 +12,15 @@ async function scrape() {
         const puppetMaster = new PuppetMaster(page, browser);
 
         const sitemapTrick = new SitemapTrick(puppetMaster, {});
-        await sitemapTrick.accessPage()
+        await sitemapTrick.accessPage();
         const partners = await sitemapTrick.scrapePartnersElements();
         console.log(partners.length);
-        
-        const partnerInfo = await sitemapTrick.extractBasicPartnerAppDetailFromPartnerElement(partners[0]);
+
+        const partnerInfo =
+            await sitemapTrick.extractBasicPartnerAppDetailFromPartnerElement(
+                partners[0],
+            );
         console.log(partnerInfo);
-        
     } catch (error) {
         console.log(error);
     }
