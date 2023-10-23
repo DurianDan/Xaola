@@ -108,22 +108,22 @@ class AppLandingPageTrick implements BaseTrick{
             this.elements.pricingPlans.priceElementTag,
             priceNameElement
             )).text()
-        const planName = await (await this.puppetMaster.xpathElement(
-            this.elements.pricingPlans.nameElementTag,
-            priceNameElement
-            )).text()
-        const additionalPriceOptionElement =  (await this.puppetMaster.xpathElements(
+        const additionalPriceLineElement =  (await this.puppetMaster.xpathElements(
             this.elements.pricingPlans.additionalPriceOptionElementTag,
             priceNameElement // sometimes there are additional price option,
             // like anual sub price, instead of the usual monthly sub.
             ))[0]
-        const additionalPriceOption = additionalPriceOptionElement
+        const additionalPriceLine = additionalPriceLineElement
                 // check if the additionalPriceOptionElement has been found 
-                ? (await additionalPriceOptionElement.text()).trim()
+                ? (await additionalPriceLineElement.text()).trim()
                 : "" // if not, it equals to blank string ""
+        const planName = await (await this.puppetMaster.xpathElement(
+            this.elements.pricingPlans.nameElementTag,
+            priceNameElement
+            )).text()
         return {
             price: planName.trim(),
-            planName: `${priceLine.trim()}\n${additionalPriceOption}`.trim()
+            planName: `${priceLine.trim()}\n${additionalPriceLine}`.trim()
         }
     }
     async derivePlanDetail(

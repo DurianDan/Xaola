@@ -9,6 +9,11 @@ export default interface BaseTrick {
     scrapedResults: ScrapeResult;
     elements: ElementsCfg.XpathPageConfig;
     /**
+     * Automatically log, based on this.logConfig
+     * @returns void
+     */
+    log: (msg: string, err: Error)=>void;
+    /**
      * Execute all necessary operations to scrape the loaded URL
      * @returns {ScrapeResult}
      */

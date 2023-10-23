@@ -9,12 +9,13 @@ import {
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
 
-class SitemapTrick implements BaseTrick {
+class SitemapTrick implements BaseTrick{
     public urls: ShopifyPageURL = new ShopifyPageURL({});
     public elements = ElementsCfg.sitemapElements;
     constructor(
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
+        public log: 
     ) {
         this.puppetMaster = puppetMaster;
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
