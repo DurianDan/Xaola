@@ -1,39 +1,12 @@
-import { Page, Browser, Viewport, GoToOptions, ElementHandle, JSHandle } from 'puppeteer';
+import { Page, Browser, Viewport, GoToOptions, ElementHandle } from 'puppeteer';
+import ScrapedElement from './ScrapedElement';
 
 type Miliseconds = number;
 type XpathExpression = string;
 type HttpUrl = string;
 
-class ScrapedElement {
-    constructor(public element: ElementHandle) {
-        this.element = element;
-    }
-    async getProperty(propertyName: string): Promise<string> {        
-        const valueHandle: JSHandle = await this.element.getProperty(propertyName);
-        const propertyValue = await valueHandle.jsonValue() as string
-        
-        if (propertyValue) {
-            return propertyValue;
-        } else {
-            throw new Error(
-                `Cant get attribute "${propertyName}", it might not exist!!!`,
-            );
-        }
-    }
-    async text(): Promise<string> {
-        return await this.getProperty("textContent")
-    }
-    async href(): Promise<string> {
-        return (await this.getProperty('href'));
-    }
-    async hrefAndText(): Promise<{ href: string; text: string }> {
-        const href = await this.href();
-        const text = await this.text();
-        return { href, text };
-    }
-}
 
-class PuppetMaster {
+export default class PuppetMaster {
     constructor(
         public page: Page,
         public browser: Browser,
@@ -109,6 +82,4 @@ class PuppetMaster {
     async close(): Promise<void>{
         await this.browser.close()
     }
-}
-
-export { PuppetMaster, ScrapedElement };
+};

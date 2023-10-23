@@ -1,6 +1,7 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import { PuppetMaster, ScrapedElement } from '../PuppetMaster';
+import PuppetMaster from '../PuppetMaster';
+import ScrapedElement from '../ScrapedElement';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
     ShopifyPartner,

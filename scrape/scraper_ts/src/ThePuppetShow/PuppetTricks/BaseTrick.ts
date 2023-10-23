@@ -1,6 +1,6 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import { PuppetMaster } from '../PuppetMaster';
+import PuppetMaster from '../PuppetMaster';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 
 export default interface BaseTrick {
