@@ -1,7 +1,10 @@
-import { PuppetMaster } from "../ThePuppetShow/PuppetMaster"
-import { debugLaunchOptions, defaultLaunchOptions } from "../TheSalesman/config/browser";
+import PuppetMaster from "../ThePuppetShow/PuppetMaster"
 import initPuppet from "../initPupper"
 import SitemapTrick from "../ThePuppetShow/PuppetTricks/SitemapTrick";
+import {
+    // debugLaunchOptions,
+    defaultLaunchOptions
+} from "../TheSalesman/config/browser";
 
 let puppetMaster: PuppetMaster;
 let sitemapTrick: SitemapTrick;

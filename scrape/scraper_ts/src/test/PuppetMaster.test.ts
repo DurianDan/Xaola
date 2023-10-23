@@ -1,4 +1,4 @@
-import { PuppetMaster } from "../ThePuppetShow/PuppetMaster"
+import PuppetMaster from "../ThePuppetShow/PuppetMaster"
 import { debugLaunchOptions } from "../TheSalesman/config/browser";
 import initPuppet from "../initPupper"
 

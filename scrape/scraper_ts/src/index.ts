@@ -1,7 +1,5 @@
-import puppeteer, { Page, Browser } from 'puppeteer';
-import { PuppetMaster } from './ThePuppetShow/PuppetMaster';
-import { ShopifyPageURL } from './TheSalesman/config/pages';
-import { sitemapElements } from './TheSalesman/config/elements';
+import puppeteer from 'puppeteer';
+import PuppetMaster from './ThePuppetShow/PuppetMaster';
 import SitemapTrick from './ThePuppetShow/PuppetTricks/SitemapTrick';
 
 async function scrape() {
@@ -12,7 +10,6 @@ async function scrape() {
         });
         const page = await browser.newPage();
         const puppetMaster = new PuppetMaster(page, browser);
-        const urls = new ShopifyPageURL({});
 
         const sitemapTrick = new SitemapTrick(puppetMaster, {});
         await sitemapTrick.accessPage()
