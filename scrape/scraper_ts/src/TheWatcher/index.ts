@@ -22,7 +22,7 @@ class ConsoleWatcher implements BaseWatcher {
         }
     }
     error(watchThings: WatchThings): void {
-        if (this.config.level) {
+        if (this.config.level && ['info', 'warn', 'error'].includes(this.config.level)) {
             this.log(this.generateMessage(watchThings));
         }
     }

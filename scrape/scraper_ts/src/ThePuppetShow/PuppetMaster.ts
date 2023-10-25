@@ -1,26 +1,52 @@
 import { Page, Browser, Viewport, GoToOptions, ElementHandle } from 'puppeteer';
 import ScrapedElement from './ScrapedElement';
+import { BaseWatcher } from '../TheWatcher/BaseWatcher';
 
 type Miliseconds = number;
 type XpathExpression = string;
 type HttpUrl = string;
 
+interface PuppetMasterConfig{
+    logNullElement: boolean;
+    defaultGotoOptions?: GoToOptions;
+    defaultViewport?: Viewport;
+}
+
 export default class PuppetMaster {
     constructor(
         public page: Page,
         public browser: Browser,
-        public defaultGotoOptions: GoToOptions = { waitUntil: 'networkidle2' },
-        public defaultViewport: Viewport = {
+        public config: PuppetMasterConfig,
+        public watcher?: BaseWatcher,
+    ) {
+        this.browser = browser;
+        this.page = page;
+        this.watcher = watcher
+        this.config = this.initConfig(config)
+    }
+    /**
+     * Check for undefined/missing fields in config, an replace theme with default values
+     * @param {any} config:PuppetMasterConfig to be checked
+     * @returns {any}
+     */
+    initConfig(config: PuppetMasterConfig): PuppetMasterConfig{
+        config.defaultGotoOptions = config.defaultGotoOptions??{ waitUntil: 'networkidle2' }
+        config.defaultViewport = config.defaultViewport??{
             width: 1280,
             height: 800,
             deviceScaleFactor: 1,
-        },
-    ) {
-        this.browser = browser;
-        this.defaultViewport = defaultViewport;
-        this.page = page;
+        }
+        return config
     }
-
+    logErrorNullElement(element: ScrapedElement, elementName: string):ScrapedElement{
+        if (this.config.logNullElement){
+            this.watcher?.checkError(
+                element,
+                {msg: `Cant find ${elementName} element, at xpath: ${element.xpath}`}
+                )
+        }
+        return element
+    }
     /**
      * Delay whole programm for miliseconds,
      * @param number duration:Miliseconds
@@ -33,7 +59,7 @@ export default class PuppetMaster {
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
         await Promise.all([
             this.page.waitForNavigation(),
-            this.page?.goto(url, customGotoOptions ?? this.defaultGotoOptions),
+            this.page?.goto(url, customGotoOptions ?? this.config.defaultGotoOptions),
         ]);
     }
     checkPage(): Page {
@@ -46,13 +72,17 @@ export default class PuppetMaster {
     async xpathElements(
         xpath: XpathExpression,
         parentElement?: ScrapedElement,
+        elementName?: string
     ): Promise<ScrapedElement[]> {
         const elements = parentElement
             ? await parentElement.element.$$('xpath/' + xpath)
             : await this.checkPage().$x(xpath);
 
         const scrapedElements = elements.map(
-            (ele) => new ScrapedElement(ele as ElementHandle),
+            (ele) => this.logErrorNullElement(
+                new ScrapedElement(ele as ElementHandle, xpath),
+                elementName
+                ),
         );
         return scrapedElements;
     }

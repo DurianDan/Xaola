@@ -106,7 +106,10 @@ class AppLandingPageTrick implements BaseTrick {
         };
     }
     extractCurrentAppURL(): string {
-        return this.puppetMaster.page.url();
+        const currentURL = this.puppetMaster.page.url();
+        if (currentURL != this.urls.appLandingPage.toString()){
+            this.watcher.warn({msg: "Current app landing page URL is different from initial url in (config)"})
+        }
     }
     async extractAppDescriptionLogs(): Promise<ShopifyAppDescriptionLog> {
         const scrapedOn = new Date();

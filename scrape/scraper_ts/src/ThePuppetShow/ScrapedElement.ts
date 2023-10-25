@@ -1,8 +1,12 @@
 import { ElementHandle, JSHandle } from 'puppeteer';
 
 class ScrapedElement {
-    constructor(public element: ElementHandle) {
+    constructor(
+        public element: ElementHandle,
+        public xpath: string
+    ) {
         this.element = element;
+        this.xpath = xpath
     }
     async getProperty(propertyName: string): Promise<string> {
         const valueHandle: JSHandle =
