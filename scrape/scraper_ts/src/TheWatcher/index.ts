@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { WatchConfig, BaseWatcher, WatchThings } from './BaseWatcher';
 
 class ConsoleWatcher implements BaseWatcher {
-    constructor(public config: WatchConfig) {
+    public constructor(public config: WatchConfig) {
         this.config = config;
     }
     generateMessage(watchThings: WatchThings): string {
@@ -51,4 +51,4 @@ class ConsoleWatcher implements BaseWatcher {
     }
 }
 
-export { ConsoleWatcher };
+export {  ConsoleWatcher };

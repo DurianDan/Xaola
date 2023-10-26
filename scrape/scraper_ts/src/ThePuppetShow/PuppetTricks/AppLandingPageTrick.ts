@@ -40,9 +40,6 @@ class AppLandingPageTrick implements BaseTrick {
         const element = await this.puppetMaster.xpathElement(
             this.elements.descriptionElement,
         );
-        this.watcher.checkError(element, {
-            msg: `Cant find description element: ${this.elements.descriptionElement}`,
-        });
         const description = (await element.text()).trim();
         this.watcher.checkWarn(description, {
             msg: `Cant find description element: ${this.elements.descriptionElement}`,
@@ -53,11 +50,8 @@ class AppLandingPageTrick implements BaseTrick {
         const element = await this.puppetMaster.xpathElement(
             this.elements.appNameElement,
         );
-        this.watcher.checkError(element, {
-            msg: `Cant find appName element: ${this.elements.appNameElement}`,
-        });
         const appName = (await element.text()).trim();
-        this.watcher.checkWarn(appName, {
+        this.watcher.checkError(appName, {
             msg: `Cant find appName element: ${this.elements.descriptionElement}`,
         });
         return appName;
@@ -66,11 +60,8 @@ class AppLandingPageTrick implements BaseTrick {
         const element = await this.puppetMaster.xpathElement(
             this.elements.reviewCountElement,
         );
-        this.watcher.checkError(element, {
-            msg: `Cant find description element: ${this.elements.reviewCountElement}`,
-        });
         const countLine = (await element.text()).trim();
-        this.watcher.checkWarn(countLine, {
+        this.watcher.checkError(countLine, {
             msg: `Cant find description element: ${this.elements.reviewCountElement}`,
         });
         return Number(countLine.replace(',', ''));
@@ -79,12 +70,9 @@ class AppLandingPageTrick implements BaseTrick {
         const element = await this.puppetMaster.xpathElement(
             this.elements.avgRatingElement,
         );
-        this.watcher.checkError(element, {
-            msg: `Cant find avgRating element: ${this.elements.avgRatingElement}`,
-        });
         const rateStr = (await element.text()).match(/(\d.\d)/);
         this.watcher.checkError(rateStr, {
-            msg: 'Cant extract float number from this string: ' + rateStr + ' ',
+            msg: 'Cant extract float number from this string: ' + rateStr,
         });
         if (rateStr) {
             return Number(rateStr);
@@ -110,6 +98,7 @@ class AppLandingPageTrick implements BaseTrick {
         if (currentURL != this.urls.appLandingPage.toString()){
             this.watcher.warn({msg: "Current app landing page URL is different from initial url in (config)"})
         }
+        return currentURL
     }
     async extractAppDescriptionLogs(): Promise<ShopifyAppDescriptionLog> {
         const scrapedOn = new Date();
@@ -153,6 +142,17 @@ class AppLandingPageTrick implements BaseTrick {
         }
         return cleanedString;
     }
+    async additionalPriceLine(priceNameElement: ScrapedElement): Promise<string>{
+        const additionalPriceLineElement = (
+            await this.puppetMaster.xpathElements(
+                this.elements.pricingPlans.additionalPriceOptionElementTag,
+                priceNameElement, // sometimes there are additional price option,
+                // like anual sub price, instead of the usual monthly sub.
+            )
+        )[0];
+        this.watcher.checkWarn(additionalPriceLineElement, {msg: "<No `additionalPriceLineElement`>"})
+        return additionalPriceLineElement?(await additionalPriceLineElement.text()).trim(): ""
+    }
     async derivePlanPriceName(
         priceNameElement: ScrapedElement,
     ): Promise<{ planName: string; price: string }> {
@@ -162,17 +162,7 @@ class AppLandingPageTrick implements BaseTrick {
                 priceNameElement,
             )
         ).text();
-        const additionalPriceLineElement = (
-            await this.puppetMaster.xpathElements(
-                this.elements.pricingPlans.additionalPriceOptionElementTag,
-                priceNameElement, // sometimes there are additional price option,
-                // like anual sub price, instead of the usual monthly sub.
-            )
-        )[0];
-        const additionalPriceLine = additionalPriceLineElement
-            ? // check if the additionalPriceOptionElement has been found
-              (await additionalPriceLineElement.text()).trim()
-            : ''; // if not, it equals to blank string ""
+        const additionalPriceLine = await this.additionalPriceLine(priceNameElement);
         const planName = await (
             await this.puppetMaster.xpathElement(
                 this.elements.pricingPlans.nameElementTag,

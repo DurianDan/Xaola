@@ -8,6 +8,7 @@ import {
     ShopifyAppDetail,
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
+import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 
 class SitemapTrick implements BaseTrick{
     public urls: ShopifyPageURL = new ShopifyPageURL({});
@@ -15,7 +16,7 @@ class SitemapTrick implements BaseTrick{
     constructor(
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
-        public log: 
+        public watcher: BaseWatcher
     ) {
         this.puppetMaster = puppetMaster;
         this.scrapedResults = this.checkScrapedResults(scrapedResults);

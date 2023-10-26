@@ -38,10 +38,10 @@ export default class PuppetMaster {
         }
         return config
     }
-    logErrorNullElement(element: ScrapedElement, elementName: string):ScrapedElement{
-        if (this.config.logNullElement){
+    logErrorNullElement(element: ScrapedElement, elementName?: string):ScrapedElement{
+        if (this.config.logNullElement && elementName){
             this.watcher?.checkError(
-                element,
+                element.element,
                 {msg: `Cant find ${elementName} element, at xpath: ${element.xpath}`}
                 )
         }
@@ -89,10 +89,13 @@ export default class PuppetMaster {
     async xpathElement(
         xpath: XpathExpression,
         parentElement?: ScrapedElement,
-    ): Promise<ScrapedElement> {
-        const elements = await this.xpathElements(xpath, parentElement);
+        elementName: string = ""
+        ): Promise<ScrapedElement> {
+            const elements = await this.xpathElements(
+                xpath, parentElement, elementName
+            );
         const resultElement = elements[0];
-
+        
         if (resultElement) {
             return resultElement;
         } else {
@@ -101,8 +104,8 @@ export default class PuppetMaster {
     }
     async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {
         const hrefsTexts = await this.page.$$eval('a', (as) =>
-            as.map((a) => ({
-                href: a.href,
+        as.map((a) => ({
+            href: a.href,
                 text: a.textContent as string,
             })),
         );
