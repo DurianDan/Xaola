@@ -33,8 +33,8 @@ class ShopifyPageURL {
             '/c/shopify-community-zh-cn/ct-p/zh-cn?profile.language=zh-CN',
     };
 
-    constructor(public businessIdentifiers: PartnerUrlConfig) {
-        this.businessIdentifiers = businessIdentifiers;
+    constructor(public partnerIdentifiers: PartnerUrlConfig) {
+        this.partnerIdentifiers = partnerIdentifiers;
     }
     normalizeUrl(prefix: string | URL, suffix: string): URL {
         return new URL(suffix, prefix);
@@ -42,13 +42,13 @@ class ShopifyPageURL {
     get appLandingPage(): URL {
         return this.normalizeUrl(
             this.appsMarketPlace,
-            this.businessIdentifiers.appUrlId ?? '',
+            this.partnerIdentifiers.appUrlId ?? '',
         );
     }
     get appPartnerLandingPage(): URL {
         return this.normalizeUrl(
             this.appPartnerPrefix,
-            this.businessIdentifiers.partnerUrlId ?? '',
+            this.partnerIdentifiers.partnerUrlId ?? '',
         );
     }
     get appReviewsDefaultPage(): URL {
@@ -58,15 +58,15 @@ class ShopifyPageURL {
         return this.normalizeUrl(
             this.communityPrefix,
             this.communityLanguageSuffixes[
-                this.businessIdentifiers.commutityLanguage ?? 'english'
+                this.partnerIdentifiers.commutityLanguage ?? 'english'
             ],
         );
     }
     get communityUserProfile(): URL {
-        if (this.businessIdentifiers.communityUrlId) {
+        if (this.partnerIdentifiers.communityUrlId) {
             return this.normalizeUrl(
                 this.communityUserProfilePrefix,
-                this.businessIdentifiers.communityUrlId.toString(),
+                this.partnerIdentifiers.communityUrlId.toString(),
             );
         } else {
             return this.communityLandingPage;
@@ -75,7 +75,7 @@ class ShopifyPageURL {
     get appCategoryPage(): URL {
         return this.normalizeUrl(
             this.appCategoryPrefix,
-            this.businessIdentifiers.categoryUrlId ?? '',
+            this.partnerIdentifiers.categoryUrlId ?? '',
         );
     }
     addPageParam(

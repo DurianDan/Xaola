@@ -21,7 +21,7 @@ let expectedTabHrefTexts = [
 
 beforeAll(async () => {
     const { page, browser } = await initPuppet(debugLaunchOptions);
-    puppetMaster = new PuppetMaster(page, browser);
+    puppetMaster = new PuppetMaster(page, browser, {logNullElement:true});
     await puppetMaster.goto(githubAccount);
 }, timeLimit);
 

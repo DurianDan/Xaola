@@ -12,18 +12,19 @@ import {
 import { PartnerUrlConfig } from '../../TheSalesman/AudienceProfile';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
+import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 
 class AppLandingPageTrick implements BaseTrick {
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.shopifyAppElements;
     constructor(
-        partnerUrlConfig: PartnerUrlConfig,
+        appUrlId: string,
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
-        this.urls = new ShopifyPageURL(partnerUrlConfig);
+        this.urls = new ShopifyPageURL({appUrlId});
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
     }
@@ -31,9 +32,10 @@ class AppLandingPageTrick implements BaseTrick {
         this.watcher.checkInfo(result, {
             msg: 'Empty `ScrapeResult`, will return a new scrape result',
         });
-        result.shopifyAppDescriptionLog = result.shopifyAppDescriptionLog ?? [];
+        result.shopifyPartner = result.shopifyPartner ?? [];
         result.shopifyAppDetail = result.shopifyAppDetail ?? [];
         result.shopifyPricingPlan = result.shopifyPricingPlan ?? [];
+        result.shopifyAppDescriptionLog = result.shopifyAppDescriptionLog ?? [];
         return result;
     }
     async extractDescription(): Promise<string> {
@@ -215,8 +217,7 @@ class AppLandingPageTrick implements BaseTrick {
         this.puppetMaster.goto(this.urls.appLandingPage.toString());
         return true;
     }
-    async scrape(): Promise<ScrapeResult> {
-        await this.puppetMaster.goto(this.urls.appLandingPage.toString());
+    async extractDerive(): Promise<ScrapeResult> {
         const partnerBasicInfo = await this.extractBasicPartnerDetail();
         const appDetails = await this.extractAppDetail(
             partnerBasicInfo.shopifyPage,
@@ -225,10 +226,20 @@ class AppLandingPageTrick implements BaseTrick {
             appDetails.shopifyPage,
         );
         const description = await this.extractAppDescriptionLogs();
-        this.scrapedResults.shopifyPartner?.push(partnerBasicInfo);
-        this.scrapedResults.shopifyAppDetail?.push(appDetails);
-        this.scrapedResults.shopifyPricingPlan?.push(...pricingPlans);
-        this.scrapedResults.shopifyAppDescriptionLog?.push(description);
+        return {
+            shopifyPartner: [partnerBasicInfo],
+            shopifyAppDetail: [appDetails],
+            shopifyPricingPlan: pricingPlans,
+            shopifyAppDescriptionLog: [description],
+        }
+    }
+    updateScrapeResult(scrapeResult: ScrapeResult): void {
+        this.scrapedResults = mergeScrapeResult([scrapeResult, this.scrapedResults])
+    }
+    async scrape(): Promise<ScrapeResult> {
+        await this.accessPage();
+        const informationExtracted = await this.extractDerive();
+        this.updateScrapeResult(informationExtracted)
         return this.scrapedResults;
     }
 }

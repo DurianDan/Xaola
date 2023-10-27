@@ -5,6 +5,7 @@ import {
     // debugLaunchOptions,
     defaultLaunchOptions,
 } from '../TheSalesman/config/browser';
+import { ConsoleWatcher } from '../TheWatcher';
 
 let puppetMaster: PuppetMaster;
 let sitemapTrick: SitemapTrick;
@@ -13,8 +14,9 @@ const scrapeSitemapTimeLimit = 1000 * 60 * 60;
 
 beforeAll(async () => {
     const { page, browser } = await initPuppet(defaultLaunchOptions);
-    puppetMaster = new PuppetMaster(page, browser);
-    sitemapTrick = new SitemapTrick(puppetMaster, {});
+    const watcher = new ConsoleWatcher({})
+    puppetMaster = new PuppetMaster(page, browser, {logNullElement: true});
+    sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher);
 }, commonTimeLimit);
 
 afterAll(async () => {
