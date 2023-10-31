@@ -1,6 +1,6 @@
 import PuppetMaster from './ThePuppetShow/PuppetMaster';
 // import SitemapTrick from './ThePuppetShow/PuppetTricks/SitemapTrick';
-import initPuppet from './initPupper';
+import initPuppet from './initPuppet';
 import { defaultLaunchOptions } from './TheSalesman/config/browser';
 import { ConsoleWatcher } from './TheWatcher';
 import AppLandingPageTrick from './ThePuppetShow/PuppetTricks/AppLandingPageTrick';
