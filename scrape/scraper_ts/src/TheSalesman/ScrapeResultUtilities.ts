@@ -1,4 +1,5 @@
 import ScrapeResult from "./ScrapeResult";
+import pl from 'nodejs-polars';
 
 export function mergeScrapeResult(resultsToMerge: ScrapeResult[]): ScrapeResult{
     const mergedResult: ScrapeResult = {
@@ -25,3 +26,29 @@ export function mergeScrapeResult(resultsToMerge: ScrapeResult[]): ScrapeResult{
     })
     return mergedResult
 }
+
+// interface ScrapedResultFilePath{
+//     shopifyPartner: string,
+//     shopifyAppCategory: string,
+//     shopifyAppDescriptionLog: string,
+//     shopifyAppDetail: string,
+//     shopifyAppReviews: string,
+//     shopifyCategoryRankLog: string,
+//     shopifyCommunityUserStats: string,
+//     shopifyCommunityUserStatsLog: string,
+//     shopifyPricingPlan: string,
+// }
+
+// type SaveFileType = "arrow"|"csv"|"parquet";
+
+// interface SaveScrapedResultConfig {
+//     filepaths: string|ScrapedResultFilePath,
+//     suffix?: string,
+//     prefix?: string,
+//     filetype: SaveFileType
+// }
+
+// export function saveCustomFile(result)
+// export function saveScrapedResult(result: ScrapeResult, saveConfig: SaveScrapedResultConfig):void{
+
+// }

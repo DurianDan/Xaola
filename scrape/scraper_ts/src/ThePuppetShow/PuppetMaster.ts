@@ -3,7 +3,7 @@ import ScrapedElement from './ScrapedElement';
 import { BaseWatcher } from '../TheWatcher/BaseWatcher';
 
 type Miliseconds = number;
-type XpathExpression = string;
+type PSelector = string;
 type HttpUrl = string;
 
 interface PuppetMasterConfig{
@@ -42,7 +42,7 @@ export default class PuppetMaster {
         if (this.config.logNullElement && elementName){
             this.watcher?.checkError(
                 element.element,
-                {msg: `Cant find ${elementName} element, at xpath: ${element.xpath}`}
+                {msg: `Cant find ${elementName} element, at xpath: ${element.selector}`}
                 )
         }
         return element
@@ -69,37 +69,44 @@ export default class PuppetMaster {
             return this.page;
         }
     }
-    async xpathElements(
-        xpath: XpathExpression,
+    /**
+     * Select and get the elements based on provided `selector`, if pair-using with a parentElement, `selector` will be used as a `p-selector`. If not, `selector` will be treated as an `xpath`.
+     * @param {any} selector:XPathExpression (or PSelector, if a parentElement is parsed)
+     * @param {any} parentElement?:ScrapedElement
+     * @param {any} elementName?:string for logging
+     * @returns {any}
+     */
+    async selectElements(
+        selector: PSelector|XPathExpression,
         parentElement?: ScrapedElement,
         elementName?: string
     ): Promise<ScrapedElement[]> {
         const elements = parentElement
-            ? await parentElement.element.$$('xpath/' + xpath)
-            : await this.checkPage().$x(xpath);
+            ? await parentElement.element.$$(selector as string)
+            : await this.checkPage().$x(selector as string);
 
         const scrapedElements = elements.map(
             (ele) => this.logErrorNullElement(
-                new ScrapedElement(ele as ElementHandle, xpath),
+                new ScrapedElement(ele as ElementHandle, selector as string),
                 elementName
                 ),
         );
         return scrapedElements;
     }
-    async xpathElement(
-        xpath: XpathExpression,
+    async selectElement(
+        selector: PSelector|XPathExpression,
         parentElement?: ScrapedElement,
         elementName: string = ""
         ): Promise<ScrapedElement> {
-            const elements = await this.xpathElements(
-                xpath, parentElement, elementName
+            const elements = await this.selectElements(
+                selector, parentElement, elementName
             );
         const resultElement = elements[0];
         
         if (resultElement) {
             return resultElement;
         } else {
-            throw `null/undefined element: ${xpath}`;
+            throw `null/undefined element: ${selector}`;
         }
     }
     async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {

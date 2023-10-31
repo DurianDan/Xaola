@@ -24,7 +24,7 @@ class SitemapTrick implements BaseTrick{
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
     }
     async scrapePartnersElements(): Promise<ScrapedElement[]> {
-        const results = await this.puppetMaster.xpathElements(
+        const results = await this.puppetMaster.selectElements(
             this.elements.partnerAreaElementPath,
         );
         return results as ScrapedElement[];
@@ -39,8 +39,8 @@ class SitemapTrick implements BaseTrick{
     async extractHrefTextsFromChildrenTagA(
         parentElement: ScrapedElement,
     ): Promise<{ href: string; text: string }[]> {
-        const allTagA = await this.puppetMaster.xpathElements(
-            '//a',
+        const allTagA = await this.puppetMaster.selectElements(
+            'a',
             parentElement,
         );
         // get all "texts" and "hrefs" inside of Tag "a", inside the Partner elements
@@ -55,15 +55,14 @@ class SitemapTrick implements BaseTrick{
     async extractBasicPartnerAppDetailFromPartnerElement(
         element: ScrapedElement,
     ): Promise<ScrapeResult> {
-        const allHrefTexts =
-            await this.extractHrefTextsFromChildrenTagA(element);
+        const allHrefTexts = await this.extractHrefTextsFromChildrenTagA(element);
         // First tag "a" is of the partner name and link
         const tmpPartner = new ShopifyPartner(
             null,
             new Date(),
             allHrefTexts[0].text.trim(),
             allHrefTexts[0].href,
-        );
+            );
         const tmpScrapedResult: ScrapeResult = {
             shopifyPartner: [tmpPartner],
             shopifyAppDetail: [],
@@ -77,9 +76,11 @@ class SitemapTrick implements BaseTrick{
                     hrefText.href,
                     hrefText.text.trim(),
                     undefined,
-                ),
-            );
-        }
+                    undefined,
+                    tmpPartner.shopifyPage
+                    ),
+                    );
+                }
         return tmpScrapedResult;
     }
     async extractBasicCategoryInfo(): Promise<ShopifyAppCategory[]> {
@@ -114,7 +115,8 @@ class SitemapTrick implements BaseTrick{
     async extractDerive(): Promise<ScrapeResult> {
         const partnerElements: ScrapedElement[] = await this.scrapePartnersElements()
         const sitemapScrapedInfo: ScrapeResult = {shopifyPartner:[], shopifyAppDetail:[]}
-        for (const element of partnerElements){
+        for (const [idx, element] of partnerElements.entries()){
+            this.watcher.info({msg:`idx: ${idx}/${partnerElements.length} partnerElements`});
             const {shopifyPartner, shopifyAppDetail} = await this.extractBasicPartnerAppDetailFromPartnerElement(element)
             sitemapScrapedInfo.shopifyPartner?.push(...shopifyPartner??[])
             sitemapScrapedInfo.shopifyAppDetail?.push(...shopifyAppDetail??[])
@@ -127,8 +129,12 @@ class SitemapTrick implements BaseTrick{
         this.scrapedResults = mergeScrapeResult([scrapeResult, this.scrapedResults])    
     }
     async scrape(): Promise<ScrapeResult> {
+        this.watcher.info({msg:`Accessing ${this.urls.sitemap}`})
         await this.accessPage();
+        this.watcher.info({msg:`Extracting basic partner apps info...`})
         const scrapeResult = await this.extractDerive();
+        this.watcher.info({msg:`${this.scrapedResults.shopifyPartner?.length} Partners`})
+        this.watcher.info({msg:`${this.scrapedResults.shopifyAppDetail?.length} Apps`})
         this.updateScrapeResult(scrapeResult);
         return this.scrapedResults
     }

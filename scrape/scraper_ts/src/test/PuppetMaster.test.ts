@@ -32,7 +32,7 @@ afterAll(async () => {
 test(
     '1. xpathElement()',
     async () => {
-        const extractedNameElement = await puppetMaster.xpathElement(
+        const extractedNameElement = await puppetMaster.selectElement(
             githubAccountNameXpath,
         );
         const extractedName = (await extractedNameElement.text()).trim();
@@ -44,7 +44,7 @@ test(
 test(
     '2. getProperty() => hrefAndTexts()',
     async () => {
-        const tabsElement = await puppetMaster.xpathElements(tabsXpath);
+        const tabsElement = await puppetMaster.selectElements(tabsXpath);
         const extractedTabHrefTexts = await Promise.all(
             tabsElement.map(async (ele) => {
                 // choose only the first 5 elements because they are duplicated after that.
@@ -62,7 +62,7 @@ test(
 test(
     '3. href()',
     async () => {
-        const overViewElement = await puppetMaster.xpathElement(tabsXpath);
+        const overViewElement = await puppetMaster.selectElement(tabsXpath);
         expect(await overViewElement.href()).toBe(githubAccount);
     },
     timeLimit,
@@ -71,7 +71,7 @@ test(
 test(
     '4. hrefAndText()',
     async () => {
-        const overViewElement = await puppetMaster.xpathElement(tabsXpath);
+        const overViewElement = await puppetMaster.selectElement(tabsXpath);
         let hrefText = await overViewElement.hrefAndText();
         hrefText.text = hrefText.text.trim();
         expect(hrefText).toStrictEqual({

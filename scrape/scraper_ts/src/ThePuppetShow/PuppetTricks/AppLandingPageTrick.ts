@@ -39,7 +39,7 @@ class AppLandingPageTrick implements BaseTrick {
         return result;
     }
     async extractDescription(): Promise<string> {
-        const element = await this.puppetMaster.xpathElement(
+        const element = await this.puppetMaster.selectElement(
             this.elements.descriptionElement,
         );
         const description = (await element.text()).trim();
@@ -49,7 +49,7 @@ class AppLandingPageTrick implements BaseTrick {
         return description;
     }
     async extractAppName(): Promise<string> {
-        const element = await this.puppetMaster.xpathElement(
+        const element = await this.puppetMaster.selectElement(
             this.elements.appNameElement,
         );
         const appName = (await element.text()).trim();
@@ -59,7 +59,7 @@ class AppLandingPageTrick implements BaseTrick {
         return appName;
     }
     async extractReviewCount(): Promise<number> {
-        const element = await this.puppetMaster.xpathElement(
+        const element = await this.puppetMaster.selectElement(
             this.elements.reviewCountElement,
         );
         const countLine = (await element.text()).trim();
@@ -69,7 +69,7 @@ class AppLandingPageTrick implements BaseTrick {
         return Number(countLine.replace(',', ''));
     }
     async extractAvgRating(): Promise<number> {
-        const element = await this.puppetMaster.xpathElement(
+        const element = await this.puppetMaster.selectElement(
             this.elements.avgRatingElement,
         );
         const rateStr = (await element.text()).match(/(\d.\d)/);
@@ -86,7 +86,7 @@ class AppLandingPageTrick implements BaseTrick {
         partnerName: string;
         partnerURL: string;
     }> {
-        const partnerHrefElement = await this.puppetMaster.xpathElement(
+        const partnerHrefElement = await this.puppetMaster.selectElement(
             this.elements.partnerHrefElement,
         );
         const partnerHrefText = await partnerHrefElement.hrefAndText();
@@ -146,7 +146,7 @@ class AppLandingPageTrick implements BaseTrick {
     }
     async additionalPriceLine(priceNameElement: ScrapedElement): Promise<string>{
         const additionalPriceLineElement = (
-            await this.puppetMaster.xpathElements(
+            await this.puppetMaster.selectElements(
                 this.elements.pricingPlans.additionalPriceOptionElementTag,
                 priceNameElement, // sometimes there are additional price option,
                 // like anual sub price, instead of the usual monthly sub.
@@ -159,14 +159,14 @@ class AppLandingPageTrick implements BaseTrick {
         priceNameElement: ScrapedElement,
     ): Promise<{ planName: string; price: string }> {
         const priceLine = await (
-            await this.puppetMaster.xpathElement(
+            await this.puppetMaster.selectElement(
                 this.elements.pricingPlans.priceElementTag,
                 priceNameElement,
             )
         ).text();
         const additionalPriceLine = await this.additionalPriceLine(priceNameElement);
         const planName = await (
-            await this.puppetMaster.xpathElement(
+            await this.puppetMaster.selectElement(
                 this.elements.pricingPlans.nameElementTag,
                 priceNameElement,
             )
@@ -181,14 +181,14 @@ class AppLandingPageTrick implements BaseTrick {
         appURL: string,
     ): Promise<ShopifyPricingPlan> {
         const { planName, price } = await this.derivePlanPriceName(
-            await this.puppetMaster.xpathElement(
+            await this.puppetMaster.selectElement(
                 this.elements.pricingPlans.priceNameElementTag,
                 planElement,
             ),
         );
         const planOffer = this.deriveCleanPlanOffer(
             await (
-                await this.puppetMaster.xpathElement(
+                await this.puppetMaster.selectElement(
                     this.elements.pricingPlans.planOfferElementTag,
                     planElement,
                 )
@@ -204,7 +204,7 @@ class AppLandingPageTrick implements BaseTrick {
         );
     }
     async extractPricingPlans(appURL: string): Promise<ShopifyPricingPlan[]> {
-        const planElements = await this.puppetMaster.xpathElements(
+        const planElements = await this.puppetMaster.selectElements(
             this.elements.pricingPlans.planElement,
         );
         return await Promise.all(
