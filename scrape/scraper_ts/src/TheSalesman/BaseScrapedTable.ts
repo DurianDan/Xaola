@@ -5,10 +5,10 @@ class BaseScrapedTable {
 
     constructor(
         public id: number | null = null,
-        public createdOn: Date,
+        public scrapedAt: Date,
     ) {
         this.id = id;
-        this.createdOn = createdOn;
+        this.scrapedAt = scrapedAt;
     }
 
     /**

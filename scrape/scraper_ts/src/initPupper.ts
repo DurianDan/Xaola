@@ -5,5 +5,6 @@ export default async function initPuppet(
 ): Promise<{ page: Page; browser: Browser }> {
     const browser: Browser = await puppeteer.launch(launchOptions);
     const page: Page = await browser.pages().then((e) => e[0]);
+    // const page = await browser.newPage();
     return { browser, page };
 }

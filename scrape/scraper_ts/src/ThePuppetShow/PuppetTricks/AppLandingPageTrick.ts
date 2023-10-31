@@ -214,7 +214,7 @@ class AppLandingPageTrick implements BaseTrick {
         );
     }
     async accessPage(): Promise<boolean> {
-        this.puppetMaster.goto(this.urls.appLandingPage.toString());
+        await this.puppetMaster.goto(this.urls.appLandingPage.toString());
         return true;
     }
     async extractDerive(): Promise<ScrapeResult> {
