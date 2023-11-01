@@ -15,7 +15,7 @@ import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 
 class FancyCategoryTrick implements BaseTrick {
     public urls: ShopifyPageURL;
-    public elements = ElementsCfg.shopifyAppElements;
+    public elements = ElementsCfg.fancyCategoryElements;
     constructor(
         partnerUrlId: string,
         public currentPageIdx: number = 1,

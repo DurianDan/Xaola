@@ -4,6 +4,26 @@ const shopifyCommonElements = {
     topNavbarElement: '//*[@id="AppStoreNavbar"]/nav',
 };
 
+const fancyCategoryElements = {
+    videoTagsElements: '//video',
+    appCateogryInfo: {
+        positions: '//div[@data-app-card-and-ad-wrap]',
+        innerTagASelector: "a",
+        innerAvgReviewSelector: 'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
+        innerReviewCountSelector: 'div[data-app-card-and-ad-wrap] span:nth-child(4)',
+        innerAppNameSelector: 'div > div > div > div:nth-child(1)'
+        /* 
+        $x('//div[@data-app-card-and-ad-wrap]/div/div/div/div[1]')[6].textContent.trim()
+        'Linkpop'
+        $x('//div[@data-app-card-and-ad-wrap]//span[4]')[6].textContent.trim()
+        '56 total reviews'
+        $x('//div[@data-app-card-and-ad-wrap]/div/div/div[1]/div[2]/span[1]')[6].textContent.trim()
+        '3.4\n               out of 5 stars'
+ */
+
+    }
+}
+
 const shopifyReviewsElements = {
     reviewContentElements:
         '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[2]',
@@ -98,6 +118,7 @@ type XpathPageConfig =
     | typeof shopifySolutionElements
     | typeof sitemapElements
     | typeof shopifyCategoryElements;
+    | typeof fancyCategoryElements
 
 export {
     shopifyCommonElements,
@@ -107,5 +128,6 @@ export {
     shopifySolutionElements,
     sitemapElements,
     shopifyCategoryElements,
+    fancyCategoryElements,
     XpathPageConfig,
 };
