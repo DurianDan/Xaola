@@ -9,7 +9,6 @@ import {
     ShopifyAppDescriptionLog,
     ShopifyPricingPlan,
 } from '../../TheSalesman/ScrapedTable';
-import { PartnerUrlConfig } from '../../TheSalesman/AudienceProfile';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
