@@ -42,6 +42,24 @@ class FancyCategoryTrick implements BaseTrick {
         await this.puppetMaster.goto(this.urls.appCategoryPage.toString());
         return true;
     }
+    async extractAppRankElements(): Promise<{element:ScrapedElement, rank: number}[]>{
+        const elements = await this.puppetMaster.selectElements(
+            this.elements.appCateogryInfo.positions,
+            undefined, "AppsRanksElements"
+        )
+        return elements.map((value, index) =>{
+            return {
+                element: value,
+                rank: index
+            }
+        })
+    }
+    async extractAppInfoInsideRankElement(element: ScrapedElement): ShopifyAppDetail{
+        // this.elements.appCateogryInfo.innerTagASelector
+        // this.elements.appCateogryInfo.innerAvgReviewSelector
+        // this.elements.appCateogryInfo.innerReviewCountSelector
+        // this.elements.appCateogryInfo.innerAppNameSelector
+    }
     async extractDerive(): Promise<ScrapeResult> {
         ...
     }
