@@ -9,7 +9,7 @@ const fancyCategoryElements = {
     appCateogryInfo: {
         positions: '//div[@data-app-card-and-ad-wrap]',
         innerTagASelector: "a",
-        innerAvgReviewSelector: 'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
+        innerAvgRatingSelector: 'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
         innerReviewCountSelector: 'div[data-app-card-and-ad-wrap] span:nth-child(4)',
         innerAppNameSelector: 'div > div > div > div:nth-child(1)'
         /* 

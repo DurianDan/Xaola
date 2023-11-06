@@ -8,6 +8,7 @@ import {
     ShopifyAppDetail,
     ShopifyAppDescriptionLog,
     ShopifyPricingPlan,
+    HttpUrl,
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
@@ -54,9 +55,27 @@ class FancyCategoryTrick implements BaseTrick {
             }
         })
     }
+    async extractAppLinkNameFromRankElement(element: ScrapedElement): Promise<{appName: string, appLink: HttpUrl}>{
+        const innerTagA = await this.puppetMaster.selectElement(
+            this.elements.appCateogryInfo.innerTagASelector,
+            element
+        )
+        const {href: appLink, text: appName} = await innerTagA.hrefAndText();
+        return {appLink, appName: appName.trim()}
+    }
+    async extractAppAvgRatingFromRankElement(element: ScrapedElement): Promise<number>{
+        const ratingElement = await this.puppetMaster.selectElement(
+            this.elements.appCateogryInfo.innerAvgRatingSelector,
+            element
+        )
+        const ratingString = (await ratingElement.text()).trim();
+        // '3.4\n               out of 5 stars'
+        return Number(ratingString.split("\n")[0])
+    }
     async extractAppInfoInsideRankElement(element: ScrapedElement): ShopifyAppDetail{
-        // this.elements.appCateogryInfo.innerTagASelector
-        // this.elements.appCateogryInfo.innerAvgReviewSelector
+        const {appLink, appName} = await this.extractAppLinkNameFromRankElement(element)
+        const avgRating = await this.extractAppAvgRatingFromRankElement(element)
+        
         // this.elements.appCateogryInfo.innerReviewCountSelector
         // this.elements.appCateogryInfo.innerAppNameSelector
     }
