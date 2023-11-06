@@ -3,10 +3,10 @@ import { ElementHandle, JSHandle } from 'puppeteer';
 class ScrapedElement {
     constructor(
         public element: ElementHandle,
-        public selector: string
+        public selector: string,
     ) {
         this.element = element;
-        this.selector = selector
+        this.selector = selector;
     }
     async getProperty(propertyName: string): Promise<string> {
         const valueHandle: JSHandle =

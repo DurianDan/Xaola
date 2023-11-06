@@ -14,8 +14,8 @@ const scrapeSitemapTimeLimit = 1000 * 60 * 60;
 
 beforeAll(async () => {
     const { page, browser } = await initPuppet(defaultLaunchOptions);
-    const watcher = new ConsoleWatcher({})
-    puppetMaster = new PuppetMaster(page, browser, {logNullElement: true});
+    const watcher = new ConsoleWatcher({});
+    puppetMaster = new PuppetMaster(page, browser, { logNullElement: true });
     sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher);
 }, commonTimeLimit);
 

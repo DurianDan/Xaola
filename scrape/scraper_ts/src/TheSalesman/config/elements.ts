@@ -8,9 +8,11 @@ const fancyCategoryElements = {
     videoTagsElements: '//video',
     appCateogryInfo: {
         positions: '//div[@data-app-card-and-ad-wrap]',
-        innerTagASelector: "a",
-        innerAvgRatingSelector: 'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
-        innerReviewCountSelector: 'div[data-app-card-and-ad-wrap] span:nth-child(4)',
+        innerTagASelector: 'a',
+        innerAvgRatingSelector:
+            'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
+        innerReviewCountSelector:
+            'div[data-app-card-and-ad-wrap] span:nth-child(4)',
         // innerAppNameSelector: 'div > div > div > div:nth-child(1)'
         /* 
         $x('//div[@data-app-card-and-ad-wrap]/div/div/div/div[1]')[6].textContent.trim()
@@ -20,9 +22,8 @@ const fancyCategoryElements = {
         $x('//div[@data-app-card-and-ad-wrap]/div/div/div[1]/div[2]/span[1]')[6].textContent.trim()
         '3.4\n               out of 5 stars'
  */
-
-    }
-}
+    },
+};
 
 const shopifyReviewsElements = {
     reviewContentElements:
@@ -118,7 +119,7 @@ type XpathPageConfig =
     | typeof shopifySolutionElements
     | typeof sitemapElements
     | typeof shopifyCategoryElements
-    | typeof fancyCategoryElements
+    | typeof fancyCategoryElements;
 
 export {
     shopifyCommonElements,

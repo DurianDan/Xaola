@@ -191,5 +191,5 @@ export {
     ShopifyCommunityUserStatsLog,
     ShopifyPricingPlan,
     HttpUrl,
-    scrapeBlocks
+    scrapeBlocks,
 };

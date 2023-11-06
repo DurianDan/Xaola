@@ -12,13 +12,13 @@ import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 
-class SitemapTrick implements BaseTrick{
+class SitemapTrick implements BaseTrick {
     public urls: ShopifyPageURL = new ShopifyPageURL({});
     public elements = ElementsCfg.sitemapElements;
     constructor(
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
-        public watcher: BaseWatcher
+        public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
@@ -55,14 +55,15 @@ class SitemapTrick implements BaseTrick{
     async extractBasicPartnerAppDetailFromPartnerElement(
         element: ScrapedElement,
     ): Promise<ScrapeResult> {
-        const allHrefTexts = await this.extractHrefTextsFromChildrenTagA(element);
+        const allHrefTexts =
+            await this.extractHrefTextsFromChildrenTagA(element);
         // First tag "a" is of the partner name and link
         const tmpPartner = new ShopifyPartner(
             null,
             new Date(),
             allHrefTexts[0].text.trim(),
             allHrefTexts[0].href,
-            );
+        );
         const tmpScrapedResult: ScrapeResult = {
             shopifyPartner: [tmpPartner],
             shopifyAppDetail: [],
@@ -77,66 +78,83 @@ class SitemapTrick implements BaseTrick{
                     hrefText.text.trim(),
                     undefined,
                     undefined,
-                    tmpPartner.shopifyPage
-                    ),
-                    );
-                }
+                    tmpPartner.shopifyPage,
+                ),
+            );
+        }
         return tmpScrapedResult;
     }
     async extractBasicCategoryInfo(): Promise<ShopifyAppCategory[]> {
         const allHrefTexts = await this.puppetMaster.allTagAHrefsTexts();
         const categoryDetails: ShopifyAppCategory[] = [];
-        for (const { href, text } of allHrefTexts){
-            if (href.startsWith(this.urls.appCategoryPrefix)){
+        for (const { href, text } of allHrefTexts) {
+            if (href.startsWith(this.urls.appCategoryPrefix)) {
                 categoryDetails.push(
-                    new ShopifyAppCategory(
-                        null, new Date(), text, null, href
-                        )
-                    )
+                    new ShopifyAppCategory(null, new Date(), text, null, href),
+                );
             }
         }
         return categoryDetails;
     }
-    updateBasicPartnerAppsDetail(
-        {shopifyAppDetail: tmpAppsDetail, shopifyPartner: tmpPartner}: ScrapeResult
-    ): void{
-        this.scrapedResults.shopifyAppDetail?.push(...tmpAppsDetail??[])
-        this.scrapedResults.shopifyPartner?.push(...tmpPartner??[])
+    updateBasicPartnerAppsDetail({
+        shopifyAppDetail: tmpAppsDetail,
+        shopifyPartner: tmpPartner,
+    }: ScrapeResult): void {
+        this.scrapedResults.shopifyAppDetail?.push(...(tmpAppsDetail ?? []));
+        this.scrapedResults.shopifyPartner?.push(...(tmpPartner ?? []));
     }
-    updateBasicCategoryInfo(
-        {shopifyAppCategory: tmpCategories}: ScrapeResult
-    ): void{
-        this.scrapedResults.shopifyAppCategory?.push(...tmpCategories??[])
+    updateBasicCategoryInfo({
+        shopifyAppCategory: tmpCategories,
+    }: ScrapeResult): void {
+        this.scrapedResults.shopifyAppCategory?.push(...(tmpCategories ?? []));
     }
     async accessPage(): Promise<boolean> {
         await this.puppetMaster.goto(this.urls.sitemap);
         return true;
     }
     async extractDerive(): Promise<ScrapeResult> {
-        const partnerElements: ScrapedElement[] = await this.scrapePartnersElements()
-        const sitemapScrapedInfo: ScrapeResult = {shopifyPartner:[], shopifyAppDetail:[]}
-        for (const [idx, element] of partnerElements.entries()){
-            this.watcher.info({msg:`idx: ${idx}/${partnerElements.length} partnerElements`});
-            const {shopifyPartner, shopifyAppDetail} = await this.extractBasicPartnerAppDetailFromPartnerElement(element)
-            sitemapScrapedInfo.shopifyPartner?.push(...shopifyPartner??[])
-            sitemapScrapedInfo.shopifyAppDetail?.push(...shopifyAppDetail??[])
+        const partnerElements: ScrapedElement[] =
+            await this.scrapePartnersElements();
+        const sitemapScrapedInfo: ScrapeResult = {
+            shopifyPartner: [],
+            shopifyAppDetail: [],
+        };
+        for (const [idx, element] of partnerElements.entries()) {
+            this.watcher.info({
+                msg: `idx: ${idx}/${partnerElements.length} partnerElements`,
+            });
+            const { shopifyPartner, shopifyAppDetail } =
+                await this.extractBasicPartnerAppDetailFromPartnerElement(
+                    element,
+                );
+            sitemapScrapedInfo.shopifyPartner?.push(...(shopifyPartner ?? []));
+            sitemapScrapedInfo.shopifyAppDetail?.push(
+                ...(shopifyAppDetail ?? []),
+            );
         }
-        const categoryInfo = await this.extractBasicCategoryInfo()
-        sitemapScrapedInfo.shopifyAppCategory = categoryInfo
-        return sitemapScrapedInfo
+        const categoryInfo = await this.extractBasicCategoryInfo();
+        sitemapScrapedInfo.shopifyAppCategory = categoryInfo;
+        return sitemapScrapedInfo;
     }
     updateScrapeResult(scrapeResult: ScrapeResult): void {
-        this.scrapedResults = mergeScrapeResult([scrapeResult, this.scrapedResults])    
+        this.scrapedResults = mergeScrapeResult([
+            scrapeResult,
+            this.scrapedResults,
+        ]);
     }
     async scrape(): Promise<ScrapeResult> {
-        this.watcher.info({msg:`Accessing ${this.urls.sitemap}`})
+        this.watcher.info({ msg: `Accessing ${this.urls.sitemap}` });
         await this.accessPage();
-        this.watcher.info({msg:`Extracting basic partner apps info...`})
+        this.watcher.info({ msg: `Extracting basic partner apps info...` });
         const scrapeResult = await this.extractDerive();
-        this.watcher.info({msg:`${this.scrapedResults.shopifyPartner?.length} Partners`})
-        this.watcher.info({msg:`${this.scrapedResults.shopifyAppDetail?.length} Apps`})
+        this.watcher.info({
+            msg: `${this.scrapedResults.shopifyPartner?.length} Partners`,
+        });
+        this.watcher.info({
+            msg: `${this.scrapedResults.shopifyAppDetail?.length} Apps`,
+        });
         this.updateScrapeResult(scrapeResult);
-        return this.scrapedResults
+        return this.scrapedResults;
     }
 }
 

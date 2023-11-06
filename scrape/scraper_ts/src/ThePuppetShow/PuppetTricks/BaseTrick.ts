@@ -14,13 +14,13 @@ export default interface BaseTrick {
      * Extract Strings from Elements, and derive info from theme
      * @returns {any}: ScrapeResult information everything extracted
      */
-    extractDerive(): Promise<ScrapeResult>
+    extractDerive(): Promise<ScrapeResult>;
     /**
      * Takes in a ScrapeResult object, and update to the current `this.scrapeResult`. It is meant to be used after `this.extractDerive`
      * @param {any} scrapeResult:ScrapeResult
      * @returns {any}
      */
-    updateScrapeResult(scrapeResult: ScrapeResult): void
+    updateScrapeResult(scrapeResult: ScrapeResult): void;
     /**
      * Execute all necessary operations to scrape the loaded URL
      * @returns {ScrapeResult}

@@ -6,7 +6,7 @@ type Miliseconds = number;
 type PSelector = string;
 type HttpUrl = string;
 
-interface PuppetMasterConfig{
+interface PuppetMasterConfig {
     logNullElement: boolean;
     defaultGotoOptions?: GoToOptions;
     defaultViewport?: Viewport;
@@ -21,31 +21,35 @@ export default class PuppetMaster {
     ) {
         this.browser = browser;
         this.page = page;
-        this.watcher = watcher
-        this.config = this.initConfig(config)
+        this.watcher = watcher;
+        this.config = this.initConfig(config);
     }
     /**
      * Check for undefined/missing fields in config, an replace theme with default values
      * @param {any} config:PuppetMasterConfig to be checked
      * @returns {any}
      */
-    initConfig(config: PuppetMasterConfig): PuppetMasterConfig{
-        config.defaultGotoOptions = config.defaultGotoOptions??{ waitUntil: 'networkidle2' }
-        config.defaultViewport = config.defaultViewport??{
+    initConfig(config: PuppetMasterConfig): PuppetMasterConfig {
+        config.defaultGotoOptions = config.defaultGotoOptions ?? {
+            waitUntil: 'networkidle2',
+        };
+        config.defaultViewport = config.defaultViewport ?? {
             width: 1280,
             height: 800,
             deviceScaleFactor: 1,
-        }
-        return config
+        };
+        return config;
     }
-    logErrorNullElement(element: ScrapedElement, elementName?: string):ScrapedElement{
-        if (this.config.logNullElement && elementName){
-            this.watcher?.checkError(
-                element.element,
-                {msg: `Cant find ${elementName} element, at xpath: ${element.selector}`}
-                )
+    logErrorNullElement(
+        element: ScrapedElement,
+        elementName?: string,
+    ): ScrapedElement {
+        if (this.config.logNullElement && elementName) {
+            this.watcher?.checkError(element.element, {
+                msg: `Cant find ${elementName} element, at xpath: ${element.selector}`,
+            });
         }
-        return element
+        return element;
     }
     /**
      * Delay whole programm for miliseconds,
@@ -59,7 +63,10 @@ export default class PuppetMaster {
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
         await Promise.all([
             this.page.waitForNavigation(),
-            this.page?.goto(url, customGotoOptions ?? this.config.defaultGotoOptions),
+            this.page?.goto(
+                url,
+                customGotoOptions ?? this.config.defaultGotoOptions,
+            ),
         ]);
     }
     checkPage(): Page {
@@ -77,32 +84,34 @@ export default class PuppetMaster {
      * @returns {any}
      */
     async selectElements(
-        selector: PSelector|XPathExpression,
+        selector: PSelector | XPathExpression,
         parentElement?: ScrapedElement,
-        elementName?: string
+        elementName?: string,
     ): Promise<ScrapedElement[]> {
         const elements = parentElement
             ? await parentElement.element.$$(selector as string)
             : await this.checkPage().$x(selector as string);
 
-        const scrapedElements = elements.map(
-            (ele) => this.logErrorNullElement(
+        const scrapedElements = elements.map((ele) =>
+            this.logErrorNullElement(
                 new ScrapedElement(ele as ElementHandle, selector as string),
-                elementName
-                ),
+                elementName,
+            ),
         );
         return scrapedElements;
     }
     async selectElement(
-        selector: PSelector|XPathExpression,
+        selector: PSelector | XPathExpression,
         parentElement?: ScrapedElement,
-        elementName: string = ""
-        ): Promise<ScrapedElement> {
-            const elements = await this.selectElements(
-                selector, parentElement, elementName
-            );
+        elementName: string = '',
+    ): Promise<ScrapedElement> {
+        const elements = await this.selectElements(
+            selector,
+            parentElement,
+            elementName,
+        );
         const resultElement = elements[0];
-        
+
         if (resultElement) {
             return resultElement;
         } else {
@@ -111,8 +120,8 @@ export default class PuppetMaster {
     }
     async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {
         const hrefsTexts = await this.page.$$eval('a', (as) =>
-        as.map((a) => ({
-            href: a.href,
+            as.map((a) => ({
+                href: a.href,
                 text: a.textContent as string,
             })),
         );

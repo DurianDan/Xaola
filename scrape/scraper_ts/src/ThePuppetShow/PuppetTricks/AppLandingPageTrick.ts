@@ -23,7 +23,7 @@ class AppLandingPageTrick implements BaseTrick {
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
-        this.urls = new ShopifyPageURL({appUrlId});
+        this.urls = new ShopifyPageURL({ appUrlId });
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
     }
@@ -96,10 +96,12 @@ class AppLandingPageTrick implements BaseTrick {
     }
     extractCurrentAppURL(): string {
         const currentURL = this.puppetMaster.page.url();
-        if (currentURL != this.urls.appLandingPage.toString()){
-            this.watcher.warn({msg: "Current app landing page URL is different from initial url in (config)"})
+        if (currentURL != this.urls.appLandingPage.toString()) {
+            this.watcher.warn({
+                msg: 'Current app landing page URL is different from initial url in (config)',
+            });
         }
-        return currentURL
+        return currentURL;
     }
     async extractAppDescriptionLogs(): Promise<ShopifyAppDescriptionLog> {
         const scrapedOn = new Date();
@@ -143,7 +145,9 @@ class AppLandingPageTrick implements BaseTrick {
         }
         return cleanedString;
     }
-    async additionalPriceLine(priceNameElement: ScrapedElement): Promise<string>{
+    async additionalPriceLine(
+        priceNameElement: ScrapedElement,
+    ): Promise<string> {
         const additionalPriceLineElement = (
             await this.puppetMaster.selectElements(
                 this.elements.pricingPlans.additionalPriceOptionElementTag,
@@ -151,8 +155,12 @@ class AppLandingPageTrick implements BaseTrick {
                 // like anual sub price, instead of the usual monthly sub.
             )
         )[0];
-        this.watcher.checkWarn(additionalPriceLineElement, {msg: "<No `additionalPriceLineElement`>"})
-        return additionalPriceLineElement?(await additionalPriceLineElement.text()).trim(): ""
+        this.watcher.checkWarn(additionalPriceLineElement, {
+            msg: '<No `additionalPriceLineElement`>',
+        });
+        return additionalPriceLineElement
+            ? (await additionalPriceLineElement.text()).trim()
+            : '';
     }
     async derivePlanPriceName(
         priceNameElement: ScrapedElement,
@@ -163,7 +171,8 @@ class AppLandingPageTrick implements BaseTrick {
                 priceNameElement,
             )
         ).text();
-        const additionalPriceLine = await this.additionalPriceLine(priceNameElement);
+        const additionalPriceLine =
+            await this.additionalPriceLine(priceNameElement);
         const planName = await (
             await this.puppetMaster.selectElement(
                 this.elements.pricingPlans.nameElementTag,
@@ -230,15 +239,18 @@ class AppLandingPageTrick implements BaseTrick {
             shopifyAppDetail: [appDetails],
             shopifyPricingPlan: pricingPlans,
             shopifyAppDescriptionLog: [description],
-        }
+        };
     }
     updateScrapeResult(scrapeResult: ScrapeResult): void {
-        this.scrapedResults = mergeScrapeResult([scrapeResult, this.scrapedResults])
+        this.scrapedResults = mergeScrapeResult([
+            scrapeResult,
+            this.scrapedResults,
+        ]);
     }
     async scrape(): Promise<ScrapeResult> {
         await this.accessPage();
         const informationExtracted = await this.extractDerive();
-        this.updateScrapeResult(informationExtracted)
+        this.updateScrapeResult(informationExtracted);
         return this.scrapedResults;
     }
 }
