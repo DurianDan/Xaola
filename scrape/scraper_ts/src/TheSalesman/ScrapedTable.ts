@@ -191,4 +191,5 @@ export {
     ShopifyCommunityUserStatsLog,
     ShopifyPricingPlan,
     HttpUrl,
+    scrapeBlocks
 };

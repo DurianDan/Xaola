@@ -9,10 +9,11 @@ import {
     ShopifyAppDescriptionLog,
     ShopifyPricingPlan,
     HttpUrl,
+    ShopifyCategoryRankLog,
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
-import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import { appRankFromAppDetail, mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 
 class FancyCategoryTrick implements BaseTrick {
     public urls: ShopifyPageURL;
@@ -55,7 +56,7 @@ class FancyCategoryTrick implements BaseTrick {
             }
         })
     }
-    async extractAppLinkNameFromRankElement(element: ScrapedElement): Promise<{appName: string, appLink: HttpUrl}>{
+    async extractLinkNameFromRankElement(element: ScrapedElement): Promise<{appName: string, appLink: HttpUrl}>{
         const innerTagA = await this.puppetMaster.selectElement(
             this.elements.appCateogryInfo.innerTagASelector,
             element
@@ -63,7 +64,7 @@ class FancyCategoryTrick implements BaseTrick {
         const {href: appLink, text: appName} = await innerTagA.hrefAndText();
         return {appLink, appName: appName.trim()}
     }
-    async extractAppAvgRatingFromRankElement(element: ScrapedElement): Promise<number>{
+    async extractAvgRatingFromRankElement(element: ScrapedElement): Promise<number>{
         const ratingElement = await this.puppetMaster.selectElement(
             this.elements.appCateogryInfo.innerAvgRatingSelector,
             element
@@ -72,15 +73,55 @@ class FancyCategoryTrick implements BaseTrick {
         // '3.4\n               out of 5 stars'
         return Number(ratingString.split("\n")[0])
     }
-    async extractAppInfoInsideRankElement(element: ScrapedElement): ShopifyAppDetail{
-        const {appLink, appName} = await this.extractAppLinkNameFromRankElement(element)
-        const avgRating = await this.extractAppAvgRatingFromRankElement(element)
-        
-        // this.elements.appCateogryInfo.innerReviewCountSelector
-        // this.elements.appCateogryInfo.innerAppNameSelector
+    async extractReviewCountFromRankElement(element: ScrapedElement): Promise<number>{
+        const reviewCountElement = await this.puppetMaster.selectElement(
+            this.elements.appCateogryInfo.innerReviewCountSelector,
+            element
+        )
+        // '56 total reviews'
+        const reviewCountString = await reviewCountElement.text()
+        return Number(reviewCountString.replace("total reviews","").trim())
     }
-    async extractDerive(): Promise<ScrapeResult> {
-        ...
+    async extractAppDetailFromRankElement(element: ScrapedElement): Promise<ShopifyAppDetail>{
+        const {appLink, appName} = await this.extractLinkNameFromRankElement(element)
+        const avgRating = await this.extractAvgRatingFromRankElement(element)
+        const reviewCount = await this.extractReviewCountFromRankElement(element)
+    
+        return new ShopifyAppDetail(
+            null,
+            new Date(),
+            appLink,
+            appName,
+            reviewCount,
+            avgRating)
+
+    }
+    async extractAppRankInfo({rank, element}:{rank: number, element: ScrapedElement}): Promise<{appDetail: ShopifyAppDetail, appRank: ShopifyCategoryRankLog}>{
+        const appDetail = await this.extractAppDetailFromRankElement(element);
+        return {
+            appDetail,
+            appRank: appRankFromAppDetail(
+                appDetail,
+                this.urls.appCategoryPage.toString(),
+                rank)
+        }
+    }
+    async extractDerive(): Promise<{
+        shopifyAppDetail: ShopifyAppDetail[],
+        shopifyCategoryRankLog: ShopifyCategoryRankLog[]
+    }> {
+        const appRankElements = await this.extractAppRankElements()
+        const tmpAppDetails: ShopifyAppDetail[] = [];
+        const tmpCategoryRankLogs: ShopifyCategoryRankLog[] = [];
+        await Promise.all(appRankElements.map(async (elementRank) => {
+            const {appDetail, appRank} = await this.extractAppRankInfo(elementRank)
+            tmpAppDetails.push(appDetail)
+            tmpCategoryRankLogs.push(appRank)
+        }))
+        return {
+            shopifyAppDetail: tmpAppDetails,
+            shopifyCategoryRankLog: tmpCategoryRankLogs
+        }
     }
     updateScrapeResult(scrapeResult: ScrapeResult): void {
         this.scrapedResults = mergeScrapeResult([scrapeResult, this.scrapedResults])

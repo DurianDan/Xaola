@@ -1,32 +1,66 @@
-import ScrapeResult from "./ScrapeResult";
-import pl from 'nodejs-polars';
+import ScrapeResult from './ScrapeResult';
+import {
+    HttpUrl,
+    ShopifyAppDetail,
+    ShopifyCategoryRankLog,
+    scrapeBlocks,
+} from './ScrapedTable';
 
-export function mergeScrapeResult(resultsToMerge: ScrapeResult[]): ScrapeResult{
+export function mergeScrapeResult(
+    resultsToMerge: ScrapeResult[],
+): ScrapeResult {
     const mergedResult: ScrapeResult = {
-        shopifyPartner:[],
-        shopifyAppCategory:[],
-        shopifyAppDescriptionLog:[],
-        shopifyAppDetail:[],
-        shopifyAppReviews:[],
-        shopifyCategoryRankLog:[],
-        shopifyCommunityUserStats:[],
-        shopifyCommunityUserStatsLog:[],
-        shopifyPricingPlan:[],
+        shopifyPartner: [],
+        shopifyAppCategory: [],
+        shopifyAppDescriptionLog: [],
+        shopifyAppDetail: [],
+        shopifyAppReviews: [],
+        shopifyCategoryRankLog: [],
+        shopifyCommunityUserStats: [],
+        shopifyCommunityUserStatsLog: [],
+        shopifyPricingPlan: [],
     };
-    resultsToMerge.forEach(result => {
-        mergedResult.shopifyPartner?.push(...result.shopifyPartner??[])
-        mergedResult.shopifyAppCategory?.push(...result.shopifyAppCategory??[])
-        mergedResult.shopifyAppDescriptionLog?.push(...result.shopifyAppDescriptionLog??[])
-        mergedResult.shopifyAppDetail?.push(...result.shopifyAppDetail??[])
-        mergedResult.shopifyAppReviews?.push(...result.shopifyAppReviews??[])
-        mergedResult.shopifyCategoryRankLog?.push(...result.shopifyCategoryRankLog??[])
-        mergedResult.shopifyCommunityUserStats?.push(...result.shopifyCommunityUserStats??[])
-        mergedResult.shopifyCommunityUserStatsLog?.push(...result.shopifyCommunityUserStatsLog??[])
-        mergedResult.shopifyPricingPlan?.push(...result.shopifyPricingPlan??[])
-    })
-    return mergedResult
+    resultsToMerge.forEach((result) => {
+        mergedResult.shopifyPartner?.push(...(result.shopifyPartner ?? []));
+        mergedResult.shopifyAppCategory?.push(
+            ...(result.shopifyAppCategory ?? []),
+        );
+        mergedResult.shopifyAppDescriptionLog?.push(
+            ...(result.shopifyAppDescriptionLog ?? []),
+        );
+        mergedResult.shopifyAppDetail?.push(...(result.shopifyAppDetail ?? []));
+        mergedResult.shopifyAppReviews?.push(
+            ...(result.shopifyAppReviews ?? []),
+        );
+        mergedResult.shopifyCategoryRankLog?.push(
+            ...(result.shopifyCategoryRankLog ?? []),
+        );
+        mergedResult.shopifyCommunityUserStats?.push(
+            ...(result.shopifyCommunityUserStats ?? []),
+        );
+        mergedResult.shopifyCommunityUserStatsLog?.push(
+            ...(result.shopifyCommunityUserStatsLog ?? []),
+        );
+        mergedResult.shopifyPricingPlan?.push(
+            ...(result.shopifyPricingPlan ?? []),
+        );
+    });
+    return mergedResult;
 }
 
+export function appRankFromAppDetail(
+    appDetail: ShopifyAppDetail,
+    categoryId: number | scrapeBlocks | HttpUrl,
+    rank: number,
+): ShopifyCategoryRankLog {
+    return new ShopifyCategoryRankLog(
+        null,
+        appDetail.scrapedAt,
+        categoryId,
+        rank,
+        appDetail.id ?? appDetail.shopifyPage,
+    );
+}
 // interface ScrapedResultFilePath{
 //     shopifyPartner: string,
 //     shopifyAppCategory: string,
