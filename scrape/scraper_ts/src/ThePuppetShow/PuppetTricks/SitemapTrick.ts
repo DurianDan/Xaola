@@ -109,6 +109,7 @@ class SitemapTrick implements BaseTrick {
         this.scrapedResults.shopifyAppCategory?.push(...(tmpCategories ?? []));
     }
     async accessPage(): Promise<boolean> {
+        this.watcher.info({msg:"Loading: "+this.urls.sitemap})
         await this.puppetMaster.goto(this.urls.sitemap);
         return true;
     }

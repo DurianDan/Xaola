@@ -6,12 +6,7 @@ class ConsoleWatcher implements BaseWatcher {
         this.config = config;
     }
     generateMessage(watchThings: WatchThings): string {
-        let prefix = watchThings.prefix ?? this.config.prefix;
-        prefix = prefix ? prefix : '';
-        let suffix = watchThings.suffix ?? this.config.suffix;
-        suffix = suffix ? suffix : '';
-        let msg = watchThings.msg ?? '';
-        return prefix + msg + suffix + watchThings.err ?? '';
+        return watchThings.msg??'' + (watchThings.err ?? '');
     }
     log(msg: string): void {
         console.log(msg);

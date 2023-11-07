@@ -6,8 +6,6 @@ interface WatchConfig {
 interface WatchThings {
     msg: string;
     err?: Error;
-    suffix?: string;
-    prefix?: string;
 }
 interface BaseWatcher {
     config: WatchConfig;

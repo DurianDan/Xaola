@@ -19,17 +19,15 @@ class FancyCategoryTrick implements BaseTrick {
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.fancyCategoryElements;
     constructor(
-        partnerUrlId: string,
-        public currentPageIdx: number = 1,
+        categoryUrlId: string,
         public puppetMaster: PuppetMaster,
         public scrapedResults: ScrapeResult,
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
-        this.urls = new ShopifyPageURL({ partnerUrlId });
+        this.urls = new ShopifyPageURL({ categoryUrlId });
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
-        this.currentPageIdx = currentPageIdx;
     }
     checkScrapedResults(result: ScrapeResult): ScrapeResult {
         this.watcher.checkInfo(result, {
@@ -40,6 +38,7 @@ class FancyCategoryTrick implements BaseTrick {
         return result;
     }
     async accessPage(): Promise<boolean> {
+        this.watcher.info({msg:"Loading: "+this.urls.appCategoryPage.toString()})
         await this.puppetMaster.goto(this.urls.appCategoryPage.toString());
         return true;
     }
@@ -133,20 +132,17 @@ class FancyCategoryTrick implements BaseTrick {
         shopifyCategoryRankLog: ShopifyCategoryRankLog[];
     }> {
         const appRankElements = await this.extractAppRankElements();
-        const tmpAppDetails: ShopifyAppDetail[] = [];
-        const tmpCategoryRankLogs: ShopifyCategoryRankLog[] = [];
+        const shopifyAppDetail: ShopifyAppDetail[] = [];
+        const shopifyCategoryRankLog: ShopifyCategoryRankLog[] = [];
         await Promise.all(
             appRankElements.map(async (elementRank) => {
                 const { appDetail, appRank } =
                     await this.extractAppRankInfo(elementRank);
-                tmpAppDetails.push(appDetail);
-                tmpCategoryRankLogs.push(appRank);
+                shopifyAppDetail.push(appDetail);
+                shopifyCategoryRankLog.push(appRank);
             }),
         );
-        return {
-            shopifyAppDetail: tmpAppDetails,
-            shopifyCategoryRankLog: tmpCategoryRankLogs,
-        };
+        return {shopifyAppDetail, shopifyCategoryRankLog};
     }
     updateScrapeResult(scrapeResult: ScrapeResult): void {
         this.scrapedResults = mergeScrapeResult([
