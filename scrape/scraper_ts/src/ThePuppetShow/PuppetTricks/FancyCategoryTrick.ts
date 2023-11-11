@@ -16,6 +16,7 @@ import {
 } from '../../TheSalesman/ScrapeResultUtilities';
 
 class FancyCategoryTrick implements BaseTrick {
+
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.fancyCategoryElements;
     constructor(
@@ -65,7 +66,10 @@ class FancyCategoryTrick implements BaseTrick {
             element,
         );
         const { href: appLink, text: appName } = await innerTagA.hrefAndText();
-        return { appLink, appName: appName.trim() };
+        return {
+            appLink: appLink.split("?")[0],
+            appName: appName.trim()
+        };
     }
     async extractAvgRatingFromRankElement(
         element: ScrapedElement,
