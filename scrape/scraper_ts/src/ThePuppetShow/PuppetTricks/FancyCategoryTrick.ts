@@ -16,7 +16,6 @@ import {
 } from '../../TheSalesman/ScrapeResultUtilities';
 
 class FancyCategoryTrick implements BaseTrick {
-
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.fancyCategoryElements;
     constructor(
@@ -39,7 +38,9 @@ class FancyCategoryTrick implements BaseTrick {
         return result;
     }
     async accessPage(): Promise<boolean> {
-        this.watcher.info({msg:"Loading: "+this.urls.appCategoryPage.toString()})
+        this.watcher.info({
+            msg: 'Loading: ' + this.urls.appCategoryPage.toString(),
+        });
         await this.puppetMaster.goto(this.urls.appCategoryPage.toString());
         return true;
     }
@@ -67,8 +68,8 @@ class FancyCategoryTrick implements BaseTrick {
         );
         const { href: appLink, text: appName } = await innerTagA.hrefAndText();
         return {
-            appLink: appLink.split("?")[0],
-            appName: appName.trim()
+            appLink: appLink.split('?')[0],
+            appName: appName.trim(),
         };
     }
     async extractAvgRatingFromRankElement(
@@ -146,7 +147,7 @@ class FancyCategoryTrick implements BaseTrick {
                 shopifyCategoryRankLog.push(appRank);
             }),
         );
-        return {shopifyAppDetail, shopifyCategoryRankLog};
+        return { shopifyAppDetail, shopifyCategoryRankLog };
     }
     updateScrapeResult(scrapeResult: ScrapeResult): void {
         this.scrapedResults = mergeScrapeResult([

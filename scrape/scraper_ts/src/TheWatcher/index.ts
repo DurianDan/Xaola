@@ -6,7 +6,7 @@ class ConsoleWatcher implements BaseWatcher {
         this.config = config;
     }
     generateMessage(watchThings: WatchThings): string {
-        return watchThings.msg??'' + (watchThings.err ?? '');
+        return watchThings.msg ?? '' + (watchThings.err ?? '');
     }
     log(msg: string): void {
         console.log(msg);
