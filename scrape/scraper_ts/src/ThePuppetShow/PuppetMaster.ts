@@ -61,6 +61,7 @@ export default class PuppetMaster {
         });
     }
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
+        this.page.setDefaultNavigationTimeout(0)
         await Promise.all([
             this.page.waitForNavigation(),
             this.page?.goto(

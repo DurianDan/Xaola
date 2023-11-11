@@ -13,15 +13,6 @@ const fancyCategoryElements = {
             'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
         innerReviewCountSelector:
             'div[data-app-card-and-ad-wrap] span:nth-child(4)',
-        // innerAppNameSelector: 'div > div > div > div:nth-child(1)'
-        /* 
-        $x('//div[@data-app-card-and-ad-wrap]/div/div/div/div[1]')[6].textContent.trim()
-        'Linkpop'
-        $x('//div[@data-app-card-and-ad-wrap]//span[4]')[6].textContent.trim()
-        '56 total reviews'
-        $x('//div[@data-app-card-and-ad-wrap]/div/div/div[1]/div[2]/span[1]')[6].textContent.trim()
-        '3.4\n               out of 5 stars'
- */
     },
 };
 

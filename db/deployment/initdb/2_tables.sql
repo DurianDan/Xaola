@@ -22,7 +22,7 @@ CREATE TABLE scraped.shopify_app_category (
 );
 
 -- Create shopfy_app_info in scraped
-CREATE TABLE scraped.shopfy_app_info (
+CREATE TABLE scraped.shopify_app_info (
     id SERIAL PRIMARY KEY,
     shopify_page TEXT NOT NULL,
     app_name VARCHAR(255),
