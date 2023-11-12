@@ -17,6 +17,8 @@ const fancyCategoryElements = {
 };
 
 const shopifyReviewsElements = {
+    reviewCountElement: '//*[@id="arp-reviews"]/div/div[2]/div[1]/h1/span[3]',
+    avgReviewElement: '//div[@class="app-reviews-metrics"]/div[2]/div[1]',
     reviewContentElements:
         '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[2]',
     ratingElements:
