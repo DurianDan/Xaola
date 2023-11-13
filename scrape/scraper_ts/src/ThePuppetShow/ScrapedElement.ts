@@ -1,4 +1,4 @@
-import { ElementHandle, JSHandle } from 'puppeteer';
+import { ClickOptions, ElementHandle, JSHandle } from 'puppeteer';
 
 class ScrapedElement {
     constructor(
@@ -31,6 +31,9 @@ class ScrapedElement {
         const href = await this.href();
         const text = await this.text();
         return { href, text };
+    }
+    async click(option?: ClickOptions): Promise<void>{
+        await this.element.click(option);
     }
 }
 
