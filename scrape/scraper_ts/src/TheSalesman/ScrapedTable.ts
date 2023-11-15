@@ -52,7 +52,7 @@ class ShopifyAppDetail extends BaseScrapedTable {
         this.partnerId = partnerId;
     }
 }
-class ShopifyAppReviews extends BaseScrapedTable {
+class ShopifyAppReview extends BaseScrapedTable {
     _eqFields: string[] = ['reviewer', 'location', 'content'];
 
     constructor(
@@ -185,7 +185,7 @@ export {
     ShopifyAppCategory,
     ShopifyAppDescriptionLog,
     ShopifyAppDetail,
-    ShopifyAppReviews,
+    ShopifyAppReview,
     ShopifyCategoryRankLog,
     ShopifyCommunityUserStats,
     ShopifyCommunityUserStatsLog,
