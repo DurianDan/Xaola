@@ -45,6 +45,17 @@ class AppReviewsTrick implements BaseTrick {
     public reviewPages: HttpUrl[];
     public showMoreButtonText: string;
     public elements = ElementsCfg.shopifyReviewsElements;
+    private approxDaysOnAppIndicators: [string, number][] = [ 
+        ["month", 30],
+        ["hour", 1/24],
+        ["week", 7],
+        ["day", 1],
+        ["year", 365.5],
+        ["minute", 1/60],
+        ["about", 0.9],
+        ["almost", 0.75],
+        ["over", 1.2]
+    ]
     constructor(
         config: AppReviewsConfig,
         public puppetMaster: PuppetMaster,
@@ -140,14 +151,78 @@ class AppReviewsTrick implements BaseTrick {
         }
     }
     async extractReviewElements(): Promise<ScrapedElement[]> {
-        return await this.puppetMaster.selectElements(
-            this.elements.
+        const foundFancyReviews = await this.puppetMaster.selectElements(
+            this.elements.reviewSectionElements.fancy
+        )
+        const foundNormalReviews = await this.puppetMaster.selectElements(
+            this.elements.reviewSectionElements.normal
+        )
+        if(foundFancyReviews.length > foundNormalReviews.length){
+            return foundFancyReviews
+        }else{
+            return foundNormalReviews
+        }
+    }
+    async extractApproxDaysOnApp(daysOnAppLine?: ScrapedElement): Promise<undefined|number>{
+        if (daysOnAppLine){
+            const daysOnAppString = (await (await daysOnAppLine).text()).toLowerCase()
+            const rawPeriod = Number(daysOnAppString.match(/\d+/g)??[0]);
+            for (const [approxIndicator, conversionRate] of this.approxDaysOnAppIndicators){
+                daysOnAppString.includes(approxIndicator) ? rawPeriod*conversionRate:undefined
+            }
+            return rawPeriod
+        }else{
+            return undefined
+        }
+    }
+    async extractDeriveRating(ratingElement?: ScrapedElement): Promise<number|undefined>{
+        if (ratingElement){
+            const ratingLine = (await ratingElement.getProperty("aria-label")).trim() // 3 out of 5 stars
+            return Number(ratingLine.slice(0,1))
+        }else{
+            return undefined
+        }
+    }
+    async extractReviewInfo({element, pageNum: pageNum}:{element: ScrapedElement, pageNum: number}): Promise<ShopifyAppReview>{
+        const innerSelector = this.elements.reviewSectionElements.innerElementsSelectors
+        const quickSelect = async (selector: string) => {
+            return await this.puppetMaster.selectElement(selector, element)
+        }
+        const storeName = await quickSelect(innerSelector.storeName)
+        const storeLocation = await quickSelect(innerSelector.storeLocation)
+        const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine)
+        const content = await quickSelect(innerSelector.content)
+        const ratingElement = await quickSelect(innerSelector.rating)
+        return new ShopifyAppReview(
+            null,
+            new Date(),
+            this.urls.appLandingPage.toString(),
+            pageNum,
+            storeName?(await storeName.text()).trim():undefined,
+            storeLocation?(await storeLocation.text()).trim():undefined,
+            content?(await content.text()).trim():undefined,
+            await this.extractApproxDaysOnApp(daysOnApp),
+            await this.extractDeriveRating(ratingElement),
         )
     }
-    async extractReviewsInPage(): Promise<ShopifyAppReview[]> {
-        
+    async extractReviewsInPage(pageNum: number): Promise<ShopifyAppReview[]> {
+        const reviewElements = await this.extractReviewElements()
+        let reviews: ShopifyAppReview[] = []
+        for (const element of reviewElements){
+            const tmpExtractedReview = await this.extractReviewInfo(
+                {element, pageNum}
+                )
+            reviews.push(tmpExtractedReview)
+        }
+        return reviews
     }
-    extractDerive(): Promise<ScrapeResult>;
+    async extractDerive(): Promise<{
+        shopifyAppReviews: ShopifyAppReview[],
+        shopifyAppDetail: ShopifyAppDetail[]
+    }>{
+        const tmpScrapedResult = {}
+
+    }
     updateScrapeResult(scrapeResult: ScrapeResult): void;
     scrape(): Promise<ScrapeResult>;
 }

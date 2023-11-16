@@ -19,26 +19,23 @@ const fancyCategoryElements = {
 const shopifyReviewsElements = {
     reviewCountElement: '//*[@id="arp-reviews"]/div/div[2]/div[1]/h1/span[3]',
     avgReviewElement: '//div[@class="app-reviews-metrics"]/div[2]/div[1]',
-    appNameElement: '//*[@id="arp-reviews"]/div/div[2]/div[1]/h1/span[1]/a/span',
-    
-
-    reviewContentElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[2]',
-    ratingElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[1]/div[1]',
-    reviewDateElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[1]/div[1]/div[2]',
-    reviewerElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]/div[2]',
-    showmoreButtonElement: '//button',
-    alteredReviewContentElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]/div[1]/div[2]',
-    alteredRatingElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]/div[1]/div[1]/div[1]',
-    alteredReviewDateElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]/div[1]/div[1]/div[2]',
-    alteredReviewerElements:
-        '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]/div[2]',
+    appNameElement:
+        '//*[@id="arp-reviews"]/div/div[2]/div[1]/h1/span[1]/a/span',
+    reviewSectionElements: {
+        fancy: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]',
+        normal: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]',
+        innerElementsSelectors: {
+            storeName: 'div:first-child > div:nth-child(2) > div:first-child',
+            storeLocation:
+                'div:first-child > div:nth-child(2) > div:nth-child(2)',
+            content: 'div:first-child > div:first-child > div:nth-child(2)',
+            DaysOnAppLine:
+                'div:first-child > div:nth-child(2) > div:nth-child(3)',
+            rating: 'div:first-child > div:first-child > div:first-child > div:first-child',
+            datePosted:
+                'div:first-child > div:first-child > div:first-child > div:nth-child(2)',
+        },
+    },
 };
 
 const shopifyAppElements = {

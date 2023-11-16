@@ -21,7 +21,7 @@ CREATE TABLE scraped.shopify_app_category (
     FOREIGN KEY (parent_category_id) REFERENCES scraped.shopify_app_category(id)
 );
 
--- Create shopfy_app_info in scraped
+-- Create shopify_app_info in scraped
 CREATE TABLE scraped.shopify_app_info (
     id SERIAL PRIMARY KEY,
     shopify_page TEXT NOT NULL,
@@ -39,14 +39,14 @@ CREATE TABLE scraped.shopify_app_reviews (
     id SERIAL PRIMARY KEY,
     app_id INT NOT NULL,
     last_updated_page INT NOT NULL,
-    reviewer VARCHAR(255) NOT NULL,
-    location VARCHAR(255) NOT NULL,
+    store_name VARCHAR(255) NOT NULL,
+    store_location VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    days_spent_on_app FLOAT NOT NULL,
+    approx_days_on_app FLOAT NOT NULL,
     rating INT NOT NULL,
-    review_date TIMESTAMP NOT NULL,
+    date_posted TIMESTAMP NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (app_id) REFERENCES scraped.shopfy_app_info(id)
+    FOREIGN KEY (app_id) REFERENCES scraped.shopify_app_info(id)
 );
 
 -- Create shopify_pricing_plan in scraped
@@ -57,7 +57,7 @@ CREATE TABLE scraped.shopify_pricing_plan (
     offer TEXT,
     app_id INT NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (app_id) REFERENCES scraped.shopfy_app_info(id)
+    FOREIGN KEY (app_id) REFERENCES scraped.shopify_app_info(id)
 );
 
 -- Create shopify_category_rank_log in scraped
@@ -68,7 +68,7 @@ CREATE TABLE scraped.shopify_category_rank_log (
     app_id INT NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (category_id) REFERENCES scraped.shopify_app_category(id),
-    FOREIGN KEY (app_id) REFERENCES scraped.shopfy_app_info(id)
+    FOREIGN KEY (app_id) REFERENCES scraped.shopify_app_info(id)
 );
 
 -- Create shopify_app_description in scraped
@@ -77,7 +77,7 @@ CREATE TABLE scraped.shopify_app_description_log (
     app_id INT NOT NULL,
     description TEXT,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (app_id) REFERENCES scraped.shopfy_app_info(id)
+    FOREIGN KEY (app_id) REFERENCES scraped.shopify_app_info(id)
 );
 
 

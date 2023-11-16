@@ -53,29 +53,29 @@ class ShopifyAppDetail extends BaseScrapedTable {
     }
 }
 class ShopifyAppReview extends BaseScrapedTable {
-    _eqFields: string[] = ['reviewer', 'location', 'content'];
+    _eqFields: string[] = ['storeName', 'storeLocation', 'content'];
 
     constructor(
         public id: number | null = null,
         public scrapedAt: Date,
         public appId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
         public lastUpdatedPage: number | scrapeBlocks = '<not-scraped-yet>',
-        public reviewer: string | scrapeBlocks = '<not-scraped-yet>',
-        public location: string | scrapeBlocks = '<not-scraped-yet>',
+        public storeName: string | scrapeBlocks = '<not-scraped-yet>',
+        public storeLocation: string | scrapeBlocks = '<not-scraped-yet>',
         public content: string | scrapeBlocks = '<not-scraped-yet>',
-        public daysSpentOnApp: number | scrapeBlocks = '<not-scraped-yet>',
+        public approxDaysOnApp: number | scrapeBlocks = '<not-scraped-yet>',
         public rating: number | scrapeBlocks = '<not-scraped-yet>',
-        public reviewDate: string | scrapeBlocks = '<not-scraped-yet>',
+        public datePosted: string | scrapeBlocks = '<not-scraped-yet>',
     ) {
         super(id, scrapedAt);
         this.appId = appId;
         this.lastUpdatedPage = lastUpdatedPage;
-        this.reviewer = reviewer;
-        this.location = location;
+        this.storeName = storeName;
+        this.storeLocation = storeLocation;
         this.content = content;
-        this.daysSpentOnApp = daysSpentOnApp;
+        this.approxDaysOnApp = approxDaysOnApp;
         this.rating = rating;
-        this.reviewDate = reviewDate;
+        this.datePosted = datePosted;
     }
 }
 class ShopifyPricingPlan extends BaseScrapedTable {

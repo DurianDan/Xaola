@@ -96,7 +96,10 @@ export default class PuppetMaster {
 
         const scrapedElements = elements.map((ele) =>
             this.logErrorNullElement(
-                new ScrapedElement(ele as ElementHandle, selector as string),
+                new ScrapedElement(
+                    ele as ElementHandle,
+                    selector as string
+                    ),
                 elementName,
             ),
         );
@@ -106,19 +109,13 @@ export default class PuppetMaster {
         selector: PSelector | XPathExpression,
         parentElement?: ScrapedElement,
         elementName: string = '',
-    ): Promise<ScrapedElement> {
+    ): Promise<ScrapedElement|undefined> {
         const elements = await this.selectElements(
             selector,
             parentElement,
             elementName,
         );
-        const resultElement = elements[0];
-
-        if (resultElement) {
-            return resultElement;
-        } else {
-            throw `null/undefined element: ${selector}`;
-        }
+        return elements[0];
     }
     async allTagAHrefsTexts(): Promise<{ href: HttpUrl; text: string }[]> {
         const hrefsTexts = await this.page.$$eval('a', (as) =>
