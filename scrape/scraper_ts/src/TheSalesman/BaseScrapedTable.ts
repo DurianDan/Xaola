@@ -1,4 +1,4 @@
-import { difference as arrDiff } from 'lodash';
+import { difference as arrDiff, isEmpty } from 'lodash';
 
 class BaseScrapedTable {
     public _eqFields: string[] = ['shopify_page'];
@@ -45,6 +45,20 @@ class BaseScrapedTable {
         return this._eqFields.every((field): boolean => {
             return (this as any)[field] === (this as any)[field];
         });
+    }
+
+    /**
+     * Check if the ScrapedTable is a valid object => actually contains crucial information => ready to be compared with this.isEqual()
+     * @returns {any}
+     */
+    isValid(): boolean {
+        for (const fieldName in this._eqFields){
+            const tmpValue = (this as any)[fieldName]
+            if (! tmpValue || isEmpty(tmpValue)){
+                return false;
+            }
+        }
+        return true
     }
 }
 
