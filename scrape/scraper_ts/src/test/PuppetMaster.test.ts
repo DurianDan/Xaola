@@ -35,7 +35,7 @@ test(
         const extractedNameElement = await puppetMaster.selectElement(
             githubAccountNameXpath,
         );
-        const extractedName = (await extractedNameElement.text()).trim();
+        const extractedName = (await extractedNameElement?.text())?.trim();
         expect(extractedName).toBe('Huy Vu Nguyen');
     },
     timeLimit,
@@ -63,7 +63,7 @@ test(
     '3. href()',
     async () => {
         const overViewElement = await puppetMaster.selectElement(tabsXpath);
-        expect(await overViewElement.href()).toBe(githubAccount);
+        expect(await overViewElement?.href()).toBe(githubAccount);
     },
     timeLimit,
 );
@@ -72,8 +72,7 @@ test(
     '4. hrefAndText()',
     async () => {
         const overViewElement = await puppetMaster.selectElement(tabsXpath);
-        let hrefText = await overViewElement.hrefAndText();
-        hrefText.text = hrefText.text.trim();
+        let hrefText = await overViewElement?.hrefAndText();
         expect(hrefText).toStrictEqual({
             href: githubAccount,
             text: 'Overview',
