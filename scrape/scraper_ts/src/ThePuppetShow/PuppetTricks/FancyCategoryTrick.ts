@@ -61,38 +61,49 @@ class FancyCategoryTrick implements BaseTrick {
     }
     async extractLinkNameFromRankElement(
         element: ScrapedElement,
-    ): Promise<{ appName: string; appLink: HttpUrl }> {
-        const innerTagA = await this.puppetMaster.selectElement(
-            this.elements.appCateogryInfo.innerTagASelector,
-            element,
-        );
-        const { href: appLink, text: appName } = await innerTagA.hrefAndText();
+    ): Promise<{
+        appName: string|undefined;
+        appLink: HttpUrl|undefined
+    }> {
+        const innerTagA = this.watcher.checkError(
+            await this.puppetMaster.selectElement(
+                this.elements.appCateogryInfo.innerTagASelector,
+                element),
+            {msg: "Cant find innerTagA of each App/Rank element"}
+            )
+        const { href: appLink, text: appName } = innerTagA
+                ?await innerTagA.hrefAndText()
+                :{href:undefined, text: undefined};
         return {
-            appLink: appLink.split('?')[0],
-            appName: appName.trim(),
+            appLink: appLink?.split('?')[0],
+            appName: appName?.trim(),
         };
     }
     async extractAvgRatingFromRankElement(
         element: ScrapedElement,
-    ): Promise<number> {
-        const ratingElement = await this.puppetMaster.selectElement(
-            this.elements.appCateogryInfo.innerAvgRatingSelector,
-            element,
-        );
-        const ratingString = (await ratingElement.text()).trim();
+    ): Promise<number|undefined> {
+        const ratingElement = this.watcher.checkError(
+            await this.puppetMaster.selectElement(
+                this.elements.appCateogryInfo.innerAvgRatingSelector,
+                element),
+            {msg: "Cant find ratingElement inside App/Rank Elements"}
+            );
+        const ratingString = (await ratingElement?.text())?.trim();
         // '3.4\n               out of 5 stars'
-        return Number(ratingString.split('\n')[0]);
+        return Number(ratingString?.split('\n')[0]);
     }
     async extractReviewCountFromRankElement(
         element: ScrapedElement,
     ): Promise<number> {
-        const reviewCountElement = await this.puppetMaster.selectElement(
-            this.elements.appCateogryInfo.innerReviewCountSelector,
-            element,
-        );
+        const reviewCountElement = this.watcher.checkError(
+            await this.puppetMaster.selectElement(
+                this.elements.appCateogryInfo.innerReviewCountSelector,
+                element),
+            {msg: "Cant find reviewCountElement, inside App/Rank element"}
+            );
         // '56 total reviews'
-        const reviewCountString = await reviewCountElement.text();
-        return Number(reviewCountString.replace('total reviews', '').trim());
+        const reviewCountString = await reviewCountElement?.text();
+        return Number(reviewCountString?.replace('total reviews', '').trim());
     }
     async extractAppDetailFromRankElement(
         element: ScrapedElement,

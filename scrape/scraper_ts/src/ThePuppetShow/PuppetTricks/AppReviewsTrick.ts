@@ -252,3 +252,5 @@ class AppReviewsTrick implements BaseTrick {
         return this.scrapedResults
     };
 }
+
+export {AppReviewsTrick, AppReviewsConfig};

@@ -8,6 +8,8 @@ import {
 import { ConsoleWatcher } from './TheWatcher';
 import FancyCategoryTrick from './ThePuppetShow/PuppetTricks/FancyCategoryTrick';
 import { range } from 'lodash';
+import { AppReviewsTrick } from './ThePuppetShow/PuppetTricks/AppReviewsTrick';
+import { defaultAppReviewsTrickConfig } from './TheSalesman/config/tricks';
 
 async function scrape() {
     let errorCount = 0;
@@ -25,17 +27,14 @@ async function scrape() {
                 watcher,
             );
 
-            const fancyCateTrick = new FancyCategoryTrick(
-                'selling-products',
-                puppetMaster,
-                {},
-                watcher,
-            );
-            await fancyCateTrick.accessPage();
-            const results = await fancyCateTrick.extractDerive();
-            console.log(results.shopifyAppDetail[0]);
-            sucessCount += 1;
-            console.log(`>>> Success rate: ${sucessCount / 100}`);
+            const reviewTrick = new AppReviewsTrick(
+                defaultAppReviewsTrickConfig("buy-button", 1),
+                puppetMaster, {}, watcher
+            )
+
+            const result = await reviewTrick.extractDerive();
+            console.log(result);
+            
         } catch (error) {
             console.log(error);
             errorCount += 1;
