@@ -80,21 +80,21 @@ class AppReviewsTrick implements BaseTrick {
         oldReviewsCount,
         newReviewsCount,
     }: AppReviewsConfigAutoDecideReviewsToScrape): number[] {
-        const reviewsDiff = oldReviewsCount - newReviewsCount;
+        const reviewsDiff = newReviewsCount - oldReviewsCount;
         let pagesDiff = Math.ceil(reviewsDiff / this.urls.reviewsPerPage);
-        pagesDiff = pagesDiff < 1 ? pagesDiff : 1;
+        pagesDiff = pagesDiff < 1 ? 1 : pagesDiff;
+        this.watcher.info({
+            msg: `Auto infer number of pages to scrape: ${pagesDiff}`,
+        });
         return range(1, pagesDiff + 1);
     }
     inferReviewPages(config: AppReviewsConfig): ReviewPages {
         let pageNums: number[];
         if (isWithReviewPages(config)) {
             pageNums = config.reviewPages;
-            this.watcher.info({ msg: `Using parsed pages: ${pageNums} ` });
+            this.watcher.info({ msg: `Scraping specified reviews pages: ${pageNums} ` });
         } else {
             pageNums = this.inferPagesDiff(config);
-            this.watcher.info({
-                msg: `Auto infer number of pages to scrape: ${pageNums}`,
-            });
         }
         return pageNums.map((pageNum) => ({
             url: this.urls.reviewPaginatedURL(pageNum).toString(),
@@ -122,30 +122,34 @@ class AppReviewsTrick implements BaseTrick {
         );
         return true;
     }
+
+    async extractEachAppInfoElement(
+        selector:string,
+        elementType:string
+    ): Promise<ScrapedElement|undefined>{
+        return this.watcher.checkError(
+            await this.puppetMaster.selectElement(selector),
+            { msg: `Empty App Info: \`${elementType}\`` },
+            );
+        }
+
     async extractBasicAppDetail(): Promise<ShopifyAppDetail> {
-        const appName = this.watcher.checkError(
-            await this.puppetMaster.selectElement(this.elements.appNameElement),
-            { msg: 'Empty `appName`' },
-        );
-        const avgRating = this.watcher.checkError(
-            await this.puppetMaster.selectElement(
-                this.elements.avgReviewElement,
-            ),
-            { msg: 'Empty `avgRating`' },
-        );
-        const reviewCountElement = this.watcher.checkError(
-            await this.puppetMaster.selectElement(
-                this.elements.reviewCountElement,
-            ),
-            { msg: 'Empty `reviewCount`' },
-        );
-        const reviewCount = reviewCountElement
-            ? Number((await reviewCountElement.text()).replace(',', ''))
-            : undefined;
+        const appName = await this.extractEachAppInfoElement(
+            this.elements.appNameElement,"appName");
+        const avgRating = await this.extractEachAppInfoElement(
+            this.elements.avgReviewElement, "avgRating");
+        const reviewCountElement = await this.extractEachAppInfoElement(
+            this.elements.reviewCountElement,"reviewCount");
+            
+        const reviewCount = Number((
+                await reviewCountElement?.text())
+            ?.replace(',', '') // remove delimiter of big amount of reviews. E.g.: '1,050 reviews'
+            ?.split(" review")[0].trim() // remove the `reivews` or `review` substring.
+        )
         return new ShopifyAppDetail(
             null,
             new Date(),
-            this.puppetMaster.page.url(),
+            this.urls.appLandingPage.toString(),
             appName ? await appName.text() : undefined,
             reviewCount,
             avgRating ? Number(await avgRating.text()) : undefined,
@@ -220,9 +224,9 @@ class AppReviewsTrick implements BaseTrick {
             this.elements.reviewSectionElements.innerElementsSelectors;
         const quickSelect = async (selector: string) => {
             return await this.puppetMaster.selectElement(selector, element);
-        };
+                    };
         const storeName = await quickSelect(innerSelector.storeName);
-        const storeLocation = await quickSelect(innerSelector.storeLocation);
+                const storeLocation = await quickSelect(innerSelector.storeLocation);
         const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine);
         const content = await quickSelect(innerSelector.content);
         const ratingElement = await quickSelect(innerSelector.rating);
@@ -238,13 +242,14 @@ class AppReviewsTrick implements BaseTrick {
             await this.extractDeriveRating(ratingElement),
         );
     }
-    async extractReviewsInPage(pageNum: number): Promise<ShopifyAppReview[]> {
+    async extractReviewsInPage(currentPageNum: number): Promise<ShopifyAppReview[]> {
         const reviewElements = await this.extractReviewElements();
+        
         let reviews: ShopifyAppReview[] = [];
         for (const element of reviewElements) {
             const tmpExtractedReview = await this.extractReviewInfo({
                 element,
-                pageNum,
+                pageNum: currentPageNum,
             });
             reviews.push(tmpExtractedReview);
         }

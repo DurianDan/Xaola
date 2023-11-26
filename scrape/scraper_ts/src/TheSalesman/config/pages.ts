@@ -4,6 +4,7 @@ import {
     ShopifyCommunityLanguageUrlSuffix,
 } from '../AudienceProfile';
 type HttpUrl = string;
+import { trim as lodashTrim } from 'lodash';
 
 class ShopifyPageURL {
     sitemap: HttpUrl = 'https://apps.shopify.com/sitemap';
@@ -32,7 +33,8 @@ class ShopifyPageURL {
         this.partnerIdentifiers = partnerIdentifiers;
     }
     normalizeUrl(prefix: string | URL, suffix: string): URL {
-        return new URL(suffix, prefix);
+        const normalizedURL = new URL(suffix, prefix);
+        return normalizedURL
     }
     get appLandingPage(): URL {
         return this.normalizeUrl(
@@ -46,8 +48,8 @@ class ShopifyPageURL {
             this.partnerIdentifiers.partnerUrlId ?? '',
         );
     }
-    get appReviewsDefaultPage(): URL {
-        return this.normalizeUrl(this.appLandingPage, 'reviews');
+    get appReviewsDefaultPage(): string {
+        return lodashTrim(this.appLandingPage.toString(), "/") + '/reviews';
     }
     get communityLandingPage(): URL {
         return this.normalizeUrl(
@@ -83,8 +85,8 @@ class ShopifyPageURL {
         baseURL.search = searchParams.toString();
         return baseURL;
     }
-    reviewPaginatedURL(page: number): URL {
-        return this.addPageParam(this.appReviewsDefaultPage, page);
+    reviewPaginatedURL(page: number, pageArg: string = "page"): URL {
+        return new URL(this.appReviewsDefaultPage + `?${pageArg}=${page}`);
     }
     appCategoryPaginatedURL(page: number): URL {
         return this.addPageParam(this.appCategoryPage, page);
