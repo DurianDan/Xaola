@@ -59,21 +59,20 @@ class FancyCategoryTrick implements BaseTrick {
             };
         });
     }
-    async extractLinkNameFromRankElement(
-        element: ScrapedElement,
-    ): Promise<{
-        appName: string|undefined;
-        appLink: HttpUrl|undefined
+    async extractLinkNameFromRankElement(element: ScrapedElement): Promise<{
+        appName: string | undefined;
+        appLink: HttpUrl | undefined;
     }> {
         const innerTagA = this.watcher.checkError(
             await this.puppetMaster.selectElement(
                 this.elements.appCateogryInfo.innerTagASelector,
-                element),
-            {msg: "Cant find innerTagA of each App/Rank element"}
-            )
+                element,
+            ),
+            { msg: 'Cant find innerTagA of each App/Rank element' },
+        );
         const { href: appLink, text: appName } = innerTagA
-                ?await innerTagA.hrefAndText()
-                :{href:undefined, text: undefined};
+            ? await innerTagA.hrefAndText()
+            : { href: undefined, text: undefined };
         return {
             appLink: appLink?.split('?')[0],
             appName: appName?.trim(),
@@ -81,13 +80,14 @@ class FancyCategoryTrick implements BaseTrick {
     }
     async extractAvgRatingFromRankElement(
         element: ScrapedElement,
-    ): Promise<number|undefined> {
+    ): Promise<number | undefined> {
         const ratingElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
                 this.elements.appCateogryInfo.innerAvgRatingSelector,
-                element),
-            {msg: "Cant find ratingElement inside App/Rank Elements"}
-            );
+                element,
+            ),
+            { msg: 'Cant find ratingElement inside App/Rank Elements' },
+        );
         const ratingString = (await ratingElement?.text())?.trim();
         // '3.4\n               out of 5 stars'
         return Number(ratingString?.split('\n')[0]);
@@ -98,9 +98,10 @@ class FancyCategoryTrick implements BaseTrick {
         const reviewCountElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
                 this.elements.appCateogryInfo.innerReviewCountSelector,
-                element),
-            {msg: "Cant find reviewCountElement, inside App/Rank element"}
-            );
+                element,
+            ),
+            { msg: 'Cant find reviewCountElement, inside App/Rank element' },
+        );
         // '56 total reviews'
         const reviewCountString = await reviewCountElement?.text();
         return Number(reviewCountString?.replace('total reviews', '').trim());

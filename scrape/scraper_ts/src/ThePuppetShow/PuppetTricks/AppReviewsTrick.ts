@@ -14,19 +14,19 @@ import ScrapedElement from '../ScrapedElement';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 
 interface ReviewPageScrapeResult {
-    shopifyAppReviews: ShopifyAppReview[],
-    shopifyAppDetail: ShopifyAppDetail[]
+    shopifyAppReviews: ShopifyAppReview[];
+    shopifyAppDetail: ShopifyAppDetail[];
 }
 interface AppReviewsConfigWithReviewPages {
-    showMoreButtonText: string,
-    appUrlId: string,
-    reviewPages: number[],
+    showMoreButtonText: string;
+    appUrlId: string;
+    reviewPages: number[];
 }
 interface AppReviewsConfigAutoDecideReviewsToScrape {
-    appUrlId: string,
-    showMoreButtonText: string,
-    oldReviewsCount: number,
-    newReviewsCount: number
+    appUrlId: string;
+    showMoreButtonText: string;
+    oldReviewsCount: number;
+    newReviewsCount: number;
 }
 
 function isWithReviewPages(
@@ -45,24 +45,24 @@ type AppReviewsConfig =
     | AppReviewsConfigAutoDecideReviewsToScrape
     | AppReviewsConfigWithReviewPages;
 
-type ReviewPages = {url: HttpUrl, pageNum: number}[]
+type ReviewPages = { url: HttpUrl; pageNum: number }[];
 
 class AppReviewsTrick implements BaseTrick {
     public urls: ShopifyPageURL;
-    public reviewPages: ReviewPages ;
+    public reviewPages: ReviewPages;
     public showMoreButtonText: string;
     public elements = ElementsCfg.shopifyReviewsElements;
-    private approxDaysOnAppIndicators: [string, number][] = [ 
-        ["month", 30],
-        ["hour", 1/24],
-        ["week", 7],
-        ["day", 1],
-        ["year", 365.5],
-        ["minute", 1/(60*24)],
-        ["about", 0.9],
-        ["almost", 0.75],
-        ["over", 1.2]
-    ]
+    private approxDaysOnAppIndicators: [string, number][] = [
+        ['month', 30],
+        ['hour', 1 / 24],
+        ['week', 7],
+        ['day', 1],
+        ['year', 365.5],
+        ['minute', 1 / (60 * 24)],
+        ['about', 0.9],
+        ['almost', 0.75],
+        ['over', 1.2],
+    ];
     constructor(
         config: AppReviewsConfig,
         public puppetMaster: PuppetMaster,
@@ -74,7 +74,7 @@ class AppReviewsTrick implements BaseTrick {
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
         this.reviewPages = this.inferReviewPages(config);
-        this.showMoreButtonText = config.showMoreButtonText // "Show more"
+        this.showMoreButtonText = config.showMoreButtonText; // "Show more"
     }
     inferPagesDiff({
         oldReviewsCount,
@@ -96,12 +96,10 @@ class AppReviewsTrick implements BaseTrick {
                 msg: `Auto infer number of pages to scrape: ${pageNums}`,
             });
         }
-        return pageNums.map((pageNum) =>
-            ({
-                url: this.urls.reviewPaginatedURL(pageNum).toString(),
-                pageNum
-            })
-        );
+        return pageNums.map((pageNum) => ({
+            url: this.urls.reviewPaginatedURL(pageNum).toString(),
+            pageNum,
+        }));
     }
     checkScrapedResults(result: ScrapeResult): ScrapeResult {
         this.watcher.checkInfo(result, {
@@ -118,139 +116,167 @@ class AppReviewsTrick implements BaseTrick {
         );
         return true;
     }
-    async accessPagination(pageNum: number): Promise<boolean>{
+    async accessPagination(pageNum: number): Promise<boolean> {
         await this.puppetMaster.goto(
             this.urls.reviewPaginatedURL(pageNum).toString(),
         );
         return true;
     }
     async extractBasicAppDetail(): Promise<ShopifyAppDetail> {
-        const appName = this.watcher.checkError(await this.puppetMaster.selectElement(
-            this.elements.appNameElement), {msg: "Empty `appName`"})
-        const avgRating = this.watcher.checkError(await this.puppetMaster.selectElement(
-                    this.elements.avgReviewElement), {msg: "Empty `avgRating`"})
-        const reviewCountElement = this.watcher.checkError(await this.puppetMaster.selectElement(
-                        this.elements.reviewCountElement), {msg: "Empty `reviewCount`"})
-        const reviewCount = reviewCountElement? (
-            Number((await reviewCountElement.text()).replace(",",""))
-        ): undefined 
+        const appName = this.watcher.checkError(
+            await this.puppetMaster.selectElement(this.elements.appNameElement),
+            { msg: 'Empty `appName`' },
+        );
+        const avgRating = this.watcher.checkError(
+            await this.puppetMaster.selectElement(
+                this.elements.avgReviewElement,
+            ),
+            { msg: 'Empty `avgRating`' },
+        );
+        const reviewCountElement = this.watcher.checkError(
+            await this.puppetMaster.selectElement(
+                this.elements.reviewCountElement,
+            ),
+            { msg: 'Empty `reviewCount`' },
+        );
+        const reviewCount = reviewCountElement
+            ? Number((await reviewCountElement.text()).replace(',', ''))
+            : undefined;
         return new ShopifyAppDetail(
             null,
             new Date(),
             this.puppetMaster.page.url(),
-            appName? await appName.text(): undefined,
+            appName ? await appName.text() : undefined,
             reviewCount,
-            avgRating? Number(await avgRating.text()): undefined,
+            avgRating ? Number(await avgRating.text()) : undefined,
         );
     }
     /**
      * Click on all "Show more" button elements, to open every hidden text
      * @returns {any}
      */
-    async clickAllShowMoreButton(): Promise<void>{
-        const allButtonElements = await this.puppetMaster.selectElements('button')
+    async clickAllShowMoreButton(): Promise<void> {
+        const allButtonElements =
+            await this.puppetMaster.selectElements('button');
         for (const buttonElement of allButtonElements) {
-            const buttonText = await buttonElement.text()
-            if (buttonText.trim() === this.showMoreButtonText){
-                await buttonElement.click()
+            const buttonText = await buttonElement.text();
+            if (buttonText.trim() === this.showMoreButtonText) {
+                await buttonElement.click();
             }
         }
     }
     async extractReviewElements(): Promise<ScrapedElement[]> {
         const foundFancyReviews = await this.puppetMaster.selectElements(
-            this.elements.reviewSectionElements.fancy
-        )
+            this.elements.reviewSectionElements.fancy,
+        );
         const foundNormalReviews = await this.puppetMaster.selectElements(
-            this.elements.reviewSectionElements.normal
-        )
-        if(foundFancyReviews.length > foundNormalReviews.length){
-            return foundFancyReviews
-        }else{
-            return foundNormalReviews
+            this.elements.reviewSectionElements.normal,
+        );
+        if (foundFancyReviews.length > foundNormalReviews.length) {
+            return foundFancyReviews;
+        } else {
+            return foundNormalReviews;
         }
     }
-    async extractApproxDaysOnApp(daysOnAppLine?: ScrapedElement): Promise<undefined|number>{
-        if (daysOnAppLine){
-            const daysOnAppString = (await (await daysOnAppLine).text()).toLowerCase()
-            const rawPeriod = Number(daysOnAppString.match(/\d+/g)??[0]);
-            for (const [approxIndicator, conversionRate] of this.approxDaysOnAppIndicators){
-                daysOnAppString.includes(approxIndicator) ? rawPeriod*conversionRate:undefined
+    async extractApproxDaysOnApp(
+        daysOnAppLine?: ScrapedElement,
+    ): Promise<undefined | number> {
+        if (daysOnAppLine) {
+            const daysOnAppString = (
+                await (await daysOnAppLine).text()
+            ).toLowerCase();
+            const rawPeriod = Number(daysOnAppString.match(/\d+/g) ?? [0]);
+            for (const [approxIndicator, conversionRate] of this
+                .approxDaysOnAppIndicators) {
+                daysOnAppString.includes(approxIndicator)
+                    ? rawPeriod * conversionRate
+                    : undefined;
             }
-            return rawPeriod
-        }else{
-            return undefined
+            return rawPeriod;
+        } else {
+            return undefined;
         }
     }
-    async extractDeriveRating(ratingElement?: ScrapedElement): Promise<number|undefined>{
-        if (ratingElement){
-            const ratingLine = (await ratingElement.getProperty("aria-label")).trim() // 3 out of 5 stars
-            return Number(ratingLine.slice(0,1))
-        }else{
-            return undefined
+    async extractDeriveRating(
+        ratingElement?: ScrapedElement,
+    ): Promise<number | undefined> {
+        if (ratingElement) {
+            const ratingLine = (
+                await ratingElement.getProperty('aria-label')
+            ).trim(); // 3 out of 5 stars
+            return Number(ratingLine.slice(0, 1));
+        } else {
+            return undefined;
         }
     }
-    async extractReviewInfo({element, pageNum: pageNum}:{element: ScrapedElement, pageNum: number}): Promise<ShopifyAppReview>{
-        const innerSelector = this.elements.reviewSectionElements.innerElementsSelectors
+    async extractReviewInfo({
+        element,
+        pageNum: pageNum,
+    }: {
+        element: ScrapedElement;
+        pageNum: number;
+    }): Promise<ShopifyAppReview> {
+        const innerSelector =
+            this.elements.reviewSectionElements.innerElementsSelectors;
         const quickSelect = async (selector: string) => {
-            return await this.puppetMaster.selectElement(selector, element)
-        }
-        const storeName = await quickSelect(innerSelector.storeName)
-        const storeLocation = await quickSelect(innerSelector.storeLocation)
-        const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine)
-        const content = await quickSelect(innerSelector.content)
-        const ratingElement = await quickSelect(innerSelector.rating)
+            return await this.puppetMaster.selectElement(selector, element);
+        };
+        const storeName = await quickSelect(innerSelector.storeName);
+        const storeLocation = await quickSelect(innerSelector.storeLocation);
+        const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine);
+        const content = await quickSelect(innerSelector.content);
+        const ratingElement = await quickSelect(innerSelector.rating);
         return new ShopifyAppReview(
             null,
             new Date(),
             this.urls.appLandingPage.toString(),
             pageNum,
-            storeName?(await storeName.text()).trim():undefined,
-            storeLocation?(await storeLocation.text()).trim():undefined,
-            content?(await content.text()).trim():undefined,
+            storeName ? (await storeName.text()).trim() : undefined,
+            storeLocation ? (await storeLocation.text()).trim() : undefined,
+            content ? (await content.text()).trim() : undefined,
             await this.extractApproxDaysOnApp(daysOnApp),
             await this.extractDeriveRating(ratingElement),
-        )
+        );
     }
     async extractReviewsInPage(pageNum: number): Promise<ShopifyAppReview[]> {
-        const reviewElements = await this.extractReviewElements()
-        let reviews: ShopifyAppReview[] = []
-        for (const element of reviewElements){
-            const tmpExtractedReview = await this.extractReviewInfo(
-                {element, pageNum}
-                )
-            reviews.push(tmpExtractedReview)
+        const reviewElements = await this.extractReviewElements();
+        let reviews: ShopifyAppReview[] = [];
+        for (const element of reviewElements) {
+            const tmpExtractedReview = await this.extractReviewInfo({
+                element,
+                pageNum,
+            });
+            reviews.push(tmpExtractedReview);
         }
-        return reviews
+        return reviews;
     }
-    async extractDerive(): Promise<ReviewPageScrapeResult>{
+    async extractDerive(): Promise<ReviewPageScrapeResult> {
         let tmpScrapeResult: ReviewPageScrapeResult = {
             shopifyAppReviews: [],
-            shopifyAppDetail: []
+            shopifyAppDetail: [],
         };
-        for (const {url:_, pageNum} of this.reviewPages){
-            await this.accessPagination(pageNum)
+        for (const { url: _, pageNum } of this.reviewPages) {
+            await this.accessPagination(pageNum);
             if (pageNum === 1) {
-                this.watcher.info({msg: "Extracting basic app details"})
-                tmpScrapeResult.shopifyAppDetail.push(await this.extractBasicAppDetail())
+                this.watcher.info({ msg: 'Extracting basic app details' });
+                tmpScrapeResult.shopifyAppDetail.push(
+                    await this.extractBasicAppDetail(),
+                );
             }
             tmpScrapeResult.shopifyAppReviews.push(
-                ...await this.extractReviewsInPage(pageNum)
-                )   
+                ...(await this.extractReviewsInPage(pageNum)),
+            );
         }
         return tmpScrapeResult;
-
     }
-    updateScrapeResult(scrapeResult: ScrapeResult): void{
-        mergeScrapeResult([
-            scrapeResult,
-            this.scrapedResults
-        ])
+    updateScrapeResult(scrapeResult: ScrapeResult): void {
+        mergeScrapeResult([scrapeResult, this.scrapedResults]);
     }
-    async scrape(): Promise<ScrapeResult>{
+    async scrape(): Promise<ScrapeResult> {
         const scrapedResult = await this.extractDerive();
-        this.updateScrapeResult(scrapedResult)
-        return this.scrapedResults
-    };
+        this.updateScrapeResult(scrapedResult);
+        return this.scrapedResults;
+    }
 }
 
-export {AppReviewsTrick, AppReviewsConfig};
+export { AppReviewsTrick, AppReviewsConfig };

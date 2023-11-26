@@ -52,13 +52,13 @@ class BaseScrapedTable {
      * @returns {any}
      */
     isValid(): boolean {
-        for (const fieldName in this._eqFields){
-            const tmpValue = (this as any)[fieldName]
-            if (! tmpValue || isEmpty(tmpValue)){
+        for (const fieldName in this._eqFields) {
+            const tmpValue = (this as any)[fieldName];
+            if (!tmpValue || isEmpty(tmpValue)) {
                 return false;
             }
         }
-        return true
+        return true;
     }
 }
 

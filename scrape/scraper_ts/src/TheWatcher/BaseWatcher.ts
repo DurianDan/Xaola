@@ -33,7 +33,7 @@ interface BaseWatcher {
      * @param {any} watchThings:WatchThings
      * @returns {any}
      */
-    checkInfo<T>(toCheck: T , watchThings: WatchThings): T;
+    checkInfo<T>(toCheck: T, watchThings: WatchThings): T;
     /**
      * Utilize `this.checkObjectToLog` to check if the parsed object is undefined/null/empty-object/blank-string, if it is, execute `this.warn`
      * @param {any} toCheck:T

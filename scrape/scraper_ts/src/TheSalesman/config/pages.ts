@@ -13,7 +13,7 @@ class ShopifyPageURL {
     communityUserProfilePrefix: HttpUrl =
         'https://community.shopify.com/c/user/viewprofilepage/user-id/';
     appCategoryPrefix: HttpUrl = 'https://apps.shopify.com/categories/';
-    reviewsPerPage: number = 10
+    reviewsPerPage: number = 10;
     communityLanguageSuffixes: ShopifyCommunityLanguageUrlSuffix = {
         english: '/c/shopify-community/ct-p/en?profile.language=en',
         french: '/c/communaut%C3%A9-shopify-fr/ct-p/fr?profile.language=fr',

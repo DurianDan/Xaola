@@ -6,7 +6,6 @@ import {
     defaultLaunchOptions,
 } from './TheSalesman/config/browser';
 import { ConsoleWatcher } from './TheWatcher';
-import FancyCategoryTrick from './ThePuppetShow/PuppetTricks/FancyCategoryTrick';
 import { range } from 'lodash';
 import { AppReviewsTrick } from './ThePuppetShow/PuppetTricks/AppReviewsTrick';
 import { defaultAppReviewsTrickConfig } from './TheSalesman/config/tricks';
@@ -28,13 +27,14 @@ async function scrape() {
             );
 
             const reviewTrick = new AppReviewsTrick(
-                defaultAppReviewsTrickConfig("buy-button", 1),
-                puppetMaster, {}, watcher
-            )
+                defaultAppReviewsTrickConfig('buy-button', 370),
+                puppetMaster,
+                {},
+                watcher,
+            );
 
             const result = await reviewTrick.extractDerive();
             console.log(result);
-            
         } catch (error) {
             console.log(error);
             errorCount += 1;

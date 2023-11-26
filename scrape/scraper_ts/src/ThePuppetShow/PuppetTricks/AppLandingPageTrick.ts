@@ -37,64 +37,68 @@ class AppLandingPageTrick implements BaseTrick {
         result.shopifyAppDescriptionLog = result.shopifyAppDescriptionLog ?? [];
         return result;
     }
-    async extractDescription(): Promise<string|undefined> {
+    async extractDescription(): Promise<string | undefined> {
         const element = await this.puppetMaster.selectElement(
             this.elements.descriptionElement,
         );
-        const description = element? (await element.text()).trim(): undefined;
+        const description = element ? (await element.text()).trim() : undefined;
         this.watcher.checkWarn(description, {
             msg: `Cant find description element: ${this.elements.descriptionElement}`,
         });
         return description;
     }
-    async extractAppName(): Promise<string|undefined> {
+    async extractAppName(): Promise<string | undefined> {
         const element = await this.puppetMaster.selectElement(
             this.elements.appNameElement,
         );
-        const appName = element? (await element.text()).trim(): undefined;
+        const appName = element ? (await element.text()).trim() : undefined;
         this.watcher.checkError(appName, {
             msg: `Cant find appName element: ${this.elements.descriptionElement}`,
         });
         return appName;
     }
-    async extractReviewCount(): Promise<number|undefined> {
+    async extractReviewCount(): Promise<number | undefined> {
         const element = await this.puppetMaster.selectElement(
             this.elements.reviewCountElement,
         );
-        const countLine = element? (await element.text()).trim(): undefined;
+        const countLine = element ? (await element.text()).trim() : undefined;
         this.watcher.checkError(countLine, {
             msg: `Cant find description element: ${this.elements.reviewCountElement}`,
         });
-        return countLine?Number(countLine.replace(',', '')):undefined;
+        return countLine ? Number(countLine.replace(',', '')) : undefined;
     }
-    async extractAvgRating(): Promise<number|undefined> {
+    async extractAvgRating(): Promise<number | undefined> {
         const element = await this.puppetMaster.selectElement(
             this.elements.avgRatingElement,
         );
-        const rateStr = element?(await element.text()).match(/(\d.\d)/):undefined;
+        const rateStr = element
+            ? (await element.text()).match(/(\d.\d)/)
+            : undefined;
         this.watcher.checkError(rateStr, {
             msg: 'Cant extract float number from this string: ' + rateStr,
         });
         if (rateStr) {
-            return rateStr?Number(rateStr):undefined;
+            return rateStr ? Number(rateStr) : undefined;
         } else {
             throw new Error(`This is not a float ${rateStr}`);
         }
     }
     async extractPartnerInfo(): Promise<{
-        partnerName: string|undefined;
-        partnerURL: string|undefined;
+        partnerName: string | undefined;
+        partnerURL: string | undefined;
     }> {
         const partnerHrefElement = await this.puppetMaster.selectElement(
             this.elements.partnerHrefElement,
         );
-        const partnerHrefText = partnerHrefElement?await partnerHrefElement.hrefAndText():undefined;
-        this.watcher.checkError(partnerHrefElement,
-            {msg: "Empty/Undefined `partnerHrefElement`"}
-            )
+        const partnerHrefText = partnerHrefElement
+            ? await partnerHrefElement.hrefAndText()
+            : undefined;
+        this.watcher.checkError(partnerHrefElement, {
+            msg: 'Empty/Undefined `partnerHrefElement`',
+        });
         return {
-            partnerName: partnerHrefText?partnerHrefText.text:undefined,
-            partnerURL: partnerHrefText?partnerHrefText.href:undefined,
+            partnerName: partnerHrefText ? partnerHrefText.text : undefined,
+            partnerURL: partnerHrefText ? partnerHrefText.href : undefined,
         };
     }
     extractCurrentAppURL(): string {
@@ -138,11 +142,11 @@ class AppLandingPageTrick implements BaseTrick {
         );
     }
     async deriveCleanPlanOffer(
-        rawOfferString?: ScrapedElement
-    ): Promise<string|undefined> {
-        if (!rawOfferString){
-            this.watcher.warn({msg: "Empty Plan Offer Element"})
-            return undefined
+        rawOfferString?: ScrapedElement,
+    ): Promise<string | undefined> {
+        if (!rawOfferString) {
+            this.watcher.warn({ msg: 'Empty Plan Offer Element' });
+            return undefined;
         }
         const splitted = (await rawOfferString.text()).trim().split('\n');
         let cleanedString = '';
@@ -171,48 +175,51 @@ class AppLandingPageTrick implements BaseTrick {
             ? (await additionalPriceLineElement.text()).trim()
             : '';
     }
-    async derivePlanPriceName(
-        priceNameElement?: ScrapedElement,
-    ): Promise<{
-        planName: string|undefined;
-        price: string|undefined
-    }>{
-        if (!priceNameElement){
-            return {planName:undefined, price:undefined}
+    async derivePlanPriceName(priceNameElement?: ScrapedElement): Promise<{
+        planName: string | undefined;
+        price: string | undefined;
+    }> {
+        if (!priceNameElement) {
+            return { planName: undefined, price: undefined };
         }
         const puppetMasterFindPrice = async (xpath: string) => {
             return this.watcher.checkWarn(
                 await this.puppetMaster.selectElement(xpath, priceNameElement),
-                {msg: "Empty planName or price, xpath"+xpath}
-                )
-            }
+                { msg: 'Empty planName or price, xpath' + xpath },
+            );
+        };
         const pricingPlansXpaths = this.elements.pricingPlans;
-        const priceLine = await puppetMasterFindPrice(pricingPlansXpaths.priceElementTag)
-        const additionalPriceLine = await this.additionalPriceLine(priceNameElement);
-        const planName = await puppetMasterFindPrice(pricingPlansXpaths.nameElementTag)
+        const priceLine = await puppetMasterFindPrice(
+            pricingPlansXpaths.priceElementTag,
+        );
+        const additionalPriceLine =
+            await this.additionalPriceLine(priceNameElement);
+        const planName = await puppetMasterFindPrice(
+            pricingPlansXpaths.nameElementTag,
+        );
         return {
             price: (await planName?.text())?.trim(),
-            planName: `${(await priceLine?.text())?.trim()}\n${additionalPriceLine}`.trim()
+            planName: `${(
+                await priceLine?.text()
+            )?.trim()}\n${additionalPriceLine}`.trim(),
         };
     }
     async derivePlanDetail(
         planElement: ScrapedElement,
         appURL: string,
     ): Promise<ShopifyPricingPlan> {
-        const puppetMasterFindPlan = async (xpath: string) => (
-            await this.puppetMaster.selectElement(
-                xpath, planElement)
-            )
+        const puppetMasterFindPlan = async (xpath: string) =>
+            await this.puppetMaster.selectElement(xpath, planElement);
         const planXpaths = this.elements.pricingPlans;
         const { planName, price } = await this.derivePlanPriceName(
             this.watcher.checkWarn(
                 await puppetMasterFindPlan(planXpaths.priceNameElementTag),
-                {msg: `Empty/There aren't any priceNameElementTag`}
-            )
-        )
-        
+                { msg: `Empty/There aren't any priceNameElementTag` },
+            ),
+        );
+
         const planOffer = await this.deriveCleanPlanOffer(
-            await puppetMasterFindPlan(planXpaths.planOfferElementTag)
+            await puppetMasterFindPlan(planXpaths.planOfferElementTag),
         );
         return new ShopifyPricingPlan(
             null,

@@ -32,7 +32,7 @@ class ScrapedElement {
         const text = await this.text();
         return { href, text };
     }
-    async click(option?: ClickOptions): Promise<void>{
+    async click(option?: ClickOptions): Promise<void> {
         await this.element.click(option);
     }
 }

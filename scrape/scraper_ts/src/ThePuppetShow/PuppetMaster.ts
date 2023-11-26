@@ -62,7 +62,7 @@ export default class PuppetMaster {
     }
     async goto(url: HttpUrl, customGotoOptions?: GoToOptions): Promise<void> {
         this.page.setDefaultNavigationTimeout(0);
-        this.watcher?.info({msg: "Loading "+url})
+        this.watcher?.info({ msg: 'Loading ' + url });
         await Promise.all([
             this.page.waitForNavigation(),
             this.page?.goto(
@@ -96,10 +96,7 @@ export default class PuppetMaster {
 
         const scrapedElements = elements.map((ele) =>
             this.logErrorNullElement(
-                new ScrapedElement(
-                    ele as ElementHandle,
-                    selector as string
-                    ),
+                new ScrapedElement(ele as ElementHandle, selector as string),
                 elementName,
             ),
         );
@@ -109,7 +106,7 @@ export default class PuppetMaster {
         selector: PSelector | XPathExpression,
         parentElement?: ScrapedElement,
         elementName: string = '',
-    ): Promise<ScrapedElement|undefined> {
+    ): Promise<ScrapedElement | undefined> {
         const elements = await this.selectElements(
             selector,
             parentElement,

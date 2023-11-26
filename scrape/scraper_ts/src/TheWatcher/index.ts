@@ -36,19 +36,19 @@ class ConsoleWatcher implements BaseWatcher {
         if (this.checkObjectToLog(toCheck)) {
             this.info(watchThings);
         }
-        return toCheck
+        return toCheck;
     }
-    checkError<T>(toCheck: T, watchThings: WatchThings): T{
+    checkError<T>(toCheck: T, watchThings: WatchThings): T {
         if (this.checkObjectToLog(toCheck)) {
             this.error(watchThings);
         }
-        return toCheck
+        return toCheck;
     }
-    checkWarn<T>(toCheck: T, watchThings: WatchThings): T{
+    checkWarn<T>(toCheck: T, watchThings: WatchThings): T {
         if (this.checkObjectToLog(toCheck)) {
             this.info(watchThings);
         }
-        return toCheck
+        return toCheck;
     }
 }
 
