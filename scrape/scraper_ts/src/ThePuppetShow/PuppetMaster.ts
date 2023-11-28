@@ -90,9 +90,13 @@ export default class PuppetMaster {
         parentElement?: ScrapedElement,
         elementName?: string,
     ): Promise<ScrapedElement[]> {
-        const elements = parentElement
-            ? await parentElement.element.$$(selector as string)
-            : await this.checkPage().$x(selector as string);
+        let elements = []
+        if (parentElement){
+            // this.page.waitForSelector(selector as string, )
+            elements = await parentElement.element.$$(selector as string)
+        }else{
+            elements = await this.checkPage().$x(selector as string);
+        }
 
         const scrapedElements = elements.map((ele) =>
             this.logErrorNullElement(
