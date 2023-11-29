@@ -1,12 +1,14 @@
-import { ClickOptions, ElementHandle, JSHandle } from 'puppeteer';
+import { ClickOptions, ElementHandle, JSHandle, Page } from 'puppeteer';
 
 class ScrapedElement {
     constructor(
         public element: ElementHandle,
         public selector: string,
+        public page?: Page
     ) {
         this.element = element;
-        this.selector = selector;
+        this.selector = selector; 
+        this.page = page
     }
     async getProperty(propertyName: string): Promise<string> {
         const valueHandle: JSHandle =
@@ -16,8 +18,24 @@ class ScrapedElement {
         if (propertyValue) {
             return propertyValue;
         } else {
+            // console.log(await this.element.);
             throw new Error(
-                `Cant get attribute "${propertyName}", it might not exist!!!`,
+                `Cant get property "${propertyName}", it might not exist!!!`,
+            );
+        }
+    }
+    async getAttribute(attributeName: string): Promise<string>{
+        const attributeValue = await this.element.evaluate(
+            (element, attributeName) => {
+                return element.getAttribute(attributeName);
+          }, attributeName);
+      
+        if (attributeValue) {
+            return attributeValue;
+        } else {
+            // console.log(await this.element.);
+            throw new Error(
+                `Cant get property "${attributeValue}", it might not exist!!!`,
             );
         }
     }

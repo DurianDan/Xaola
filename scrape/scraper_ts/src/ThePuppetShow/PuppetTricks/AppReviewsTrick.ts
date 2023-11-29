@@ -162,11 +162,11 @@ class AppReviewsTrick implements BaseTrick {
     async clickAllShowMoreButton(): Promise<void> {
         const allButtonElements =
             await this.puppetMaster.selectElements('button');
-        for (const buttonElement of allButtonElements) {
+                for (const buttonElement of allButtonElements) {
             const buttonText = await buttonElement.text();
             if (buttonText.trim() === this.showMoreButtonText) {
                 await buttonElement.click();
-            }
+                            }
         }
     }
     async extractReviewElements(): Promise<ScrapedElement[]> {
@@ -206,7 +206,7 @@ class AppReviewsTrick implements BaseTrick {
     ): Promise<number | undefined> {
         if (ratingElement) {
             const ratingLine = (
-                await ratingElement.getProperty('aria-label')
+                await ratingElement.getAttribute('aria-label')
             ).trim(); // 3 out of 5 stars
             return Number(ratingLine.slice(0, 1));
         } else {
@@ -224,7 +224,7 @@ class AppReviewsTrick implements BaseTrick {
             this.elements.reviewSectionElements.innerElementsSelectors;
         const quickSelect = async (selector: string) => {
             return await this.puppetMaster.selectElement(selector, element);
-                    };
+                        };
         const storeName = await quickSelect(innerSelector.storeName);
                 const storeLocation = await quickSelect(innerSelector.storeLocation);
         const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine);
@@ -260,6 +260,7 @@ class AppReviewsTrick implements BaseTrick {
             shopifyAppReviews: [],
             shopifyAppDetail: [],
         };
+        await this.clickAllShowMoreButton()
         for (const { url: _, pageNum } of this.reviewPages) {
             await this.accessPagination(pageNum);
             if (pageNum === 1) {

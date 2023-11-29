@@ -29,8 +29,8 @@ const shopifyReviewsElements = {
             storeLocation: 'div:nth-child(2) > div:nth-child(2)',
             content: 'div:first-child > div:nth-child(2)[data-truncate-review] > div:first-child[data-truncate-content-copy]',
             DaysOnAppLine: 'div:nth-child(2) > div:nth-child(3)',
-            rating: 'div:first-child > div:first-child > div:first-child[aria-label][role="img"]',
-            datePosted: 'div:first-child > div:first-child > div:first-child',
+            rating: 'div:first-child > div:first-child > div:first-child > div:first-child',
+            datePosted: 'div:first-child > div:first-child > div:nth-child(2)',
         },
     },
 };

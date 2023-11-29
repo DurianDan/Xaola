@@ -100,7 +100,10 @@ export default class PuppetMaster {
 
         const scrapedElements = elements.map((ele) =>
             this.logErrorNullElement(
-                new ScrapedElement(ele as ElementHandle, selector as string),
+                new ScrapedElement(
+                    ele as ElementHandle,
+                    selector as string,
+                    this.page),
                 elementName,
             ),
         );

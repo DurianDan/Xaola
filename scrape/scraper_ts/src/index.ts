@@ -2,7 +2,7 @@ import PuppetMaster from './ThePuppetShow/PuppetMaster';
 // import SitemapTrick from './ThePuppetShow/PuppetTricks/SitemapTrick';
 import initPuppet from './initPuppet';
 import {
-    // debugLaunchOptions,
+    debugLaunchOptions,
     defaultLaunchOptions,
 } from './TheSalesman/config/browser';
 import { ConsoleWatcher } from './TheWatcher';
@@ -11,38 +11,33 @@ import { AppReviewsTrick } from './ThePuppetShow/PuppetTricks/AppReviewsTrick';
 import { defaultAppReviewsTrickConfig } from './TheSalesman/config/tricks';
 
 async function scrape() {
-    let errorCount = 0;
-    let sucessCount = 0;
+    const { page, browser } = await initPuppet(defaultLaunchOptions);
+    try {
+        const watcher = new ConsoleWatcher({ level: 'info' });
+        const puppetMaster = new PuppetMaster(
+            page,
+            browser,
+            { logNullElement: true },
+            watcher,
+        );
 
-    for (const _ of range(0, 100)) {
-        await new Promise((r) => setTimeout(r, 5000));
-        const { page, browser } = await initPuppet(defaultLaunchOptions);
-        try {
-            const watcher = new ConsoleWatcher({ level: 'info' });
-            const puppetMaster = new PuppetMaster(
-                page,
-                browser,
-                { logNullElement: true },
-                watcher,
-            );
-
-            const reviewTrick = new AppReviewsTrick(
-                defaultAppReviewsTrickConfig('buy-button', 370),
-                puppetMaster,
-                {},
-                watcher,
-            );
-
-            const result = await reviewTrick.extractDerive();
-            console.log(result);
-        } catch (error) {
-            console.log(error);
-            errorCount += 1;
-        } finally {
-            console.log(`> Success counts: ${sucessCount}`);
-            console.log(`> Error counts: ${errorCount}`);
-            browser.close();
-        }
+        const reviewTrick = new AppReviewsTrick(
+            defaultAppReviewsTrickConfig('buy-button', 370),
+            puppetMaster,
+            {},
+            watcher,
+        );
+        // console.log(reviewTrick.reviewPages);
+        
+        await reviewTrick.accessPagination(1);
+        await reviewTrick.clickAllShowMoreButton()
+        const scrapedReviewsPage1 = await reviewTrick.extractReviewsInPage(1)
+        console.log(scrapedReviewsPage1);
+        
+    } catch (error) {
+        console.log(error);
+    } finally {
+        browser.close();
     }
 }
 
