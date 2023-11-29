@@ -10,7 +10,7 @@ const fancyCategoryElements = {
         positions: '//div[@data-app-card-and-ad-wrap]',
         innerTagASelector: 'a',
         innerAvgRatingSelector:
-            'div > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)',
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
         innerReviewCountSelector:
             'div[data-app-card-and-ad-wrap] span:nth-child(4)',
     },
@@ -22,21 +22,20 @@ const shopifyReviewsElements = {
     appNameElement:
         '//*[@id="arp-reviews"]/div/div[2]/div[1]/h1/span[1]/a/span',
     reviewSectionElements: {
-        fancy: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]',
-        normal: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]',
+        fancy: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]',
+        normal: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]',
         innerElementsSelectors: {
-            storeName: 'div:first-child > div:nth-child(2) > div:first-child',
-            storeLocation:
-                'div:first-child > div:nth-child(2) > div:nth-child(2)',
-            content: 'div:first-child > div:first-child > div:nth-child(2)',
-            DaysOnAppLine:
-                'div:first-child > div:nth-child(2) > div:nth-child(3)',
-            rating: 'div:first-child > div:first-child > div:first-child > div:first-child',
-            datePosted:
-                'div:first-child > div:first-child > div:first-child > div:nth-child(2)',
+            storeName: "div:nth-child(2) > div:first-child[title]",
+            storeLocation: 'div:nth-child(2) > div:nth-child(2)',
+            content: 'div:first-child > div:nth-child(2)[data-truncate-review] > div:first-child[data-truncate-content-copy]',
+            DaysOnAppLine: 'div:nth-child(2) > div:nth-child(3)',
+            rating: 'div:first-child > div:first-child > div:first-child[aria-label][role="img"]',
+            datePosted: 'div:first-child > div:first-child > div:first-child',
         },
     },
 };
+// '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]'    
+// /html/body/main/section/div/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]
 
 const shopifyAppElements = {
     avgRatingElement:
