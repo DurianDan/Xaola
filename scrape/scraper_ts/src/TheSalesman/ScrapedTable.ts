@@ -65,7 +65,7 @@ class ShopifyAppReview extends BaseScrapedTable {
         public content: string | scrapeBlocks = '<not-scraped-yet>',
         public approxDaysOnApp: number | scrapeBlocks = '<not-scraped-yet>',
         public rating: number | scrapeBlocks = '<not-scraped-yet>',
-        public datePosted: string | scrapeBlocks = '<not-scraped-yet>',
+        public datePosted: Date | scrapeBlocks = '<not-scraped-yet>',
     ) {
         super(id, scrapedAt);
         this.appId = appId;

@@ -166,7 +166,7 @@ class AppReviewsTrick implements BaseTrick {
             const buttonText = await buttonElement.text();
             if (buttonText.trim() === this.showMoreButtonText) {
                 await buttonElement.click();
-                            }
+            }
         }
     }
     async extractReviewElements(): Promise<ScrapedElement[]> {
@@ -213,6 +213,13 @@ class AppReviewsTrick implements BaseTrick {
             return undefined;
         }
     }
+    async extractDatePosted(datePostedElement?: ScrapedElement): Promise<Date|undefined>{
+        if (datePostedElement){
+            const datePostedLine = await datePostedElement.text()
+            return new Date(datePostedLine+"UTC")
+        }
+        return datePostedElement
+    }
     async extractReviewInfo({
         element,
         pageNum: pageNum,
@@ -230,6 +237,7 @@ class AppReviewsTrick implements BaseTrick {
         const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine);
         const content = await quickSelect(innerSelector.content);
         const ratingElement = await quickSelect(innerSelector.rating);
+        const datePostedElement = await quickSelect(innerSelector.datePosted)
         return new ShopifyAppReview(
             null,
             new Date(),
@@ -240,6 +248,7 @@ class AppReviewsTrick implements BaseTrick {
             content ? (await content.text()).trim() : undefined,
             await this.extractApproxDaysOnApp(daysOnApp),
             await this.extractDeriveRating(ratingElement),
+            await this.extractDatePosted(datePostedElement)
         );
     }
     async extractReviewsInPage(currentPageNum: number): Promise<ShopifyAppReview[]> {
