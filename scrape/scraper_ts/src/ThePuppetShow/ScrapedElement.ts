@@ -35,7 +35,7 @@ class ScrapedElement {
         } else {
             // console.log(await this.element.);
             throw new Error(
-                `Cant get property "${attributeValue}", it might not exist!!!`,
+                `Cant get attribute "${attributeName}", it might not exist!!!`,
             );
         }
     }

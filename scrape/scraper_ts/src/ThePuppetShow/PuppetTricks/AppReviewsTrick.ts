@@ -160,13 +160,15 @@ class AppReviewsTrick implements BaseTrick {
      * @returns {any}
      */
     async clickAllShowMoreButton(): Promise<void> {
-        const allButtonElements =
-            await this.puppetMaster.selectElements('button');
-                for (const buttonElement of allButtonElements) {
-            const buttonText = await buttonElement.text();
-            if (buttonText.trim() === this.showMoreButtonText) {
-                await buttonElement.click();
-            }
+        const allButtonElements = await
+            this.puppetMaster.selectElements('//button');
+        for (const buttonElement of allButtonElements) {
+            try{
+                const buttonText = await buttonElement.text();
+                if (buttonText.trim() === this.showMoreButtonText) {
+                    await buttonElement.click();
+                }
+            }catch(e){}
         }
     }
     async extractReviewElements(): Promise<ScrapedElement[]> {
