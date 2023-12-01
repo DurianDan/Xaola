@@ -1,35 +1,47 @@
 import BaseScrapedTable from './BaseScrapedTable';
 
 type HttpUrl = string;
-type scrapeBlocks = '<error>' | '<not-permitted>' | '<not-scraped-yet>';
+type Email = string;
+type Cellphone = string;
+// type scrapeBlocks = '<error>' | '<not-permitted>' | '<not-scraped-yet>';
 
 class ShopifyPartner extends BaseScrapedTable {
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public name: string | scrapeBlocks = '<not-scraped-yet>',
-        public shopifyPage: HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public appsPublished: number | scrapeBlocks = '<not-scraped-yet>',
-        public avgRating: number | scrapeBlocks = '<not-scraped-yet>',
+        public name?: string,
+        public shopifyPage?: HttpUrl,
+        public appsPublished?: number,
+        public avgRating?: number,
+        public business_website?: HttpUrl,
+        public business_location?: string,
+        public support_email?: Email,
+        public support_Cellphonee?: Cellphone,
+        public years_built_apps?: number,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.name = name;
         this.shopifyPage = shopifyPage;
         this.appsPublished = appsPublished;
         this.avgRating = avgRating;
+        this.business_website = business_website
+        this.business_location = business_location
+        this.support_email = support_email
+        this.support_Cellphonee = support_Cellphonee
+        this.years_built_apps = years_built_apps
     }
 }
 
 class ShopifyAppCategory extends BaseScrapedTable {
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public name: string | scrapeBlocks = '<not-scraped-yet>',
-        public parentCategoryId: HttpUrl | number | null | scrapeBlocks = null,
-        public shopifyPage: HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public categoryType: string | scrapeBlocks = '<not-scraped-yet>',
+        public name?: string,
+        public parentCategoryId?: HttpUrl | number,
+        public shopifyPage?: HttpUrl,
+        public categoryType?: string,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.name = name;
         this.parentCategoryId = parentCategoryId;
         this.shopifyPage = shopifyPage;
@@ -38,15 +50,15 @@ class ShopifyAppCategory extends BaseScrapedTable {
 }
 class ShopifyAppDetail extends BaseScrapedTable {
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public shopifyPage: HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public appName: string | scrapeBlocks = '<not-scraped-yet>',
-        public reviewCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public avgRating: number | scrapeBlocks = '<not-scraped-yet>',
-        public partnerId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
+        public shopifyPage?: HttpUrl,
+        public appName?: string,
+        public reviewCount?: number,
+        public avgRating?: number,
+        public partnerId?: number | HttpUrl,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.appName = appName;
         this.reviewCount = reviewCount;
         this.partnerId = partnerId;
@@ -56,22 +68,22 @@ class ShopifyAppReview extends BaseScrapedTable {
     _eqFields: string[] = ['storeName', 'storeLocation', 'content'];
 
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public appId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public lastUpdatedPage: number | scrapeBlocks = '<not-scraped-yet>',
-        public storeName: string | scrapeBlocks = '<not-scraped-yet>',
-        public storeLocation: string | scrapeBlocks = '<not-scraped-yet>',
-        public content: string | scrapeBlocks = '<not-scraped-yet>',
-        public approxDaysOnApp: number | scrapeBlocks = '<not-scraped-yet>',
-        public rating: number | scrapeBlocks = '<not-scraped-yet>',
-        public datePosted: Date | scrapeBlocks = '<not-scraped-yet>',
-    ) {
-        super(id, scrapedAt);
-        this.appId = appId;
-        this.lastUpdatedPage = lastUpdatedPage;
-        this.storeName = storeName;
-        this.storeLocation = storeLocation;
+        public appId?: number | HttpUrl,
+        public lastUpdatedPage?: number,
+        public storeName?: string,
+        public storeLocation?: string,
+        public content?: string,
+        public approxDaysOnApp?: number,
+        public rating?: number,
+        public datePosted?: Date,
+        public id?: number,
+        ) {
+            super(scrapedAt, id);
+            this.appId = appId;
+            this.lastUpdatedPage = lastUpdatedPage;
+            this.storeName = storeName;
+            this.storeLocation = storeLocation;
         this.content = content;
         this.approxDaysOnApp = approxDaysOnApp;
         this.rating = rating;
@@ -81,14 +93,14 @@ class ShopifyAppReview extends BaseScrapedTable {
 class ShopifyPricingPlan extends BaseScrapedTable {
     _eqFields: string[] = ['planName', 'price', 'offer'];
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public planName: string | scrapeBlocks = '<not-scraped-yet>',
-        public price: string | scrapeBlocks = '<not-scraped-yet>',
-        public offer: string | scrapeBlocks = '<not-scraped-yet>',
-        public appId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
+        public planName?: string,
+        public price?: string,
+        public offer?: string,
+        public appId?: number | HttpUrl,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.planName = planName;
         this.price = price;
         this.offer = offer;
@@ -98,16 +110,16 @@ class ShopifyPricingPlan extends BaseScrapedTable {
 class ShopifyCategoryRankLog extends BaseScrapedTable {
     _eqFields: string[] = ['rank', 'appId', 'categoryId'];
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
         public categoryId:
             | number
             | HttpUrl
-            | scrapeBlocks = '<not-scraped-yet>',
-        public rank: number | scrapeBlocks = '<not-scraped-yet>',
-        public appId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
+        ,
+        public rank?: number,
+        public appId?: number | HttpUrl,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.categoryId = categoryId;
         this.rank = rank;
         this.appId = appId;
@@ -117,13 +129,13 @@ class ShopifyAppDescriptionLog extends BaseScrapedTable {
     _eqFields: string[] = ['description'];
 
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public appId: number | HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public description: string | scrapeBlocks = '<not-scraped-yet>',
-    ) {
-        super(id, scrapedAt);
-        this.appId = appId;
+        public appId?: number | HttpUrl,
+        public description?: string,
+        public id?: number,
+        ) {
+            super(scrapedAt, id);
+            this.appId = appId;
         this.description = description;
     }
 }
@@ -131,18 +143,18 @@ class ShopifyAppDescriptionLog extends BaseScrapedTable {
 class ShopifyCommunityUserStats extends BaseScrapedTable {
     _eqFields: string[] = ['communityUserPage'];
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public communityUserPage: HttpUrl | scrapeBlocks = '<not-scraped-yet>',
-        public communityUserName: string | scrapeBlocks = '<not-scraped-yet>',
-        public communityUserType: string | scrapeBlocks = '<not-scraped-yet>',
-        public postsCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public solutionsCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public likesCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public topicsStartedCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public partnerId: number | null | HttpUrl | scrapeBlocks = null,
+        public communityUserPage?: HttpUrl,
+        public communityUserName?: string,
+        public communityUserType?: string,
+        public postsCount?: number,
+        public solutionsCount?: number,
+        public likesCount?: number,
+        public topicsStartedCount?: number,
+        public partnerId?: number | null | HttpUrl,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.communityUserPage = communityUserPage;
         this.communityUserName = communityUserName;
         this.communityUserType = communityUserType;
@@ -163,15 +175,15 @@ class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
         'topicsStartedCount',
     ];
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
-        public communityUserId: number | scrapeBlocks = '<not-scraped-yet>',
-        public postsCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public solutionsCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public likesCount: number | scrapeBlocks = '<not-scraped-yet>',
-        public topicsStartedCount: number | scrapeBlocks = '<not-scraped-yet>',
+        public communityUserId?: number,
+        public postsCount?: number,
+        public solutionsCount?: number,
+        public likesCount?: number,
+        public topicsStartedCount?: number,
+        public id?: number,
     ) {
-        super(id, scrapedAt);
+        super(scrapedAt, id);
         this.communityUserId = communityUserId;
         this.postsCount = postsCount;
         this.solutionsCount = solutionsCount;
@@ -191,5 +203,4 @@ export {
     ShopifyCommunityUserStatsLog,
     ShopifyPricingPlan,
     HttpUrl,
-    scrapeBlocks,
 };
