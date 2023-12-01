@@ -57,9 +57,8 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
     ): Promise<ScrapeResult> {
         const allHrefTexts =
             await this.extractHrefTextsFromChildrenTagA(element);
-        // First tag "a" is of the partner name and link
+        // First tag "a" is contains the partner name and link
         const tmpPartner = new ShopifyPartner(
-            null,
             new Date(),
             allHrefTexts[0].text.trim(),
             allHrefTexts[0].href,
@@ -72,7 +71,6 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         for (const hrefText of allHrefTexts.slice(1)) {
             tmpScrapedResult.shopifyAppDetail?.push(
                 new ShopifyAppDetail(
-                    null,
                     new Date(),
                     hrefText.href,
                     hrefText.text.trim(),
@@ -87,10 +85,14 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
     async extractBasicCategoryInfo(): Promise<ShopifyAppCategory[]> {
         const allHrefTexts = await this.puppetMaster.allTagAHrefsTexts();
         const categoryDetails: ShopifyAppCategory[] = [];
-        for (const { href, text } of allHrefTexts) {
-            if (href.startsWith(this.urls.appCategoryPrefix)) {
+        for (const { href:categoryUrl, text:name } of allHrefTexts) {
+            if (categoryUrl.startsWith(this.urls.appCategoryPrefix)) {
                 categoryDetails.push(
-                    new ShopifyAppCategory(null, new Date(), text, null, href),
+                    new ShopifyAppCategory(
+                        new Date(),
+                        name,
+                        undefined,
+                        categoryUrl),
                 );
             }
         }

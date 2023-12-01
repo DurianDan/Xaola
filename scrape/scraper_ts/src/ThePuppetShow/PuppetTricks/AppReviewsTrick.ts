@@ -157,12 +157,11 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
                 .trim(), // remove the `reivews` or `review` substring.
         );
         return new ShopifyAppDetail(
-            null,
             new Date(),
             this.urls.appLandingPage.toString(),
-            appName ? await appName.text() : undefined,
+            await appName?.text(),
             reviewCount,
-            avgRating ? Number(await avgRating.text()) : undefined,
+            Number(await avgRating?.text()),
         );
     }
     /**
@@ -253,7 +252,6 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         const ratingElement = await quickSelect(innerSelector.rating);
         const datePostedElement = await quickSelect(innerSelector.datePosted);
         return new ShopifyAppReview(
-            null,
             new Date(),
             this.urls.appLandingPage.toString(),
             pageNum,

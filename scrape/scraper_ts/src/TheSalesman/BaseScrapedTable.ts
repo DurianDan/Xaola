@@ -4,8 +4,8 @@ class BaseScrapedTable {
     public _eqFields: string[] = ['shopify_page'];
 
     constructor(
-        public id: number | null = null,
         public scrapedAt: Date,
+        public id?: number,
     ) {
         this.id = id;
         this.scrapedAt = scrapedAt;

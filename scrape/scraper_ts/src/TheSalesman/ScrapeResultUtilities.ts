@@ -50,8 +50,8 @@ export function mergeScrapeResult(
 
 export function appRankFromAppDetail(
     appDetail: ShopifyAppDetail,
-    categoryId: number | scrapeBlocks | HttpUrl,
     rank: number,
+    categoryId?: number | HttpUrl,
 ): ShopifyCategoryRankLog {
     return new ShopifyCategoryRankLog(
         null,

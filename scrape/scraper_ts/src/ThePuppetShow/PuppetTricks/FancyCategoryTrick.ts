@@ -118,7 +118,6 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             await this.extractReviewCountFromRankElement(element);
 
         return new ShopifyAppDetail(
-            null,
             new Date(),
             appLink,
             appName,
@@ -141,8 +140,8 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             appDetail,
             appRank: appRankFromAppDetail(
                 appDetail,
-                this.urls.appCategoryPage.toString(),
                 rank,
+                this.urls.appCategoryPage.toString(),
             ),
         };
     }
