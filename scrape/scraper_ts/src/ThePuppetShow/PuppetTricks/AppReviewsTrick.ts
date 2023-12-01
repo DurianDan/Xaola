@@ -129,7 +129,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
     async extractEachAppInfoElement(
         selector: string,
         elementType: string,
-    ): Promise<ScrapedElement<P,E> | undefined> {
+    ): Promise<ScrapedElement<P, E> | undefined> {
         return this.watcher.checkError(
             await this.puppetMaster.selectElement(selector),
             { msg: `Empty App Info: \`${elementType}\`` },
@@ -181,7 +181,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
             } catch (e) {}
         }
     }
-    async extractReviewElements(): Promise<ScrapedElement<P,E>[]> {
+    async extractReviewElements(): Promise<ScrapedElement<P, E>[]> {
         const foundFancyReviews = await this.puppetMaster.selectElements(
             this.elements.reviewSectionElements.fancy,
         );
@@ -195,7 +195,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         }
     }
     async extractApproxDaysOnApp(
-        daysOnAppLine?: ScrapedElement<P,E>,
+        daysOnAppLine?: ScrapedElement<P, E>,
     ): Promise<undefined | number> {
         if (daysOnAppLine) {
             const daysOnAppString = (
@@ -214,7 +214,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         }
     }
     async extractDeriveRating(
-        ratingElement?: ScrapedElement<P,E>,
+        ratingElement?: ScrapedElement<P, E>,
     ): Promise<number | undefined> {
         if (ratingElement) {
             const ratingLine = (
@@ -226,7 +226,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         }
     }
     async extractDatePosted(
-        datePostedElement?: ScrapedElement<P,E>,
+        datePostedElement?: ScrapedElement<P, E>,
     ): Promise<Date | undefined> {
         if (datePostedElement) {
             const datePostedLine = await datePostedElement.text();
@@ -238,7 +238,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         element,
         pageNum: pageNum,
     }: {
-        element: ScrapedElement<P,E>;
+        element: ScrapedElement<P, E>;
         pageNum: number;
     }): Promise<ShopifyAppReview> {
         const innerSelector =

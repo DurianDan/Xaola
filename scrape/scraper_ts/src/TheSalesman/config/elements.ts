@@ -25,16 +25,17 @@ const shopifyReviewsElements = {
         fancy: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[3]/div[*]/div[1]',
         normal: '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]/div[1]',
         innerElementsSelectors: {
-            storeName: "div:nth-child(2) > div:first-child[title]",
+            storeName: 'div:nth-child(2) > div:first-child[title]',
             storeLocation: 'div:nth-child(2) > div:nth-child(2)',
-            content: 'div:first-child > div:nth-child(2)[data-truncate-review] > div:first-child[data-truncate-content-copy]',
+            content:
+                'div:first-child > div:nth-child(2)[data-truncate-review] > div:first-child[data-truncate-content-copy]',
             DaysOnAppLine: 'div:nth-child(2) > div:nth-child(3)',
             rating: 'div:first-child > div:first-child > div:first-child > div:first-child',
             datePosted: 'div:first-child > div:first-child > div:nth-child(2)',
         },
     },
 };
-// '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]'    
+// '//*[@id="arp-reviews"]/div/div[3]/div[2]/div[2]/div[*]'
 // /html/body/main/section/div/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]
 
 const shopifyAppElements = {

@@ -1,7 +1,7 @@
 import { ClickOptions, ElementHandle, JSHandle, Page } from 'puppeteer';
 import ScrapedElement from '.';
 
-class ComplexScrapedElement implements ScrapedElement<Page, ElementHandle>{
+class ComplexScrapedElement implements ScrapedElement<Page, ElementHandle> {
     constructor(
         public element: ElementHandle,
         public selector: string,

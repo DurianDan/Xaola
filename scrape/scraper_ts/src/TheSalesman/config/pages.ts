@@ -34,7 +34,7 @@ class ShopifyPageURL {
     }
     normalizeUrl(prefix: string | URL, suffix: string): URL {
         const normalizedURL = new URL(suffix, prefix);
-        return normalizedURL
+        return normalizedURL;
     }
     get appLandingPage(): URL {
         return this.normalizeUrl(
@@ -49,7 +49,7 @@ class ShopifyPageURL {
         );
     }
     get appReviewsDefaultPage(): string {
-        return lodashTrim(this.appLandingPage.toString(), "/") + '/reviews';
+        return lodashTrim(this.appLandingPage.toString(), '/') + '/reviews';
     }
     get communityLandingPage(): URL {
         return this.normalizeUrl(
@@ -85,7 +85,7 @@ class ShopifyPageURL {
         baseURL.search = searchParams.toString();
         return baseURL;
     }
-    reviewPaginatedURL(page: number, pageArg: string = "page"): URL {
+    reviewPaginatedURL(page: number, pageArg: string = 'page'): URL {
         return new URL(this.appReviewsDefaultPage + `?${pageArg}=${page}`);
     }
     appCategoryPaginatedURL(page: number): URL {

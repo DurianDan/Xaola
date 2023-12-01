@@ -142,7 +142,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         );
     }
     async deriveCleanPlanOffer(
-        rawOfferString?: ScrapedElement<P,E>,
+        rawOfferString?: ScrapedElement<P, E>,
     ): Promise<string | undefined> {
         if (!rawOfferString) {
             this.watcher.warn({ msg: 'Empty Plan Offer Element' });
@@ -159,7 +159,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         return cleanedString;
     }
     async additionalPriceLine(
-        priceNameElement: ScrapedElement<P,E>,
+        priceNameElement: ScrapedElement<P, E>,
     ): Promise<string> {
         const additionalPriceLineElement = (
             await this.puppetMaster.selectElements(
@@ -176,7 +176,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             : '';
     }
     async derivePlanPriceName(
-        priceNameElement?: ScrapedElement<P,E>,
+        priceNameElement?: ScrapedElement<P, E>,
     ): Promise<{
         planName: string | undefined;
         price: string | undefined;
@@ -207,13 +207,12 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         };
     }
     async derivePlanDetail(
-        planElement: ScrapedElement<P,E>,
+        planElement: ScrapedElement<P, E>,
         appURL: string,
     ): Promise<ShopifyPricingPlan> {
         const puppetMasterFindPlan = async (xpath: string) => {
             return await this.puppetMaster.selectElement(xpath, planElement);
-
-        }
+        };
         const planXpaths = this.elements.pricingPlans;
         const { planName, price } = await this.derivePlanPriceName(
             this.watcher.checkWarn(

@@ -4,7 +4,7 @@ interface WatchConfig {
     prefix?: string;
 }
 interface WatchThings {
-    level?: 'INFO'|'WARN'|'ERROR'
+    level?: 'INFO' | 'WARN' | 'ERROR';
     msg: string;
     err?: Error;
 }

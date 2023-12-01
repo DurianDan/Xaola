@@ -45,7 +45,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         return true;
     }
     async extractAppRankElements(): Promise<
-        { element: ScrapedElement<P,E>; rank: number }[]
+        { element: ScrapedElement<P, E>; rank: number }[]
     > {
         const elements = await this.puppetMaster.selectElements(
             this.elements.appCateogryInfo.positions,
@@ -60,7 +60,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         });
     }
     async extractLinkNameFromRankElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
     ): Promise<{
         appName: string | undefined;
         appLink: HttpUrl | undefined;
@@ -81,7 +81,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         };
     }
     async extractAvgRatingFromRankElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
     ): Promise<number | undefined> {
         const ratingElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
@@ -95,7 +95,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         return Number(ratingString?.split('\n')[0]);
     }
     async extractReviewCountFromRankElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
     ): Promise<number> {
         const reviewCountElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
@@ -109,7 +109,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         return Number(reviewCountString?.replace('total reviews', '').trim());
     }
     async extractAppDetailFromRankElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
     ): Promise<ShopifyAppDetail> {
         const { appLink, appName } =
             await this.extractLinkNameFromRankElement(element);
@@ -131,7 +131,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         element,
     }: {
         rank: number;
-        element: ScrapedElement<P,E>;
+        element: ScrapedElement<P, E>;
     }): Promise<{
         appDetail: ShopifyAppDetail;
         appRank: ShopifyCategoryRankLog;

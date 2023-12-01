@@ -12,7 +12,7 @@ interface PuppetMasterConfig {
     defaultViewport?: Viewport;
 }
 
-interface PuppetMaster<P,E> {
+interface PuppetMaster<P, E> {
     page: P;
     config: PuppetMasterConfig;
     watcher?: BaseWatcher | undefined;
@@ -29,7 +29,7 @@ interface PuppetMaster<P,E> {
      * @returns {any}
      */
     logErrorNullElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
         elementName?: string,
     ): ScrapedElement<P, E>;
     /**
@@ -57,9 +57,9 @@ interface PuppetMaster<P,E> {
      */
     selectElements(
         selector: PSelector | XPathExpression | string,
-        parentElement?:  ScrapedElement<P, E>,
+        parentElement?: ScrapedElement<P, E>,
         elementName?: string,
-    ): Promise< ScrapedElement<P, E>[]>;
+    ): Promise<ScrapedElement<P, E>[]>;
     /**
      * Select and get the element based on provided `selector`
      * @param {any} selector:PSelector|XPathExpression|string
@@ -69,9 +69,9 @@ interface PuppetMaster<P,E> {
      */
     selectElement(
         selector: PSelector | XPathExpression | string,
-        parentElement?:  ScrapedElement<P, E>,
+        parentElement?: ScrapedElement<P, E>,
         elementName?: string,
-    ): Promise< ScrapedElement<P, E> | undefined>;
+    ): Promise<ScrapedElement<P, E> | undefined>;
     /**
      * get all tags and hrefs in this.page
      * @returns {any}

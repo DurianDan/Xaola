@@ -13,7 +13,9 @@ interface PuppetMasterConfig {
     defaultViewport?: Viewport;
 }
 
-export default class ComplexMaster implements PuppetMaster<Page, ElementHandle> {
+export default class ComplexMaster
+    implements PuppetMaster<Page, ElementHandle>
+{
     constructor(
         public page: Page,
         public browser: Browser,

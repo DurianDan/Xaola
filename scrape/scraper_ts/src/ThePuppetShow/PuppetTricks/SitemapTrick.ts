@@ -23,11 +23,11 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         this.puppetMaster = puppetMaster;
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
     }
-    async scrapePartnersElements(): Promise<ScrapedElement<P,E>[]> {
+    async scrapePartnersElements(): Promise<ScrapedElement<P, E>[]> {
         const results = await this.puppetMaster.selectElements(
             this.elements.partnerAreaElementPath,
         );
-        return results as ScrapedElement<P,E>[];
+        return results as ScrapedElement<P, E>[];
     }
     checkScrapedResults(result: ScrapeResult): ScrapeResult {
         // check if need fields has been initiated inside `this.scrapedResult`
@@ -37,7 +37,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         return result;
     }
     async extractHrefTextsFromChildrenTagA(
-        parentElement: ScrapedElement<P,E>,
+        parentElement: ScrapedElement<P, E>,
     ): Promise<{ href: string; text: string }[]> {
         const allTagA = await this.puppetMaster.selectElements(
             'a',
@@ -53,7 +53,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         return allHrefTexts;
     }
     async extractBasicPartnerAppDetailFromPartnerElement(
-        element: ScrapedElement<P,E>,
+        element: ScrapedElement<P, E>,
     ): Promise<ScrapeResult> {
         const allHrefTexts =
             await this.extractHrefTextsFromChildrenTagA(element);
@@ -114,7 +114,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         return true;
     }
     async extractDerive(): Promise<ScrapeResult> {
-        const partnerElements: ScrapedElement<P,E>[] =
+        const partnerElements: ScrapedElement<P, E>[] =
             await this.scrapePartnersElements();
         const sitemapScrapedInfo: ScrapeResult = {
             shopifyPartner: [],

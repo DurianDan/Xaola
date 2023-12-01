@@ -6,30 +6,33 @@ class ConsoleWatcher implements BaseWatcher {
         this.config = config;
     }
     generateMessage(watchThings: WatchThings): string {
-        return (new Date()).toISOString() + "-"
-            + (watchThings.level?watchThings.level+"-":'')
-            + watchThings.msg
-            + (watchThings.err ? watchThings.err + "\n":'');
+        return (
+            new Date().toISOString() +
+            '-' +
+            (watchThings.level ? watchThings.level + '-' : '') +
+            watchThings.msg +
+            (watchThings.err ? watchThings.err + '\n' : '')
+        );
     }
     log(msg: string): void {
         console.log(msg);
     }
     info(watchThings: WatchThings): void {
         if (this.config.level && ['info', 'warn'].includes(this.config.level)) {
-            this.log(this.generateMessage({level: "INFO", ...watchThings}));
+            this.log(this.generateMessage({ level: 'INFO', ...watchThings }));
         }
     }
     error(watchThings: WatchThings): void {
         if (
             this.config.level &&
             ['info', 'warn', 'error'].includes(this.config.level)
-            ) {
-                this.log(this.generateMessage({level: "ERROR", ...watchThings}));
-            }
+        ) {
+            this.log(this.generateMessage({ level: 'ERROR', ...watchThings }));
         }
+    }
     warn(watchThings: WatchThings): void {
         if (this.config.level === 'warn') {
-            this.log(this.generateMessage({level: "WARN", ...watchThings}));
+            this.log(this.generateMessage({ level: 'WARN', ...watchThings }));
         }
     }
     checkObjectToLog(toCheck: any): boolean {
