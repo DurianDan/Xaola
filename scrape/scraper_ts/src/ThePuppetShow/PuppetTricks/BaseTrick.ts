@@ -1,12 +1,12 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import PuppetMaster from '../PuppetMaster';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
+import PuppetMaster from '../PuppetMaster';
 
-export default interface BaseTrick {
+export default interface BaseTrick<P, E> {
     urls: ShopifyPageURL;
-    puppetMaster: PuppetMaster;
+    puppetMaster: PuppetMaster<P, E>;
     scrapedResults: ScrapeResult;
     elements: ElementsCfg.XpathPageConfig;
     watcher: BaseWatcher;

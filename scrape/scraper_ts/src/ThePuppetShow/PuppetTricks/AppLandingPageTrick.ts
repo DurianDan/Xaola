@@ -1,7 +1,5 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import PuppetMaster from '../PuppetMaster';
-import ScrapedElement from '../ScrapedElement';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
     ShopifyPartner,
@@ -12,13 +10,15 @@ import {
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import PuppetMaster from '../PuppetMaster';
+import ScrapedElement from '../ScrapedElement.ts';
 
-class AppLandingPageTrick implements BaseTrick {
+class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.shopifyAppElements;
     constructor(
         appUrlId: string,
-        public puppetMaster: PuppetMaster,
+        public puppetMaster: PuppetMaster<P, E>,
         public scrapedResults: ScrapeResult,
         public watcher: BaseWatcher,
     ) {
@@ -102,7 +102,7 @@ class AppLandingPageTrick implements BaseTrick {
         };
     }
     extractCurrentAppURL(): string {
-        const currentURL = this.puppetMaster.page.url();
+        const currentURL = this.puppetMaster.currentURL();
         if (currentURL != this.urls.appLandingPage.toString()) {
             this.watcher.warn({
                 msg: 'Current app landing page URL is different from initial url in (config)',
@@ -142,7 +142,7 @@ class AppLandingPageTrick implements BaseTrick {
         );
     }
     async deriveCleanPlanOffer(
-        rawOfferString?: ScrapedElement,
+        rawOfferString?: ScrapedElement<P,E>,
     ): Promise<string | undefined> {
         if (!rawOfferString) {
             this.watcher.warn({ msg: 'Empty Plan Offer Element' });
@@ -159,7 +159,7 @@ class AppLandingPageTrick implements BaseTrick {
         return cleanedString;
     }
     async additionalPriceLine(
-        priceNameElement: ScrapedElement,
+        priceNameElement: ScrapedElement<P,E>,
     ): Promise<string> {
         const additionalPriceLineElement = (
             await this.puppetMaster.selectElements(
@@ -175,7 +175,9 @@ class AppLandingPageTrick implements BaseTrick {
             ? (await additionalPriceLineElement.text()).trim()
             : '';
     }
-    async derivePlanPriceName(priceNameElement?: ScrapedElement): Promise<{
+    async derivePlanPriceName(
+        priceNameElement?: ScrapedElement<P,E>,
+    ): Promise<{
         planName: string | undefined;
         price: string | undefined;
     }> {
@@ -205,11 +207,13 @@ class AppLandingPageTrick implements BaseTrick {
         };
     }
     async derivePlanDetail(
-        planElement: ScrapedElement,
+        planElement: ScrapedElement<P,E>,
         appURL: string,
     ): Promise<ShopifyPricingPlan> {
-        const puppetMasterFindPlan = async (xpath: string) =>
-            await this.puppetMaster.selectElement(xpath, planElement);
+        const puppetMasterFindPlan = async (xpath: string) => {
+            return await this.puppetMaster.selectElement(xpath, planElement);
+
+        }
         const planXpaths = this.elements.pricingPlans;
         const { planName, price } = await this.derivePlanPriceName(
             this.watcher.checkWarn(

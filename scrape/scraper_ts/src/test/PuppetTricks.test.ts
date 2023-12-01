@@ -1,4 +1,4 @@
-import PuppetMaster from '../ThePuppetShow/PuppetMaster';
+import ComplexMaster from '../ThePuppetShow/PuppetMaster/ComplexMaster';
 import initPuppet from '../initPuppet';
 import SitemapTrick from '../ThePuppetShow/PuppetTricks/SitemapTrick';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../TheSalesman/config/browser';
 import { ConsoleWatcher } from '../TheWatcher';
 
-let puppetMaster: PuppetMaster;
+let puppetMaster: ComplexMaster;
 let sitemapTrick: SitemapTrick;
 const commonTimeLimit = 15000;
 const scrapeSitemapTimeLimit = 1000 * 60 * 60;
@@ -15,7 +15,7 @@ const scrapeSitemapTimeLimit = 1000 * 60 * 60;
 beforeAll(async () => {
     const { page, browser } = await initPuppet(defaultLaunchOptions);
     const watcher = new ConsoleWatcher({});
-    puppetMaster = new PuppetMaster(page, browser, { logNullElement: true });
+    puppetMaster = new ComplexMaster(page, browser, { logNullElement: true });
     sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher);
 }, commonTimeLimit);
 

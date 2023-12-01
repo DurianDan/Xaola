@@ -1,7 +1,5 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import PuppetMaster from '../PuppetMaster';
-import ScrapedElement from '../ScrapedElement';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
     ShopifyAppDetail,
@@ -14,13 +12,15 @@ import {
     appRankFromAppDetail,
     mergeScrapeResult,
 } from '../../TheSalesman/ScrapeResultUtilities';
+import PuppetMaster from '../PuppetMaster';
+import ScrapedElement from '../ScrapedElement.ts';
 
-class FancyCategoryTrick implements BaseTrick {
+class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     public urls: ShopifyPageURL;
     public elements = ElementsCfg.fancyCategoryElements;
     constructor(
         categoryUrlId: string,
-        public puppetMaster: PuppetMaster,
+        public puppetMaster: PuppetMaster<P, E>,
         public scrapedResults: ScrapeResult,
         public watcher: BaseWatcher,
     ) {
@@ -45,7 +45,7 @@ class FancyCategoryTrick implements BaseTrick {
         return true;
     }
     async extractAppRankElements(): Promise<
-        { element: ScrapedElement; rank: number }[]
+        { element: ScrapedElement<P,E>; rank: number }[]
     > {
         const elements = await this.puppetMaster.selectElements(
             this.elements.appCateogryInfo.positions,
@@ -59,7 +59,9 @@ class FancyCategoryTrick implements BaseTrick {
             };
         });
     }
-    async extractLinkNameFromRankElement(element: ScrapedElement): Promise<{
+    async extractLinkNameFromRankElement(
+        element: ScrapedElement<P,E>,
+    ): Promise<{
         appName: string | undefined;
         appLink: HttpUrl | undefined;
     }> {
@@ -79,7 +81,7 @@ class FancyCategoryTrick implements BaseTrick {
         };
     }
     async extractAvgRatingFromRankElement(
-        element: ScrapedElement,
+        element: ScrapedElement<P,E>,
     ): Promise<number | undefined> {
         const ratingElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
@@ -93,7 +95,7 @@ class FancyCategoryTrick implements BaseTrick {
         return Number(ratingString?.split('\n')[0]);
     }
     async extractReviewCountFromRankElement(
-        element: ScrapedElement,
+        element: ScrapedElement<P,E>,
     ): Promise<number> {
         const reviewCountElement = this.watcher.checkError(
             await this.puppetMaster.selectElement(
@@ -107,7 +109,7 @@ class FancyCategoryTrick implements BaseTrick {
         return Number(reviewCountString?.replace('total reviews', '').trim());
     }
     async extractAppDetailFromRankElement(
-        element: ScrapedElement,
+        element: ScrapedElement<P,E>,
     ): Promise<ShopifyAppDetail> {
         const { appLink, appName } =
             await this.extractLinkNameFromRankElement(element);
@@ -129,7 +131,7 @@ class FancyCategoryTrick implements BaseTrick {
         element,
     }: {
         rank: number;
-        element: ScrapedElement;
+        element: ScrapedElement<P,E>;
     }): Promise<{
         appDetail: ShopifyAppDetail;
         appRank: ShopifyCategoryRankLog;

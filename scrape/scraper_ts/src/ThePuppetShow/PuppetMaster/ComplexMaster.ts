@@ -1,6 +1,7 @@
 import { Page, Browser, Viewport, GoToOptions, ElementHandle } from 'puppeteer';
-import ScrapedElement from './ScrapedElement';
-import { BaseWatcher } from '../TheWatcher/BaseWatcher';
+import ComplexScrapedElement from '../ScrapedElement.ts/ComplexScrapedElement';
+import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
+import PuppetMaster from '.';
 
 type Miliseconds = number;
 type PSelector = string;
@@ -12,7 +13,7 @@ interface PuppetMasterConfig {
     defaultViewport?: Viewport;
 }
 
-export default class PuppetMaster {
+export default class ComplexMaster implements PuppetMaster<Page, ElementHandle> {
     constructor(
         public page: Page,
         public browser: Browser,
@@ -41,9 +42,9 @@ export default class PuppetMaster {
         return config;
     }
     logErrorNullElement(
-        element: ScrapedElement,
+        element: ComplexScrapedElement,
         elementName?: string,
-    ): ScrapedElement {
+    ): ComplexScrapedElement {
         if (this.config.logNullElement && elementName) {
             this.watcher?.checkError(element.element, {
                 msg: `Cant find ${elementName} element, at xpath: ${element.selector}`,
@@ -87,23 +88,24 @@ export default class PuppetMaster {
      */
     async selectElements(
         selector: PSelector | XPathExpression,
-        parentElement?: ScrapedElement,
+        parentElement?: ComplexScrapedElement,
         elementName?: string,
-    ): Promise<ScrapedElement[]> {
-        let elements = []
-        if (parentElement){
+    ): Promise<ComplexScrapedElement[]> {
+        let elements = [];
+        if (parentElement) {
             // this.page.waitForSelector(selector as string, )
-            elements = await parentElement.element.$$(selector as string)
-        }else{
+            elements = await parentElement.element.$$(selector as string);
+        } else {
             elements = await this.checkPage().$x(selector as string);
         }
 
         const scrapedElements = elements.map((ele) =>
             this.logErrorNullElement(
-                new ScrapedElement(
+                new ComplexScrapedElement(
                     ele as ElementHandle,
                     selector as string,
-                    this.page),
+                    this.page,
+                ),
                 elementName,
             ),
         );
@@ -111,9 +113,9 @@ export default class PuppetMaster {
     }
     async selectElement(
         selector: PSelector | XPathExpression,
-        parentElement?: ScrapedElement,
+        parentElement?: ComplexScrapedElement,
         elementName: string = '',
-    ): Promise<ScrapedElement | undefined> {
+    ): Promise<ComplexScrapedElement | undefined> {
         const elements = await this.selectElements(
             selector,
             parentElement,
@@ -132,5 +134,8 @@ export default class PuppetMaster {
     }
     async close(): Promise<void> {
         await this.browser.close();
+    }
+    currentURL(): string {
+        return this.page.url();
     }
 }

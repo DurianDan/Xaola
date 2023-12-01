@@ -1,8 +1,8 @@
-import PuppetMaster from '../ThePuppetShow/PuppetMaster';
+import ComplexMaster from '../ThePuppetShow/PuppetMaster/ComplexMaster';
 import { debugLaunchOptions } from '../TheSalesman/config/browser';
 import initPuppet from '../initPuppet';
 
-let puppetMaster: PuppetMaster;
+let puppetMaster: ComplexMaster;
 const timeLimit = 20000;
 const githubAccount = 'https://github.com/DurianDan';
 const githubAccountNameXpath =
@@ -21,7 +21,7 @@ let expectedTabHrefTexts = [
 
 beforeAll(async () => {
     const { page, browser } = await initPuppet(debugLaunchOptions);
-    puppetMaster = new PuppetMaster(page, browser, { logNullElement: true });
+    puppetMaster = new ComplexMaster(page, browser, { logNullElement: true });
     await puppetMaster.goto(githubAccount);
 }, timeLimit);
 

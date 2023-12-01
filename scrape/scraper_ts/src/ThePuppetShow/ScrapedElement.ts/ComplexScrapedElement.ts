@@ -1,14 +1,15 @@
 import { ClickOptions, ElementHandle, JSHandle, Page } from 'puppeteer';
+import ScrapedElement from '.';
 
-class ScrapedElement {
+class ComplexScrapedElement implements ScrapedElement<Page, ElementHandle>{
     constructor(
         public element: ElementHandle,
         public selector: string,
-        public page?: Page
+        public page: Page,
     ) {
         this.element = element;
-        this.selector = selector; 
-        this.page = page
+        this.selector = selector;
+        this.page = page;
     }
     async getProperty(propertyName: string): Promise<string> {
         const valueHandle: JSHandle =
@@ -24,12 +25,14 @@ class ScrapedElement {
             );
         }
     }
-    async getAttribute(attributeName: string): Promise<string>{
+    async getAttribute(attributeName: string): Promise<string> {
         const attributeValue = await this.element.evaluate(
             (element, attributeName) => {
                 return element.getAttribute(attributeName);
-          }, attributeName);
-      
+            },
+            attributeName,
+        );
+
         if (attributeValue) {
             return attributeValue;
         } else {
@@ -55,4 +58,4 @@ class ScrapedElement {
     }
 }
 
-export default ScrapedElement;
+export default ComplexScrapedElement;

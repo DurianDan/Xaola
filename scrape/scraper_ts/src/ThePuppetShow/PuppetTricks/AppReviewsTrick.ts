@@ -1,6 +1,5 @@
 import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import PuppetMaster from '../PuppetMaster';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import BaseTrick from './BaseTrick';
@@ -10,8 +9,10 @@ import {
     ShopifyAppDetail,
     ShopifyAppReview,
 } from '../../TheSalesman/ScrapedTable';
-import ScrapedElement from '../ScrapedElement';
+import ComplexScrapedElement from '../ScrapedElement.ts/ComplexScrapedElement';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import PuppetMaster from '../PuppetMaster';
+import ScrapedElement from '../ScrapedElement.ts';
 
 interface ReviewPageScrapeResult {
     shopifyAppReviews: ShopifyAppReview[];
@@ -47,7 +48,7 @@ type AppReviewsConfig =
 
 type ReviewPages = { url: HttpUrl; pageNum: number }[];
 
-class AppReviewsTrick implements BaseTrick {
+class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
     public urls: ShopifyPageURL;
     public reviewPages: ReviewPages;
     public showMoreButtonText: string;
@@ -65,7 +66,7 @@ class AppReviewsTrick implements BaseTrick {
     ];
     constructor(
         config: AppReviewsConfig,
-        public puppetMaster: PuppetMaster,
+        public puppetMaster: PuppetMaster<P, E>,
         public scrapedResults: ScrapeResult,
         public watcher: BaseWatcher,
     ) {
@@ -92,7 +93,9 @@ class AppReviewsTrick implements BaseTrick {
         let pageNums: number[];
         if (isWithReviewPages(config)) {
             pageNums = config.reviewPages;
-            this.watcher.info({ msg: `Scraping specified reviews pages: ${pageNums} ` });
+            this.watcher.info({
+                msg: `Scraping specified reviews pages: ${pageNums} `,
+            });
         } else {
             pageNums = this.inferPagesDiff(config);
         }
@@ -124,28 +127,35 @@ class AppReviewsTrick implements BaseTrick {
     }
 
     async extractEachAppInfoElement(
-        selector:string,
-        elementType:string
-    ): Promise<ScrapedElement|undefined>{
+        selector: string,
+        elementType: string,
+    ): Promise<ScrapedElement<P,E> | undefined> {
         return this.watcher.checkError(
             await this.puppetMaster.selectElement(selector),
             { msg: `Empty App Info: \`${elementType}\`` },
-            );
-        }
+        );
+    }
 
     async extractBasicAppDetail(): Promise<ShopifyAppDetail> {
         const appName = await this.extractEachAppInfoElement(
-            this.elements.appNameElement,"appName");
+            this.elements.appNameElement,
+            'appName',
+        );
         const avgRating = await this.extractEachAppInfoElement(
-            this.elements.avgReviewElement, "avgRating");
+            this.elements.avgReviewElement,
+            'avgRating',
+        );
         const reviewCountElement = await this.extractEachAppInfoElement(
-            this.elements.reviewCountElement,"reviewCount");
-            
-        const reviewCount = Number((
-                await reviewCountElement?.text())
-            ?.replace(',', '') // remove delimiter of big amount of reviews. E.g.: '1,050 reviews'
-            ?.split(" review")[0].trim() // remove the `reivews` or `review` substring.
-        )
+            this.elements.reviewCountElement,
+            'reviewCount',
+        );
+
+        const reviewCount = Number(
+            (await reviewCountElement?.text())
+                ?.replace(',', '') // remove delimiter of big amount of reviews. E.g.: '1,050 reviews'
+                ?.split(' review')[0]
+                .trim(), // remove the `reivews` or `review` substring.
+        );
         return new ShopifyAppDetail(
             null,
             new Date(),
@@ -160,18 +170,18 @@ class AppReviewsTrick implements BaseTrick {
      * @returns {any}
      */
     async clickAllShowMoreButton(): Promise<void> {
-        const allButtonElements = await
-            this.puppetMaster.selectElements('//button');
+        const allButtonElements =
+            await this.puppetMaster.selectElements('//button');
         for (const buttonElement of allButtonElements) {
-            try{
+            try {
                 const buttonText = await buttonElement.text();
                 if (buttonText.trim() === this.showMoreButtonText) {
                     await buttonElement.click();
                 }
-            }catch(e){}
+            } catch (e) {}
         }
     }
-    async extractReviewElements(): Promise<ScrapedElement[]> {
+    async extractReviewElements(): Promise<ScrapedElement<P,E>[]> {
         const foundFancyReviews = await this.puppetMaster.selectElements(
             this.elements.reviewSectionElements.fancy,
         );
@@ -185,7 +195,7 @@ class AppReviewsTrick implements BaseTrick {
         }
     }
     async extractApproxDaysOnApp(
-        daysOnAppLine?: ScrapedElement,
+        daysOnAppLine?: ScrapedElement<P,E>,
     ): Promise<undefined | number> {
         if (daysOnAppLine) {
             const daysOnAppString = (
@@ -204,7 +214,7 @@ class AppReviewsTrick implements BaseTrick {
         }
     }
     async extractDeriveRating(
-        ratingElement?: ScrapedElement,
+        ratingElement?: ScrapedElement<P,E>,
     ): Promise<number | undefined> {
         if (ratingElement) {
             const ratingLine = (
@@ -215,31 +225,33 @@ class AppReviewsTrick implements BaseTrick {
             return undefined;
         }
     }
-    async extractDatePosted(datePostedElement?: ScrapedElement): Promise<Date|undefined>{
-        if (datePostedElement){
-            const datePostedLine = await datePostedElement.text()
-            return new Date(datePostedLine+"UTC")
+    async extractDatePosted(
+        datePostedElement?: ScrapedElement<P,E>,
+    ): Promise<Date | undefined> {
+        if (datePostedElement) {
+            const datePostedLine = await datePostedElement.text();
+            return new Date(datePostedLine + 'UTC');
         }
-        return datePostedElement
+        return datePostedElement;
     }
     async extractReviewInfo({
         element,
         pageNum: pageNum,
     }: {
-        element: ScrapedElement;
+        element: ScrapedElement<P,E>;
         pageNum: number;
     }): Promise<ShopifyAppReview> {
         const innerSelector =
             this.elements.reviewSectionElements.innerElementsSelectors;
         const quickSelect = async (selector: string) => {
             return await this.puppetMaster.selectElement(selector, element);
-                        };
+        };
         const storeName = await quickSelect(innerSelector.storeName);
-                const storeLocation = await quickSelect(innerSelector.storeLocation);
+        const storeLocation = await quickSelect(innerSelector.storeLocation);
         const daysOnApp = await quickSelect(innerSelector.DaysOnAppLine);
         const content = await quickSelect(innerSelector.content);
         const ratingElement = await quickSelect(innerSelector.rating);
-        const datePostedElement = await quickSelect(innerSelector.datePosted)
+        const datePostedElement = await quickSelect(innerSelector.datePosted);
         return new ShopifyAppReview(
             null,
             new Date(),
@@ -250,12 +262,14 @@ class AppReviewsTrick implements BaseTrick {
             content ? (await content.text()).trim() : undefined,
             await this.extractApproxDaysOnApp(daysOnApp),
             await this.extractDeriveRating(ratingElement),
-            await this.extractDatePosted(datePostedElement)
+            await this.extractDatePosted(datePostedElement),
         );
     }
-    async extractReviewsInPage(currentPageNum: number): Promise<ShopifyAppReview[]> {
+    async extractReviewsInPage(
+        currentPageNum: number,
+    ): Promise<ShopifyAppReview[]> {
         const reviewElements = await this.extractReviewElements();
-        
+
         let reviews: ShopifyAppReview[] = [];
         for (const element of reviewElements) {
             const tmpExtractedReview = await this.extractReviewInfo({
@@ -271,7 +285,7 @@ class AppReviewsTrick implements BaseTrick {
             shopifyAppReviews: [],
             shopifyAppDetail: [],
         };
-        await this.clickAllShowMoreButton()
+        await this.clickAllShowMoreButton();
         for (const { url: _, pageNum } of this.reviewPages) {
             await this.accessPagination(pageNum);
             if (pageNum === 1) {
