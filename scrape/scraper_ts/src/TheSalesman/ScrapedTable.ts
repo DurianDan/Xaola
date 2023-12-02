@@ -12,11 +12,12 @@ class ShopifyPartner extends BaseScrapedTable {
         public shopifyPage?: HttpUrl,
         public appsPublished?: number,
         public avgRating?: number,
-        public business_website?: HttpUrl,
-        public business_location?: string,
-        public support_email?: Email,
-        public support_Cellphonee?: Cellphone,
-        public years_built_apps?: number,
+        public businessWebsite?: HttpUrl,
+        public businessLocation?: string,
+        public supportEmail?: Email,
+        public supportCellphone?: Cellphone,
+        public yearsBuiltApps?: number,
+        public unknownSupportInfo?: string,
         public id?: number,
     ) {
         super(scrapedAt, id);
@@ -24,11 +25,12 @@ class ShopifyPartner extends BaseScrapedTable {
         this.shopifyPage = shopifyPage;
         this.appsPublished = appsPublished;
         this.avgRating = avgRating;
-        this.business_website = business_website
-        this.business_location = business_location
-        this.support_email = support_email
-        this.support_Cellphonee = support_Cellphonee
-        this.years_built_apps = years_built_apps
+        this.businessWebsite = businessWebsite
+        this.businessLocation = businessLocation
+        this.supportEmail = supportEmail
+        this.supportCellphone = supportCellphone
+        this.unknownSupportInfo = unknownSupportInfo
+        this.yearsBuiltApps = yearsBuiltApps
     }
 }
 

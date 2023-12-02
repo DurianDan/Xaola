@@ -45,11 +45,24 @@ const shopifyAppElements = {
     partnerHrefElement:
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[2]/div[2]/div[3]/div/a',
     partnerInfoBox: {
-        appsPublishedElement: '//*[@id="adp-developer"]/div/div/div/div[1]/div[1]/a',
-        averageRatingElement: '//*[@id="adp-developer"]/div/div/div/div[1]/p[1]',
-        yearsBuiltAppElement: '//*[@id="adp-developer"]/div/div/div/div[1]/p[2]',
-        websiteTagAElement: '//*[@id="adp-developer"]/div/div/div/div[1]/div[2]/a',
+        appsPublishedElement:
+            '//*[@id="adp-developer"]/div/div/div/div[1]/div[1]/a',
+        averageRatingElement:
+            '//*[@id="adp-developer"]/div/div/div/div[1]/p[1]',
+        yearsBuiltAppsElement:
+            '//*[@id="adp-developer"]/div/div/div/div[1]/p[2]',
+        websiteTagAElement:
+            '//*[@id="adp-developer"]/div/div/div/div[1]/div[2]/a',
         locationElement: '//*[@id="adp-developer"]/div/div/div/div[1]/p[3]',
+        /* 
+        the `supportInfoElements` are email and phone number.
+        Might contains more type of info if more unique cases found.
+
+        So the logic is to find all element with this xpath.
+        if the the text contains "@" => email,
+            if not => phone number
+            if anything else, just save the data first, see later
+        */
         supportInfoElements: '//*[@id="adp-developer"]/div/div/div/div[2]/p',
     },
     appNameElement:

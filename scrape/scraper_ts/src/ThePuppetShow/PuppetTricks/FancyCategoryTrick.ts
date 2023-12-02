@@ -71,7 +71,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
                 element,
             ),
             { msg: 'Cant find innerTagA of each App/Rank element' },
-        );
+        ).checkedObj;
         const { href: appLink, text: appName } = innerTagA
             ? await innerTagA.hrefAndText()
             : { href: undefined, text: undefined };
@@ -89,7 +89,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
                 element,
             ),
             { msg: 'Cant find ratingElement inside App/Rank Elements' },
-        );
+        ).checkedObj;
         const ratingString = (await ratingElement?.text())?.trim();
         // '3.4\n               out of 5 stars'
         return Number(ratingString?.split('\n')[0]);
@@ -103,7 +103,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
                 element,
             ),
             { msg: 'Cant find reviewCountElement, inside App/Rank element' },
-        );
+        ).checkedObj;
         // '56 total reviews'
         const reviewCountString = await reviewCountElement?.text();
         return Number(reviewCountString?.replace('total reviews', '').trim());

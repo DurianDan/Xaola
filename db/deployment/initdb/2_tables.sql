@@ -10,6 +10,7 @@ CREATE TABLE scraped.shopify_partner (
     years_built_apps NUMERIC(4,2),
     apps_published INTEGER,
     avg_rating NUMERIC(3,1),
+    unknown_support_info TEXT,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );

@@ -13,6 +13,7 @@ import ComplexScrapedElement from '../ScrapedElement.ts/ComplexScrapedElement';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 import PuppetMaster from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
+import { getApproxDaysFromPeriodIndicatorString } from './SmallTricks';
 
 interface ReviewPageScrapeResult {
     shopifyAppReviews: ShopifyAppReview[];
@@ -53,17 +54,6 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
     public reviewPages: ReviewPages;
     public showMoreButtonText: string;
     public elements = ElementsCfg.shopifyReviewsElements;
-    private approxDaysOnAppIndicators: [string, number][] = [
-        ['month', 30],
-        ['hour', 1 / 24],
-        ['week', 7],
-        ['day', 1],
-        ['year', 365.5],
-        ['minute', 1 / (60 * 24)],
-        ['about', 0.9],
-        ['almost', 0.75],
-        ['over', 1.2],
-    ];
     constructor(
         config: AppReviewsConfig,
         public puppetMaster: PuppetMaster<P, E>,
@@ -133,7 +123,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         return this.watcher.checkError(
             await this.puppetMaster.selectElement(selector),
             { msg: `Empty App Info: \`${elementType}\`` },
-        );
+        ).checkedObj;
     }
 
     async extractBasicAppDetail(): Promise<ShopifyAppDetail> {
@@ -196,21 +186,9 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
     async extractApproxDaysOnApp(
         daysOnAppLine?: ScrapedElement<P, E>,
     ): Promise<undefined | number> {
-        if (daysOnAppLine) {
-            const daysOnAppString = (
-                await (await daysOnAppLine).text()
-            ).toLowerCase();
-            const rawPeriod = Number(daysOnAppString.match(/\d+/g) ?? [0]);
-            for (const [approxIndicator, conversionRate] of this
-                .approxDaysOnAppIndicators) {
-                daysOnAppString.includes(approxIndicator)
-                    ? rawPeriod * conversionRate
-                    : undefined;
-            }
-            return rawPeriod;
-        } else {
-            return undefined;
-        }
+        return getApproxDaysFromPeriodIndicatorString(
+            await daysOnAppLine?.text()
+            )
     }
     async extractDeriveRating(
         ratingElement?: ScrapedElement<P, E>,

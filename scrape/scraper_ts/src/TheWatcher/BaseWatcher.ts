@@ -8,6 +8,10 @@ interface WatchThings {
     msg: string;
     err?: Error;
 }
+interface CheckLogResult<T>{
+    needsLog: boolean,
+    checkedObj: T
+}
 interface BaseWatcher {
     config: WatchConfig;
     /**
@@ -34,21 +38,21 @@ interface BaseWatcher {
      * @param {any} watchThings:WatchThings
      * @returns {any}
      */
-    checkInfo<T>(toCheck: T, watchThings: WatchThings): T;
+    checkInfo<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T>;
     /**
      * Utilize `this.checkObjectToLog` to check if the parsed object is undefined/null/empty-object/blank-string, if it is, execute `this.warn`
      * @param {any} toCheck:T
      * @param {any} watchThings:WatchThings
      * @returns {any}
      */
-    checkWarn<T>(toCheck: T, watchThings: WatchThings): T;
+    checkWarn<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T>;
     /**
      * Utilize `this.checkObjectToLog` to check if the parsed object is undefined/null/empty-object/blank-string, if it is, execute `this.error`
      * @param {any} toCheck:T
      * @param {any} watchThings:WatchThings
      * @returns {any}
      */
-    checkError<T>(toCheck: T, watchThings: WatchThings): T;
+    checkError<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T>;
     /**
      * if this.config.level is "info" or "warn", execute `this.log`
      * @param {any} watchThings:WatchThings
@@ -69,4 +73,4 @@ interface BaseWatcher {
     error(watchThings: WatchThings): void;
 }
 
-export { BaseWatcher, WatchConfig, WatchThings };
+export { BaseWatcher, WatchConfig, WatchThings, CheckLogResult };

@@ -12,6 +12,14 @@ import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 import PuppetMaster from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
+import { getApproxDaysFromPeriodIndicatorString, isPhoneNumber } from './SmallTricks';
+import { isEmpty } from 'lodash';
+
+interface PartnerSupportInfo {
+    email?: string;
+    cellphone?: string;
+    unknownInfoType?: string;
+}
 
 class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     public urls: ShopifyPageURL;
@@ -71,7 +79,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         const element = await this.puppetMaster.selectElement(
             this.elements.avgRatingElement,
         );
-        const rateStr = (await element?.text())?.match(/(\d.\d)/)
+        const rateStr = (await element?.text())?.match(/(\d.\d)/);
         this.watcher.checkError(rateStr, {
             msg: 'Cant extract float number from this string: ' + rateStr,
         });
@@ -81,29 +89,67 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             throw new Error(`This is not a float ${rateStr}`);
         }
     }
-    async extractPartnerInfo(): Promise<{
+    async extractPartnerNameUrl(): Promise<{
         partnerName: string | undefined;
         partnerURL: string | undefined;
     }> {
         const partnerHrefElement = await this.puppetMaster.selectElement(
             this.elements.partnerHrefElement,
         );
-        const partnerHrefText = partnerHrefElement
-            ? await partnerHrefElement.hrefAndText()
-            : undefined;
+        const partnerHrefText = await partnerHrefElement?.hrefAndText();
         this.watcher.checkError(partnerHrefElement, {
             msg: 'Empty/Undefined `partnerHrefElement`',
         });
         return {
-            partnerName: partnerHrefText ? partnerHrefText.text : undefined,
-            partnerURL: partnerHrefText ? partnerHrefText.href : undefined,
+            partnerName: partnerHrefText?.text,
+            partnerURL: partnerHrefText?.href,
         };
+    }
+    async deriveSupportInfo(
+        infoElements: ScrapedElement<P, E>[],
+    ): Promise<PartnerSupportInfo> {
+        const derivedInfo: PartnerSupportInfo = {};
+        const unknownInfos = await Promise.all(
+            infoElements.map(async (ele) => await ele.text()),
+        );
+        for (let i = 0; i < unknownInfos.length; i++) {
+            // loop through unknownInfos
+            // check if it's email, or cellphone
+            // if it is, add it to derivedInfo, pop it out of unknownInfos
+            const tmpInfo = unknownInfos[i].trim();
+            if (isPhoneNumber(tmpInfo)) {
+                derivedInfo.cellphone = tmpInfo;
+            } else if (tmpInfo.includes('@')) {
+                derivedInfo.email = tmpInfo;
+            }
+            // Adjust the loop counter to account for the removed element
+            i--;
+        }
+        if (!isEmpty(unknownInfos)) {
+            derivedInfo.unknownInfoType = unknownInfos.join('\n');
+        }
+        return derivedInfo;
+    }
+    async extractPartnerSupportInfo(): Promise<PartnerSupportInfo> {
+        const {
+            needsLog: supportInfoIsEmpty,
+            checkedObj: foundSupportInfoElements,
+        } = this.watcher.checkWarn(
+            await this.puppetMaster.selectElements(
+                this.elements.partnerInfoBox.supportInfoElements,
+            ),
+            { msg: "There're not any support info" },
+        );
+        if (supportInfoIsEmpty) {
+            return {};
+        }
+        return this.deriveSupportInfo(foundSupportInfoElements);
     }
     extractCurrentAppURL(): string {
         const currentURL = this.puppetMaster.currentURL();
         if (currentURL != this.urls.appLandingPage.toString()) {
             this.watcher.warn({
-                msg: 'Current app landing page URL is different from initial url in (config)',
+                msg: `Current app URL: ${currentURL} is different from initial URL ${this.urls.appLandingPage}`,
             });
         }
         return currentURL;
@@ -118,12 +164,73 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             description,
         );
     }
-    async extractBasicPartnerDetail(): Promise<ShopifyPartner> {
-        const partnerInfo = await this.extractPartnerInfo();
+    async quickSelect(
+        selector: string,
+        logStr: string,
+    ): Promise<undefined | ScrapedElement<P, E>> {
+        return this.watcher.checkWarn(
+            await this.puppetMaster.selectElement(selector),
+            { msg: logStr },
+        ).checkedObj;
+    }
+    async extractPartnerAppsPublished(): Promise<number | undefined> {
+        const appsPublishedElement = await this.quickSelect(
+            this.elements.partnerInfoBox.appsPublishedElement,
+            '<Empty Partner appsPublishedElement>',
+        );
+        const foundNumbers = (await appsPublishedElement?.text())
+            ?.match(/\d+/g)
+            ?.slice(0, 2)
+            ?.join('');
+        return foundNumbers ? Number(foundNumbers) : undefined;
+    }
+    async extractPartnerAverageRating(): Promise<number | undefined> {
+        const ratingElement = await this.quickSelect(
+            this.elements.partnerInfoBox.averageRatingElement,
+            '<Empty Partner averageRatingElement>',
+        );
+        const foundNumber = (await ratingElement?.text())?.match(/\d.\d/g)?.[0];
+        return foundNumber ? Number(foundNumber) : undefined;
+    }
+    async extractPartnerBusinessWebsite(): Promise<string | undefined> {
+        const businessWebsiteTag = await this.quickSelect(
+            this.elements.partnerInfoBox.websiteTagAElement,
+            '<Empty Partner websiteTagAElement>',
+        );
+        return await businessWebsiteTag?.href();
+    }
+    async extractPartnerYearsBuiltApps(): Promise<number | undefined> {
+        const yearsBuiltAppsElement = await this.quickSelect(
+            this.elements.partnerInfoBox.yearsBuiltAppsElement,
+            "<Empty Partner yearsBuiltAppsElement>"
+            );
+            return getApproxDaysFromPeriodIndicatorString(
+                await yearsBuiltAppsElement?.text()
+                )
+            }
+    async extractPartnerLocation(): Promise<string|undefined>{
+        const locationElement = await this.quickSelect(
+            this.elements.partnerInfoBox.locationElement,
+            "<Empty Partner locationElement"
+        );
+        return (await locationElement?.text())?.trim()
+    }
+    async extractPartnerDetail(): Promise<ShopifyPartner> {
+        const partnerInfo = await this.extractPartnerNameUrl();
+        const {
+            email, cellphone, unknownInfoType
+        } = await this.extractPartnerSupportInfo();
         return new ShopifyPartner(
             new Date(),
             partnerInfo.partnerName,
             partnerInfo.partnerURL,
+            await this.extractPartnerAppsPublished(),
+            await this.extractPartnerAverageRating(),
+            await this.extractPartnerBusinessWebsite(),
+            await this.extractPartnerLocation(),
+            email, cellphone,
+            await this.extractPartnerYearsBuiltApps(),
+            unknownInfoType
         );
     }
     async extractAppDetail(partnerPage?: string): Promise<ShopifyAppDetail> {
@@ -133,7 +240,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             await this.extractAppName(),
             await this.extractReviewCount(),
             await this.extractAvgRating(),
-            partnerPage
+            partnerPage,
         );
     }
     async deriveCleanPlanOffer(
@@ -183,7 +290,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             return this.watcher.checkWarn(
                 await this.puppetMaster.selectElement(xpath, priceNameElement),
                 { msg: 'Empty planName or price, xpath' + xpath },
-            );
+            ).checkedObj;
         };
         const pricingPlansXpaths = this.elements.pricingPlans;
         const priceLine = await puppetMasterFindPrice(
@@ -213,7 +320,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             this.watcher.checkWarn(
                 await puppetMasterFindPlan(planXpaths.priceNameElementTag),
                 { msg: `Empty/There aren't any priceNameElementTag` },
-            ),
+            ).checkedObj,
         );
 
         const planOffer = await this.deriveCleanPlanOffer(
@@ -245,9 +352,9 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         return true;
     }
     async extractDerive(): Promise<ScrapeResult> {
-        const partnerBasicInfo = await this.extractBasicPartnerDetail();
+        const partnerBasicInfo = await this.extractPartnerDetail();
         const appDetails = await this.extractAppDetail(
-            partnerBasicInfo.shopifyPage
+            partnerBasicInfo.shopifyPage,
         );
         const pricingPlans = await this.extractPricingPlans(
             appDetails.shopifyPage,
