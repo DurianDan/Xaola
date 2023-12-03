@@ -6,9 +6,9 @@ import {
     defaultLaunchOptions,
 } from '../TheSalesman/config/browser';
 import { ConsoleWatcher } from '../TheWatcher';
-
+import { Page, ElementHandle } from 'puppeteer';
 let puppetMaster: ComplexMaster;
-let sitemapTrick: SitemapTrick;
+let sitemapTrick: SitemapTrick<Page, ElementHandle>;
 const commonTimeLimit = 15000;
 const scrapeSitemapTimeLimit = 1000 * 60 * 60;
 

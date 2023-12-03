@@ -10,7 +10,7 @@ CREATE TABLE scraped.shopify_partner (
     years_built_apps NUMERIC(4,2),
     apps_published INTEGER,
     avg_rating NUMERIC(3,1),
-    unknown_support_info TEXT,
+    unknown_support_info TEXT[],
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -60,6 +60,7 @@ CREATE TABLE scraped.shopify_pricing_plan (
     id SERIAL PRIMARY KEY,
     plan_name VARCHAR(255) NOT NULL,
     price VARCHAR(255),
+    additional_price_option VARCHAR(255),
     offer TEXT,
     app_id INT NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

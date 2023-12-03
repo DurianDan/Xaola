@@ -69,12 +69,11 @@ const shopifyAppElements = {
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[1]/div[2]/h1',
     pageCountElement: '//*[@id="adp-reviews"]/div/div/h2',
     pricingPlans: {
-        planElement: '//*[@id="adp-pricing"]/div[2]/div[1]/div[*]/div[1]',
-        priceNameElementTag: '//div[1]',
-        nameElementTag: '//p[1]',
-        priceElementTag: '//h3[1]',
-        additionalPriceOptionElementTag: '//p[2]',
-        planOfferElementTag: '//ul[1]',
+        pricingPlanElements:'//div[@class="app-details-pricing-plan-card"]',
+        nameElement: 'div[class="app-details-pricing-plan-card__head"] > p:first-child',
+        nameElementAndOrAdditionalPriceOptionElement: 'div[class="app-details-pricing-plan-card__head"] >p',
+        priceElement: 'div[class="app-details-pricing-plan-card__head"] > h3',
+        planOfferElement: 'div[class="app-details-pricing-plan-card"] > ul',
     },
     descriptionElement: '//*[@id="app-details"]',
 };

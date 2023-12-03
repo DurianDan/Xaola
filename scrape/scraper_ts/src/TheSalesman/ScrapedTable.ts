@@ -17,7 +17,7 @@ class ShopifyPartner extends BaseScrapedTable {
         public supportEmail?: Email,
         public supportCellphone?: Cellphone,
         public yearsBuiltApps?: number,
-        public unknownSupportInfo?: string,
+        public unknownSupportInfo?: string[],
         public id?: number,
     ) {
         super(scrapedAt, id);
@@ -100,6 +100,7 @@ class ShopifyPricingPlan extends BaseScrapedTable {
         public price?: string,
         public offer?: string,
         public appId?: number | HttpUrl,
+        public additionalPriceOption?: string,
         public id?: number,
     ) {
         super(scrapedAt, id);
@@ -107,6 +108,7 @@ class ShopifyPricingPlan extends BaseScrapedTable {
         this.price = price;
         this.offer = offer;
         this.appId = appId;
+        this.additionalPriceOption = additionalPriceOption
     }
 }
 class ShopifyCategoryRankLog extends BaseScrapedTable {

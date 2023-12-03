@@ -3,7 +3,6 @@ import {
     HttpUrl,
     ShopifyAppDetail,
     ShopifyCategoryRankLog,
-    scrapeBlocks,
 } from './ScrapedTable';
 
 export function mergeScrapeResult(
@@ -51,10 +50,9 @@ export function mergeScrapeResult(
 export function appRankFromAppDetail(
     appDetail: ShopifyAppDetail,
     rank: number,
-    categoryId?: number | HttpUrl,
+    categoryId: number | HttpUrl,
 ): ShopifyCategoryRankLog {
     return new ShopifyCategoryRankLog(
-        null,
         appDetail.scrapedAt,
         categoryId,
         rank,
