@@ -116,7 +116,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             new Date(),
             appLink,
             appName,
-            undefined,
+            reviewCount,
             avgRating,
         );
     }
@@ -145,6 +145,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         shopifyCategoryRankLog: ShopifyCategoryRankLog[];
     }> {
         const appRankElements = await this.extractAppRankElements();        
+        this.watcher.info({msg: `There are ${appRankElements.length} appRankElements`})
         const shopifyAppDetail: ShopifyAppDetail[] = [];
         const shopifyCategoryRankLog: ShopifyCategoryRankLog[] = [];
         await Promise.all(
