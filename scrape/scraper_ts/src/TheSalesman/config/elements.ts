@@ -7,12 +7,12 @@ const shopifyCommonElements = {
 const fancyCategoryElements = {
     videoTagsElements: '//video',
     appCateogryInfo: {
-        positions: '//div[@data-app-card-and-ad-wrap]',
+        positions: '//div[@data-app-card-handle-value]',
         innerTagASelector: 'a',
         innerAvgRatingSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-        innerReviewCountSelector:
-            'div[data-app-card-and-ad-wrap] span:nth-child(4)',
+        innerReviewCountSelector: 
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
     },
 };
 

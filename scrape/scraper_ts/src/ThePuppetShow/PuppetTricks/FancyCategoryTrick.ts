@@ -38,9 +38,6 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         return result;
     }
     async accessPage(): Promise<boolean> {
-        this.watcher.info({
-            msg: 'Loading: ' + this.urls.appCategoryPage.toString(),
-        });
         await this.puppetMaster.goto(this.urls.appCategoryPage.toString());
         return true;
     }
@@ -48,9 +45,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         { element: ScrapedElement<P, E>; rank: number }[]
     > {
         const elements = await this.puppetMaster.selectElements(
-            this.elements.appCateogryInfo.positions,
-            undefined,
-            'AppsRanksElements',
+            this.elements.appCateogryInfo.positions
         );
         return elements.map((value, index) => {
             return {
@@ -104,7 +99,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             ),
             { msg: 'Cant find reviewCountElement, inside App/Rank element' },
         ).checkedObj;
-        // '56 total reviews'
+        // '56 total reviews'        
         const reviewCountString = await reviewCountElement?.text();
         return Number(reviewCountString?.replace('total reviews', '').trim());
     }
@@ -113,15 +108,15 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     ): Promise<ShopifyAppDetail> {
         const { appLink, appName } =
             await this.extractLinkNameFromRankElement(element);
-        const avgRating = await this.extractAvgRatingFromRankElement(element);
-        const reviewCount =
-            await this.extractReviewCountFromRankElement(element);
-
+        const reviewCount = await this.extractReviewCountFromRankElement(element);        
+        const avgRating = reviewCount>0?
+            await this.extractAvgRatingFromRankElement(element)
+            : undefined;
         return new ShopifyAppDetail(
             new Date(),
             appLink,
             appName,
-            reviewCount,
+            undefined,
             avgRating,
         );
     }
@@ -149,7 +144,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         shopifyAppDetail: ShopifyAppDetail[];
         shopifyCategoryRankLog: ShopifyCategoryRankLog[];
     }> {
-        const appRankElements = await this.extractAppRankElements();
+        const appRankElements = await this.extractAppRankElements();        
         const shopifyAppDetail: ShopifyAppDetail[] = [];
         const shopifyCategoryRankLog: ShopifyCategoryRankLog[] = [];
         await Promise.all(
