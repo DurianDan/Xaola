@@ -1,3 +1,4 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app_backend = FastAPI()
+app_scraper = FastAPI()
