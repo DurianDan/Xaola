@@ -9,7 +9,6 @@ import {
     ShopifyAppDetail,
     ShopifyAppReview,
 } from '../../TheSalesman/ScrapedTable';
-import ComplexScrapedElement from '../ScrapedElement.ts/ComplexScrapedElement';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
 import PuppetMaster from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';

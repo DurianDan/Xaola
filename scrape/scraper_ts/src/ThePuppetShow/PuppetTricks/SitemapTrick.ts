@@ -39,7 +39,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         // check if need fields has been initiated inside `this.scrapedResult`
         result.shopifyAppCategory = result.shopifyAppCategory ?? [];
         result.shopifyAppDetail = result.shopifyAppDetail ?? [];
-        result.shopifyAppCategory = result.shopifyAppCategory ?? [];
+        result.shopifyPartner = result.shopifyPartner ?? [];
         return result;
     }
     async extractHrefTextsFromChildrenTagA(
