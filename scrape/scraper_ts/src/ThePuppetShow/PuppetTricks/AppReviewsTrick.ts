@@ -10,7 +10,7 @@ import {
     ShopifyAppReview,
 } from '../../TheSalesman/ScrapedTable';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
-import PuppetMaster from '../PuppetMaster';
+import {PuppetMaster} from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 import { getApproxDaysFromPeriodIndicatorString } from './SmallTricks';
 

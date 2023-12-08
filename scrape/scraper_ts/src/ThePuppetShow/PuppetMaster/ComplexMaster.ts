@@ -1,17 +1,11 @@
-import { Page, Browser, Viewport, GoToOptions, ElementHandle } from 'puppeteer';
+import { Page, Browser, GoToOptions, ElementHandle } from 'puppeteer';
 import ComplexScrapedElement from '../ScrapedElement.ts/ComplexScrapedElement';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
-import PuppetMaster from '.';
+import { PuppetMaster, PuppetMasterConfig } from '.';
 
 type Miliseconds = number;
 type PSelector = string;
 type HttpUrl = string;
-
-interface PuppetMasterConfig {
-    logNullElement: boolean;
-    defaultGotoOptions?: GoToOptions;
-    defaultViewport?: Viewport;
-}
 
 export default class ComplexMaster
     implements PuppetMaster<Page, ElementHandle>

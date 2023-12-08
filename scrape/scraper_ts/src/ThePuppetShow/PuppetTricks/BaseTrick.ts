@@ -2,7 +2,7 @@ import ScrapeResult from '../../TheSalesman/ScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
-import PuppetMaster from '../PuppetMaster';
+import {PuppetMaster} from '../PuppetMaster';
 
 export default interface BaseTrick<P, E> {
     urls: ShopifyPageURL;

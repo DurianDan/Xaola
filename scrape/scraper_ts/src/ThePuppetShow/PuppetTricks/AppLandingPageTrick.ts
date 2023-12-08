@@ -10,7 +10,7 @@ import {
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
-import PuppetMaster from '../PuppetMaster';
+import {PuppetMaster} from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 import { getApproxDaysFromPeriodIndicatorString, isPhoneNumber } from './SmallTricks';
 import { isEmpty } from 'lodash';

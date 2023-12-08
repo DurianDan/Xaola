@@ -13,7 +13,7 @@ interface PuppetMasterConfig {
 }
 
 interface PuppetMaster<P, E> {
-    page: P;
+    page?: P;
     config: PuppetMasterConfig;
     watcher?: BaseWatcher | undefined;
     /**
@@ -89,4 +89,4 @@ interface PuppetMaster<P, E> {
     currentURL(): string;
 }
 
-export default PuppetMaster;
+export { PuppetMaster, PuppetMasterConfig };
