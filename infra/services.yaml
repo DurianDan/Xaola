@@ -1,0 +1,25 @@
+provider:
+  supabase:
+    plan:
+      name: free
+      pricing: null
+      cycle: 20231204 - 20240104
+    specs:
+      storage: 1GB
+      monthly_active_user: 50000
+      realtime_peak_connection: 200
+      egress_outgoing_traffic: 5GB
+    urls:
+      projects:
+        xaola: https://supabase.com/dashboard/org/ojxfuiupnbmyrxkzbvuu
+  bright_data:
+    plan:
+      plan_name: pay_as_you_go
+      cycle: monthly
+      pricing: null
+    specs:
+      proxy: 
+        name: scraping_browser
+    urls:
+      user_setting: https://brightdata.com/cp/setting/users?id=hl_e97c9e12
+    
