@@ -26,4 +26,5 @@ jobs:
           cd /root/projects/Xaola/
           git pull origin master
           git status
+          cd /root/projects/Xaola/scrape/scraper_ts
           pnpm install --only=prod
