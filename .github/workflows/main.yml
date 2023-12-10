@@ -24,6 +24,6 @@ jobs:
         port: 22
         script: |
           cd /root/projects/Xaola/
-          git pull origin main
+          git pull origin master
           git status
-          ppm install --only=prod
+          pnpm install --only=prod
