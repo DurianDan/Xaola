@@ -1,14 +1,16 @@
-import ScrapeResult from './ScrapeResult';
+import IndexedScrapeResult from './ScrapedResult/IndexedScrapedResult';
+import RawScrapeResult from './ScrapedResult/RawScrapeResult';
 import {
     HttpUrl,
+    ShopifyAppCategory,
     ShopifyAppDetail,
     ShopifyCategoryRankLog,
 } from './ScrapedTable';
 
 export function mergeScrapeResult(
-    resultsToMerge: ScrapeResult[],
-): ScrapeResult {
-    const mergedResult: ScrapeResult = {
+    resultsToMerge: RawScrapeResult[],
+): Required<RawScrapeResult> {
+    const mergedResult: Required<RawScrapeResult> = {
         shopifyPartner: [],
         shopifyAppCategory: [],
         shopifyAppDescriptionLog: [],
@@ -59,28 +61,24 @@ export function appRankFromAppDetail(
         appDetail.id ?? appDetail.shopifyPage,
     );
 }
-// interface ScrapedResultFilePath{
-//     shopifyPartner: string,
-//     shopifyAppCategory: string,
-//     shopifyAppDescriptionLog: string,
-//     shopifyAppDetail: string,
-//     shopifyAppReviews: string,
-//     shopifyCategoryRankLog: string,
-//     shopifyCommunityUserStats: string,
-//     shopifyCommunityUserStatsLog: string,
-//     shopifyPricingPlan: string,
-// }
 
-// type SaveFileType = "arrow"|"csv"|"parquet";
-
-// interface SaveScrapedResultConfig {
-//     filepaths: string|ScrapedResultFilePath,
-//     suffix?: string,
-//     prefix?: string,
-//     filetype: SaveFileType
-// }
-
-// export function saveCustomFile(result)
-// export function saveScrapedResult(result: ScrapeResult, saveConfig: SaveScrapedResultConfig):void{
-
-// }
+export function getIndexedScrapedResult(
+    rawScrapedResult: Required<RawScrapeResult>,
+): IndexedScrapeResult {
+    const indexed = {};
+    const shopifyEntities: (keyof IndexedScrapeResult)[] = [
+        'shopifyPartner',
+        'shopifyAppCategory',
+        'shopifyAppDetail',
+    ];
+    for (const entityName of shopifyEntities) {
+        (indexed as any)[entityName] = rawScrapedResult[entityName].map(
+            (scrapedResult) => {
+                const indexedResult = Object();
+                indexedResult.set(scrapedResult.shopifyPage, scrapedResult);
+                return indexedResult;
+            },
+        );
+    }
+    return indexed as IndexedScrapeResult;
+}

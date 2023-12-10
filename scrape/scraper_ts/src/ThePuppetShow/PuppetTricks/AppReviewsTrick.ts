@@ -1,4 +1,4 @@
-import ScrapeResult from '../../TheSalesman/ScrapeResult';
+import RawScrapeResult from '../../TheSalesman/ScrapedResult/RawScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
@@ -10,7 +10,7 @@ import {
     ShopifyAppReview,
 } from '../../TheSalesman/ScrapedTable';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
-import {PuppetMaster} from '../PuppetMaster';
+import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 import { getApproxDaysFromPeriodIndicatorString } from './SmallTricks';
 
@@ -56,7 +56,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
     constructor(
         config: AppReviewsConfig,
         public puppetMaster: PuppetMaster<P, E>,
-        public scrapedResults: ScrapeResult,
+        public scrapedResults: RawScrapeResult,
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
@@ -93,7 +93,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
             pageNum,
         }));
     }
-    checkScrapedResults(result: ScrapeResult): ScrapeResult {
+    checkScrapedResults(result: RawScrapeResult): RawScrapeResult {
         this.watcher.checkInfo(result, {
             msg: 'Empty `ScrapeResult`, will return a new scrape result',
         });
@@ -186,8 +186,8 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         daysOnAppLine?: ScrapedElement<P, E>,
     ): Promise<undefined | number> {
         return getApproxDaysFromPeriodIndicatorString(
-            await daysOnAppLine?.text()
-            )
+            await daysOnAppLine?.text(),
+        );
     }
     async extractDeriveRating(
         ratingElement?: ScrapedElement<P, E>,
@@ -275,10 +275,10 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         }
         return tmpScrapeResult;
     }
-    updateScrapeResult(scrapeResult: ScrapeResult): void {
+    updateScrapeResult(scrapeResult: RawScrapeResult): void {
         mergeScrapeResult([scrapeResult, this.scrapedResults]);
     }
-    async scrape(): Promise<ScrapeResult> {
+    async scrape(): Promise<RawScrapeResult> {
         const scrapedResult = await this.extractDerive();
         this.updateScrapeResult(scrapedResult);
         return this.scrapedResults;

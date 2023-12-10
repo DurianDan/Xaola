@@ -472,3 +472,13 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
   ? Database["public"]["Enums"][PublicEnumNameOrOptions]
   : never
+
+export type DBShopifyPartner = Database['public']['Tables']['shopify_partner']['Insert'];
+export type DBShopifyAppCategory = Database['public']['Tables']['shopify_app_category']['Insert'];
+export type DBShopifyAppDetail = Database['public']['Tables']['shopify_app_info']['Insert'];
+export type DBShopifyAppReview = Database['public']['Tables']['shopify_app_reviews']['Insert'];
+export type DBShopifyPricingPlan = Database['public']['Tables']['shopify_pricing_plan']['Insert'];
+export type DBShopifyCategoryRankLog = Database['public']['Tables']['shopify_category_rank_log']['Insert'];
+export type DBShopifyAppDescriptionLog = Database['public']['Tables']['shopify_app_description_log']['Insert'];
+export type DBShopifyCommunityUserStats = Database['public']['Tables']['shopify_community_user_stats']['Insert'];
+export type DBShopifyCommunityUserStatsLog = Database['public']['Tables']['shopify_community_user_stats_log']['Insert'];

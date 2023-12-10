@@ -1,4 +1,4 @@
-import ScrapeResult from '../../TheSalesman/ScrapeResult';
+import RawScrapeResult from '../../TheSalesman/ScrapedResult/RawScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
@@ -10,9 +10,12 @@ import {
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
-import {PuppetMaster} from '../PuppetMaster';
+import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
-import { getApproxDaysFromPeriodIndicatorString, isPhoneNumber } from './SmallTricks';
+import {
+    getApproxDaysFromPeriodIndicatorString,
+    isPhoneNumber,
+} from './SmallTricks';
 import { isEmpty } from 'lodash';
 
 interface PartnerSupportInfo {
@@ -27,7 +30,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     constructor(
         appUrlId: string,
         public puppetMaster: PuppetMaster<P, E>,
-        public scrapedResults: ScrapeResult,
+        public scrapedResults: RawScrapeResult,
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
@@ -35,7 +38,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
     }
-    checkScrapedResults(result: ScrapeResult): ScrapeResult {
+    checkScrapedResults(result: RawScrapeResult): RawScrapeResult {
         this.watcher.checkInfo(result, {
             msg: 'Empty `ScrapeResult`, will return a new scrape result',
         });
@@ -79,12 +82,12 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         const element = await this.puppetMaster.selectElement(
             this.elements.avgRatingElement,
         );
-        const rateLine = await element?.text()
-        const {needsLog, checkedObj: foundRating} = this.watcher.checkError(
+        const rateLine = await element?.text();
+        const { needsLog, checkedObj: foundRating } = this.watcher.checkError(
             rateLine?.match(/(\d.\d)/),
-            {msg: 'Cant extract float number from this string: ' + rateLine,
-        });
-        return needsLog ? undefined:Number(foundRating?.[0])
+            { msg: 'Cant extract float number from this string: ' + rateLine },
+        );
+        return needsLog ? undefined : Number(foundRating?.[0]);
     }
     async extractPartnerNameUrl(): Promise<{
         partnerName: string | undefined;
@@ -107,12 +110,10 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     ): Promise<PartnerSupportInfo> {
         const derivedInfo: PartnerSupportInfo = {};
         const foundInfos = await Promise.all(
-            infoElements.map(
-                async (ele) => (await ele.text()).trim()
-                ),
+            infoElements.map(async (ele) => (await ele.text()).trim()),
         );
         const unknownInfos: string[] = [];
-        foundInfos.forEach(info =>{
+        foundInfos.forEach((info) => {
             // loop through unknownInfos
             // check if it's email, or cellphone
             // if it is, add it to derivedInfo
@@ -122,9 +123,9 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             } else if (info.includes('@')) {
                 derivedInfo.email = info;
             } else {
-                unknownInfos.push(info)
+                unknownInfos.push(info);
             }
-        })
+        });
         if (!isEmpty(unknownInfos)) {
             derivedInfo.unknownInfoType = unknownInfos;
         }
@@ -142,7 +143,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         );
         if (supportInfoIsEmpty) {
             return {};
-        }        
+        }
         return this.deriveSupportInfo(foundSupportInfoElements);
     }
     extractCurrentAppURL(): string {
@@ -167,11 +168,10 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     async quickSelect(
         selector: string,
         logStr: string,
-        parentElement?: ScrapedElement<P,E>,
+        parentElement?: ScrapedElement<P, E>,
     ): Promise<undefined | ScrapedElement<P, E>> {
         return this.watcher.checkWarn(
-            await this.puppetMaster.selectElement(
-                selector, parentElement),
+            await this.puppetMaster.selectElement(selector, parentElement),
             { msg: logStr },
         ).checkedObj;
     }
@@ -204,25 +204,24 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     async extractPartnerYearsBuiltApps(): Promise<number | undefined> {
         const yearsBuiltAppsElement = await this.quickSelect(
             this.elements.partnerInfoBox.yearsBuiltAppsElement,
-            "<Empty Partner yearsBuiltAppsElement>"
-            );
+            '<Empty Partner yearsBuiltAppsElement>',
+        );
         const daysSpentBuidingApps = getApproxDaysFromPeriodIndicatorString(
-            await yearsBuiltAppsElement?.text()
-            )
-        return daysSpentBuidingApps?(daysSpentBuidingApps/365.5):undefined
+            await yearsBuiltAppsElement?.text(),
+        );
+        return daysSpentBuidingApps ? daysSpentBuidingApps / 365.5 : undefined;
     }
-    async extractPartnerLocation(): Promise<string|undefined>{
+    async extractPartnerLocation(): Promise<string | undefined> {
         const locationElement = await this.quickSelect(
             this.elements.partnerInfoBox.locationElement,
-            "<Empty Partner locationElement"
+            '<Empty Partner locationElement',
         );
-        return (await locationElement?.text())?.trim()
+        return (await locationElement?.text())?.trim();
     }
     async extractPartnerDetail(): Promise<ShopifyPartner> {
-        const {partnerName, partnerURL} = await this.extractPartnerNameUrl();
-        const {
-            email, cellphone, unknownInfoType
-        } = await this.extractPartnerSupportInfo();
+        const { partnerName, partnerURL } = await this.extractPartnerNameUrl();
+        const { email, cellphone, unknownInfoType } =
+            await this.extractPartnerSupportInfo();
         const partnerDetail = new ShopifyPartner(
             new Date(),
             partnerName,
@@ -231,11 +230,12 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             await this.extractPartnerAverageRating(),
             await this.extractPartnerBusinessWebsite(),
             await this.extractPartnerLocation(),
-            email, cellphone,
+            email,
+            cellphone,
             await this.extractPartnerYearsBuiltApps(),
-            unknownInfoType
+            unknownInfoType,
         );
-        return partnerDetail
+        return partnerDetail;
     }
     async extractAppDetail(partnerPage?: string): Promise<ShopifyAppDetail> {
         return new ShopifyAppDetail(
@@ -266,23 +266,27 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     }
     async derivePlanAdditionalPrice(
         planElement: ScrapedElement<P, E>,
-        planNameToExclude: string|undefined
-    ): Promise<undefined|string> {
-        const foundNameAndOrAddtionalPriceElements = await this.puppetMaster.selectElements(
-            this.elements.pricingPlans.nameElementAndOrAdditionalPriceOptionElement,
-            planElement
-        )
-        if (!isEmpty(foundNameAndOrAddtionalPriceElements)){return undefined}
-        if (planNameToExclude){
-            for (const element of foundNameAndOrAddtionalPriceElements){
+        planNameToExclude: string | undefined,
+    ): Promise<undefined | string> {
+        const foundNameAndOrAddtionalPriceElements =
+            await this.puppetMaster.selectElements(
+                this.elements.pricingPlans
+                    .nameElementAndOrAdditionalPriceOptionElement,
+                planElement,
+            );
+        if (!isEmpty(foundNameAndOrAddtionalPriceElements)) {
+            return undefined;
+        }
+        if (planNameToExclude) {
+            for (const element of foundNameAndOrAddtionalPriceElements) {
                 const elementText = await element.text();
-                if (!elementText.includes(planNameToExclude.trim())){
-                    return elementText.trim()
+                if (!elementText.includes(planNameToExclude.trim())) {
+                    return elementText.trim();
                 }
             }
-            return undefined
-        }else{
-            return foundNameAndOrAddtionalPriceElements.join("\n")
+            return undefined;
+        } else {
+            return foundNameAndOrAddtionalPriceElements.join('\n');
         }
     }
     async derivePlanDetail(
@@ -291,19 +295,19 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
     ): Promise<ShopifyPricingPlan> {
         const nameElement = await this.quickSelect(
             this.elements.pricingPlans.nameElement,
-            "<Empty Plan nameElement>",
-            planElement
-        )
+            '<Empty Plan nameElement>',
+            planElement,
+        );
         const planOfferElement = await this.quickSelect(
             this.elements.pricingPlans.planOfferElement,
-            "<Empty Plan planOfferElement>",
-            planElement
-        )
+            '<Empty Plan planOfferElement>',
+            planElement,
+        );
         const priceElement = await this.quickSelect(
             this.elements.pricingPlans.priceElement,
-            "<Empty Plan priceElement>",
-            planElement
-        )
+            '<Empty Plan priceElement>',
+            planElement,
+        );
         const planName = (await nameElement?.text())?.trim();
         return new ShopifyPricingPlan(
             new Date(),
@@ -311,16 +315,16 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             (await priceElement?.text())?.trim(),
             (await planOfferElement?.text())?.trim(),
             appURL,
-            await this.derivePlanAdditionalPrice(
-                planElement, planName
-            )
+            await this.derivePlanAdditionalPrice(planElement, planName),
         );
     }
     async extractPricingPlans(appURL?: string): Promise<ShopifyPricingPlan[]> {
         const planElements = await this.puppetMaster.selectElements(
             this.elements.pricingPlans.pricingPlanElements,
         );
-        this.watcher.info({msg:`there are ${planElements.length} planElements`})
+        this.watcher.info({
+            msg: `there are ${planElements.length} planElements`,
+        });
         return await Promise.all(
             planElements.map(async (plan) => {
                 return await this.derivePlanDetail(plan, appURL);
@@ -331,14 +335,14 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         await this.puppetMaster.goto(this.urls.appLandingPage.toString());
         return true;
     }
-    async extractDerive(): Promise<ScrapeResult> {
+    async extractDerive(): Promise<RawScrapeResult> {
         const partnerBasicInfo = await this.extractPartnerDetail();
         const appDetails = await this.extractAppDetail(
             partnerBasicInfo.shopifyPage,
-        );        
+        );
         const pricingPlans = await this.extractPricingPlans(
             appDetails.shopifyPage,
-        );        
+        );
         const description = await this.extractAppDescriptionLogs();
         return {
             shopifyPartner: [partnerBasicInfo],
@@ -347,13 +351,13 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             shopifyAppDescriptionLog: [description],
         };
     }
-    updateScrapeResult(scrapeResult: ScrapeResult): void {
+    updateScrapeResult(scrapeResult: RawScrapeResult): void {
         this.scrapedResults = mergeScrapeResult([
             scrapeResult,
             this.scrapedResults,
         ]);
     }
-    async scrape(): Promise<ScrapeResult> {
+    async scrape(): Promise<RawScrapeResult> {
         await this.accessPage();
         const informationExtracted = await this.extractDerive();
         this.updateScrapeResult(informationExtracted);

@@ -1,5 +1,5 @@
 import ComplexMaster from '../ThePuppetShow/PuppetMaster/ComplexMaster';
-import initPuppet from '../initPuppet';
+import {initPuppet} from '../initPuppet';
 import SitemapTrick from '../ThePuppetShow/PuppetTricks/SitemapTrick';
 import {
     // debugLaunchOptions,

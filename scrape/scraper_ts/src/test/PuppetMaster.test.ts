@@ -1,6 +1,6 @@
 import ComplexMaster from '../ThePuppetShow/PuppetMaster/ComplexMaster';
 import { debugLaunchOptions } from '../TheSalesman/config/browser';
-import initPuppet from '../initPuppet';
+import {initPuppet} from '../initPuppet';
 
 let puppetMaster: ComplexMaster;
 const timeLimit = 20000;

@@ -60,6 +60,17 @@ class BaseScrapedTable {
         }
         return true;
     }
+
+    removeNullUndefinedFields<T>(obj: T): T {
+        const newObj: T = {} as T;
+      
+        for (const key in obj) {
+          if (obj[key] !== null && obj[key] !== undefined) {
+            newObj[key] = obj[key];
+          }
+        }  
+        return newObj;
+      }
 }
 
 export default BaseScrapedTable;

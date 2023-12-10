@@ -1,6 +1,6 @@
-import * as scrapedTables from './ScrapedTable';
+import * as scrapedTables from '../ScrapedTable';
 
-interface ScrapeResult {
+interface RawScrapeResult {
     shopifyPartner?: Array<scrapedTables.ShopifyPartner>;
     shopifyAppCategory?: Array<scrapedTables.ShopifyAppCategory>;
     shopifyAppDescriptionLog?: Array<scrapedTables.ShopifyAppDescriptionLog>;
@@ -12,4 +12,4 @@ interface ScrapeResult {
     shopifyPricingPlan?: Array<scrapedTables.ShopifyPricingPlan>;
 }
 
-export default ScrapeResult;
+export default RawScrapeResult;

@@ -1,4 +1,4 @@
-import ScrapeResult from '../../TheSalesman/ScrapeResult';
+import RawScrapeResult from '../../TheSalesman/ScrapedResult/RawScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
 import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
@@ -12,7 +12,7 @@ import {
     appRankFromAppDetail,
     mergeScrapeResult,
 } from '../../TheSalesman/ScrapeResultUtilities';
-import {PuppetMaster} from '../PuppetMaster';
+import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 
 class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
@@ -21,7 +21,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     constructor(
         categoryUrlId: string,
         public puppetMaster: PuppetMaster<P, E>,
-        public scrapedResults: ScrapeResult,
+        public scrapedResults: RawScrapeResult,
         public watcher: BaseWatcher,
     ) {
         this.puppetMaster = puppetMaster;
@@ -29,7 +29,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         this.scrapedResults = this.checkScrapedResults(scrapedResults);
         this.watcher = watcher;
     }
-    checkScrapedResults(result: ScrapeResult): ScrapeResult {
+    checkScrapedResults(result: RawScrapeResult): RawScrapeResult {
         this.watcher.checkInfo(result, {
             msg: 'Empty `ScrapeResult`, will return a new scrape result',
         });
@@ -45,7 +45,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         { element: ScrapedElement<P, E>; rank: number }[]
     > {
         const elements = await this.puppetMaster.selectElements(
-            this.elements.appCateogryInfo.positions
+            this.elements.appCateogryInfo.positions,
         );
         return elements.map((value, index) => {
             return {
@@ -99,7 +99,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             ),
             { msg: 'Cant find reviewCountElement, inside App/Rank element' },
         ).checkedObj;
-        // '56 total reviews'        
+        // '56 total reviews'
         const reviewCountString = await reviewCountElement?.text();
         return Number(reviewCountString?.replace('total reviews', '').trim());
     }
@@ -108,10 +108,12 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     ): Promise<ShopifyAppDetail> {
         const { appLink, appName } =
             await this.extractLinkNameFromRankElement(element);
-        const reviewCount = await this.extractReviewCountFromRankElement(element);        
-        const avgRating = reviewCount>0?
-            await this.extractAvgRatingFromRankElement(element)
-            : undefined;
+        const reviewCount =
+            await this.extractReviewCountFromRankElement(element);
+        const avgRating =
+            reviewCount > 0
+                ? await this.extractAvgRatingFromRankElement(element)
+                : undefined;
         return new ShopifyAppDetail(
             new Date(),
             appLink,
@@ -144,8 +146,10 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         shopifyAppDetail: ShopifyAppDetail[];
         shopifyCategoryRankLog: ShopifyCategoryRankLog[];
     }> {
-        const appRankElements = await this.extractAppRankElements();        
-        this.watcher.info({msg: `There are ${appRankElements.length} appRankElements`})
+        const appRankElements = await this.extractAppRankElements();
+        this.watcher.info({
+            msg: `There are ${appRankElements.length} appRankElements`,
+        });
         const shopifyAppDetail: ShopifyAppDetail[] = [];
         const shopifyCategoryRankLog: ShopifyCategoryRankLog[] = [];
         await Promise.all(
@@ -158,13 +162,13 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         );
         return { shopifyAppDetail, shopifyCategoryRankLog };
     }
-    updateScrapeResult(scrapeResult: ScrapeResult): void {
+    updateScrapeResult(scrapeResult: RawScrapeResult): void {
         this.scrapedResults = mergeScrapeResult([
             scrapeResult,
             this.scrapedResults,
         ]);
     }
-    async scrape(): Promise<ScrapeResult> {
+    async scrape(): Promise<RawScrapeResult> {
         await this.accessPage();
         const informationExtracted = await this.extractDerive();
         this.updateScrapeResult(informationExtracted);
