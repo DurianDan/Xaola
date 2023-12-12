@@ -482,3 +482,4 @@ export type DBShopifyCategoryRankLog = Database['public']['Tables']['shopify_cat
 export type DBShopifyAppDescriptionLog = Database['public']['Tables']['shopify_app_description_log']['Insert'];
 export type DBShopifyCommunityUserStats = Database['public']['Tables']['shopify_community_user_stats']['Insert'];
 export type DBShopifyCommunityUserStatsLog = Database['public']['Tables']['shopify_community_user_stats_log']['Insert'];
+export type DBIndexEntityTable = DBShopifyPartner | DBShopifyAppCategory | DBShopifyAppDetail

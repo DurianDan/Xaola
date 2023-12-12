@@ -22,4 +22,17 @@ provider:
         name: scraping_browser
     urls:
       user_setting: https://brightdata.com/cp/setting/users?id=hl_e97c9e12
-    
+  linode:
+    plan: 
+      plan_name: Nanode 1GB
+      cycle: monthly
+      pricing: $5/month, $0.0075/Hr
+    specs:
+      name: puppet_show-debian12-eu_central
+      CPU_core: 1
+      Storage: 25GB
+      RAM: 1GB
+      Volumes: 0
+      Public_IP: 172.104.143.59
+    url:
+      instance_setting: https://cloud.linode.com/linodes/52844193/settings

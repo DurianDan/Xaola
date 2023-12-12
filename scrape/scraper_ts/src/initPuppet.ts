@@ -21,8 +21,9 @@ async function connectPuppet(
     const SBR_WS_ENDPOINT = `wss://${serviceUser}:${servicePass}@brd.superproxy.io:9222`;
     const browser = await puppeteer.connect(connectOptions??{
         browserWSEndpoint: SBR_WS_ENDPOINT,
+        protocolTimeout: 1_800_000
     });
-    const page: Page = await browser.pages().then((e) => e[0]);
+    const page: Page = await browser.newPage();
     return { browser, page };
 }
 function checkMissingEnvVars(){
@@ -36,7 +37,7 @@ function checkMissingEnvVars(){
             envsNotSet.push(objName)
         }
     })
-    if (envsNotSet.length===0){
+    if (envsNotSet.length > 0){
         throw new Error("Missing environment variables: "+envsNotSet)
     }
 }
