@@ -1,15 +1,12 @@
-// For more information, see https://crawlee.dev/
-import { PuppeteerCrawler, log } from 'crawlee';
-
-import { router } from './routes.js';
-
-const startUrls = ['https://crawlee.dev'];
+import { PuppeteerCrawler } from 'crawlee';
 
 const crawler = new PuppeteerCrawler({
-    // proxyConfiguration: new ProxyConfiguration({ proxyUrls: ['...'] }),
-    requestHandler: router,
-    // Comment this option to scrape the full website.
-    maxRequestsPerCrawl: 20,
+    async requestHandler({ request, page, log }) {
+        const title = await page.$$(
+            'div[class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 xl:tw-grid-cols-3"] > div'
+            );
+        log.info(`Amount of partnes in ${request.loadedUrl} is '${title.length}'`);
+    }
 });
 
-await crawler.run(startUrls);
+await crawler.run(['https://apps.shopify.com/sitemap']);
