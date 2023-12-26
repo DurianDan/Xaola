@@ -8,7 +8,7 @@ import RawScrapeResult from './TheSalesman/ScrapedResult/RawScrapeResult';
 import { HttpUrl, ShopifyAppCategory, ShopifyAppDetail, ShopifyPartner, ShopifyPricingPlan } from './TheSalesman/ScrapedTable';
 import AppLandingPageTrick from './ThePuppetShow/PuppetTricks/AppLandingPageTrick';
 import { Browser, Page } from 'puppeteer';
-import { defaultLaunchOptions } from './TheSalesman/config/browser';
+import { debugLaunchOptions, defaultLaunchOptions } from './TheSalesman/config/browser';
 
 require('dotenv').config();
 checkMissingEnvVars();
@@ -27,21 +27,21 @@ type DBIndex = number;
 async function getIndexedEntitiesId(
     tableName: IndexShopifyEntityTable,
 ): Promise<Map<HttpUrl, DBIndex>> {
-    const { data, error } = await supabase.from(tableName).select('*');
+    console.log(`Retrieving Old ${tableName}`);
+    const { data, error } = await supabase.from(tableName).select('id,shopify_page');
+    console.log(data?.length + " records");
     if (error) {
         console.log(error);
     }
     let partnersIdx: Map<string, number> = Object();
     data?.forEach((record) => {
-        partnersIdx.set(record.shopify_page, record.id);
+        (partnersIdx as any)[record.shopify_page] = record.id;
     });
     return partnersIdx;
 }
 
-async function getSitemapScrapedResult(
-    page: Page,
-    browser: Browser,
-): Promise<RawScrapeResult> {
+async function getSitemapScrapedResult(): Promise<RawScrapeResult> {
+    const {page, browser} = await initPuppet(debugLaunchOptions)
     const watcher = new ConsoleWatcher({ level: 'info' });
     const complexMaster = new ComplexMaster(
         page,
@@ -50,7 +50,14 @@ async function getSitemapScrapedResult(
         watcher,
     );
     const sitemapTrick = new SitemapTrick(complexMaster, {}, watcher);
-    return await sitemapTrick.scrape();
+    try{
+        return await sitemapTrick.scrape();
+    }catch(e){
+        console.log(e);
+    }finally{
+        await browser.close()
+    }
+    return {}
 }
 
 async function upsertScrapedData<
@@ -142,7 +149,7 @@ async function main() {
         watcher,
     );
     try {
-        const sitemapScrapeResult = await getSitemapScrapedResult(page, browser);
+        const sitemapScrapeResult = await getSitemapScrapedResult();
         const {updatedAppsDetail, updatedPartnerDetail} = await updateSitemapScrapedResult(
             sitemapScrapeResult
         )
