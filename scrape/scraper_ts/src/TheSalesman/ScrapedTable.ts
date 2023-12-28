@@ -10,6 +10,7 @@ import {
     DBShopifyCommunityUserStatsLog,
  } from '../supabase.public.types';
 import BaseScrapedTable from './BaseScrapedTable';
+import { urlToId } from './ScrapeResultUtilities';
 
 type HttpUrl = string;
 type Email = string;
@@ -29,9 +30,8 @@ class ShopifyPartner extends BaseScrapedTable {
         public supportCellphone?: Cellphone,
         public yearsBuiltApps?: number,
         public unknownSupportInfo?: string[],
-        public id?: number,
     ) {
-        super(scrapedAt, id);
+        super(scrapedAt, urlToId(shopifyPage));
         this.name = name;
         this.shopifyPage = shopifyPage;
         this.appsPublished = appsPublished;
@@ -68,9 +68,8 @@ class ShopifyAppCategory extends BaseScrapedTable {
         public parentCategoryId?: HttpUrl | number,
         public shopifyPage?: HttpUrl,
         public categoryType?: string,
-        public id?: number,
     ) {
-        super(scrapedAt, id);
+        super(scrapedAt, urlToId(shopifyPage));
         this.name = name;
         this.parentCategoryId = parentCategoryId;
         this.shopifyPage = shopifyPage;
@@ -95,10 +94,9 @@ class ShopifyAppDetail extends BaseScrapedTable {
         public appName?: string,
         public reviewCount?: number,
         public avgRating?: number,
-        public partnerId?: number | HttpUrl,
-        public id?: number,
+        public partnerId?: string,
     ) {
-        super(scrapedAt, id);
+        super(scrapedAt, urlToId(shopifyPage));
         this.appName = appName;
         this.reviewCount = reviewCount;
         this.partnerId = partnerId;
@@ -121,7 +119,7 @@ class ShopifyAppReview extends BaseScrapedTable {
 
     constructor(
         public scrapedAt: Date,
-        public appId?: number | HttpUrl,
+        public appId?: string,
         public lastUpdatedPage?: number,
         public storeName?: string,
         public storeLocation?: string,
@@ -164,7 +162,7 @@ class ShopifyPricingPlan extends BaseScrapedTable {
         public planName?: string,
         public price?: string,
         public offer?: string,
-        public appId?: number | HttpUrl,
+        public appId?: string,
         public additionalPriceOption?: string,
         public id?: number,
     ) {
@@ -192,12 +190,9 @@ class ShopifyCategoryRankLog extends BaseScrapedTable {
     _eqFields: string[] = ['rank', 'appId', 'categoryId'];
     constructor(
         public scrapedAt: Date,
-        public categoryId:
-            | number
-            | HttpUrl
-        ,
+        public categoryId:string,
         public rank?: number,
-        public appId?: number | HttpUrl,
+        public appId?: string,
         public id?: number,
     ) {
         super(scrapedAt, id);
@@ -216,11 +211,11 @@ class ShopifyCategoryRankLog extends BaseScrapedTable {
     }
 }
 class ShopifyAppDescriptionLog extends BaseScrapedTable {
-    _eqFields: string[] = ['description'];
+    _eqFields: string[] = ['description', 'appId'];
 
     constructor(
         public scrapedAt: Date,
-        public appId?: number | HttpUrl,
+        public appId?: string,
         public description?: string,
         public id?: number,
         ) {
@@ -250,10 +245,9 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
         public solutionsCount?: number,
         public likesCount?: number,
         public topicsStartedCount?: number,
-        public partnerId?: number | null | HttpUrl,
-        public id?: number,
+        public partnerId?: string|null,
     ) {
-        super(scrapedAt, id);
+        super(scrapedAt, urlToId(communityUserPage));
         this.communityUserPage = communityUserPage;
         this.communityUserName = communityUserName;
         this.communityUserType = communityUserType;
@@ -290,7 +284,7 @@ class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
     ];
     constructor(
         public scrapedAt: Date,
-        public communityUserId?: number,
+        public communityUserId?: string,
         public postsCount?: number,
         public solutionsCount?: number,
         public likesCount?: number,

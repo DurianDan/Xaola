@@ -5,7 +5,7 @@ class BaseScrapedTable {
 
     constructor(
         public scrapedAt: Date,
-        public id?: number,
+        public id?: number|string,
     ) {
         this.id = id;
         this.scrapedAt = scrapedAt;
