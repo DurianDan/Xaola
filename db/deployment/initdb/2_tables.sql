@@ -20,7 +20,7 @@ CREATE TABLE
   shopify_app_category (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    parent_category_id INT,
+    parent_category_id VARCHAR(255),
     shopify_page TEXT NOT NULL,
     category_type VARCHAR(50),
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE
     solutions_count INTEGER NOT NULL,
     likes_count INTEGER NOT NULL,
     topics_started_count INTEGER NOT NULL,
-    partner_id INT,
+    partner_id VARCHAR(255),
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (partner_id) REFERENCES shopify_partner (id)
@@ -113,5 +113,5 @@ CREATE TABLE
     likes_count INTEGER NOT NULL,
     topics_started_count INTEGER NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (community_user_id) REFERENCES shopify_community_user_stats_log (id)
+    FOREIGN KEY (community_user_id) REFERENCES shopify_community_user_stats (id)
 );
