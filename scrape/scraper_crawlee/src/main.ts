@@ -1,7 +1,7 @@
 import { PuppeteerCrawler } from 'crawlee';
 
 const crawler = new PuppeteerCrawler({
-    async requestHandler({ request, page, log, enqueueLinks }) {
+    async requestHandler({ request, page, log }) {
         const title = await page.$$(
             'div[class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 xl:tw-grid-cols-3"] > div'
             );

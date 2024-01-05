@@ -4,12 +4,19 @@
     "type": "module",
     "description": "This is an example of a Crawlee project.",
     "dependencies": {
+        "@supabase/supabase-js": "^2.39.2",
+        "@types/lodash": "^4.14.202",
+        "cheerio": "1.0.0-rc.12",
         "crawlee": "^3.0.0",
+        "dotenv": "^16.3.1",
+        "lodash": "^4.17.21",
+        "lodash.difference": "^4.5.0",
         "puppeteer": "^21.6.1"
     },
     "devDependencies": {
         "@apify/tsconfig": "^0.1.0",
         "@types/node": "^20.0.0",
+        "supabase": "^1.127.4",
         "tsx": "^4.4.0",
         "typescript": "~5.3.0"
     },
