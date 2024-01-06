@@ -1,4 +1,4 @@
-import { difference as arrDiff, isEmpty } from 'lodash';
+import * as lodash from 'lodash';
 
 class BaseScrapedTable {
     public _eqFields: string[] = ['shopify_page'];
@@ -22,7 +22,7 @@ class BaseScrapedTable {
             [this, otherRow],
             [otherRow, this],
         ]) {
-            const unmatchedFields: Array<string> = arrDiff(
+            const unmatchedFields: Array<string> = lodash.difference(
                 Object.keys(rowPair[0]),
                 Object.keys(rowPair[1]),
             );
@@ -54,7 +54,7 @@ class BaseScrapedTable {
     isValid(): boolean {
         for (const fieldName in this._eqFields) {
             const tmpValue = (this as any)[fieldName];
-            if (!tmpValue || isEmpty(tmpValue)) {
+            if (!tmpValue || lodash.isEmpty(tmpValue)) {
                 return false;
             }
         }

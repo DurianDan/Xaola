@@ -13,7 +13,7 @@ interface CheckLogResult<T>{
     checkedObj: T
 }
 interface BaseWatcher {
-    config: WatchConfig;
+    config?: WatchConfig;
     /**
      * Generate message for logger
      * @param {any} watchThings?:WatchThings if parsed will overwrite the this.config (WatchConfig)
@@ -26,12 +26,6 @@ interface BaseWatcher {
      * @returns {any}
      */
     log(msg: string): void;
-    /**
-     * Check an object to be undefined/null/empty-object/blank-string
-     * @param {any} toCheck:T object to check
-     * @returns {any} boolean: true if needs to be log
-     */
-    checkObjectToLog(toCheck: any): boolean;
     /**
      * Utilize `this.checkObjectToLog` to check if the parsed object is undefined/null/empty-object/blank-string, if it is, execute `this.info`
      * @param {any} toCheck:T
