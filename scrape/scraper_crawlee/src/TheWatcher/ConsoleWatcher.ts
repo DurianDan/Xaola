@@ -1,5 +1,5 @@
-import { isEmpty } from 'lodash';
 import { WatchConfig, BaseWatcher, WatchThings, CheckLogResult } from './BaseWatcher';
+import { checkObjectToLog } from './watcherUtils';
 
 class ConsoleWatcher implements BaseWatcher {
     public constructor(public config: WatchConfig) {
@@ -35,24 +35,21 @@ class ConsoleWatcher implements BaseWatcher {
             this.log(this.generateMessage({ level: 'WARN', ...watchThings }));
         }
     }
-    checkObjectToLog(toCheck: any): boolean {
-        return !toCheck || isEmpty(toCheck) || toCheck === '';
-    }
     checkInfo<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = this.checkObjectToLog(toCheck)
+        const needsLog = checkObjectToLog(toCheck)
         needsLog?this.info(watchThings):undefined
         return {needsLog, checkedObj:toCheck};
     }
     checkError<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = this.checkObjectToLog(toCheck)
+        const needsLog = checkObjectToLog(toCheck)
         needsLog?this.error(watchThings):undefined
         return {needsLog, checkedObj: toCheck};
     }
     checkWarn<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = this.checkObjectToLog(toCheck)
+        const needsLog = checkObjectToLog(toCheck)
         needsLog?this.info(watchThings):undefined
         return {needsLog, checkedObj: toCheck};
     }
 }
 
-export { ConsoleWatcher };
+export default ConsoleWatcher ;

@@ -4,7 +4,7 @@ import {
     ShopifyCommunityLanguageUrlSuffix,
 } from '../AudienceProfile';
 type HttpUrl = string;
-import { trim as lodashTrim } from 'lodash';
+import * as lodash from 'lodash';
 
 class ShopifyPageURL {
     sitemap: HttpUrl = 'https://apps.shopify.com/sitemap';
@@ -49,7 +49,7 @@ class ShopifyPageURL {
         );
     }
     get appReviewsDefaultPage(): string {
-        return lodashTrim(this.appLandingPage.toString(), '/') + '/reviews';
+        return lodash.trim(this.appLandingPage.toString(), '/') + '/reviews';
     }
     get communityLandingPage(): URL {
         return this.normalizeUrl(
