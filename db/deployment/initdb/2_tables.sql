@@ -20,7 +20,7 @@ CREATE TABLE
   shopify_app_category (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    parent_category_id VARCHAR(255),
+    parent_category_id VARCHAR(255), 
     shopify_page TEXT NOT NULL,
     category_type VARCHAR(50),
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

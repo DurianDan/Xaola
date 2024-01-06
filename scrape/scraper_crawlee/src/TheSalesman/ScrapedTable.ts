@@ -19,7 +19,7 @@ type Cellphone = string;
 
 class ShopifyPartner extends BaseScrapedTable {
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public name?: string,
         public shopifyPage?: HttpUrl,
         public appsPublished?: number,
@@ -43,7 +43,7 @@ class ShopifyPartner extends BaseScrapedTable {
         this.unknownSupportInfo = unknownSupportInfo
         this.yearsBuiltApps = yearsBuiltApps
     }
-    toDBRecord(id?:number): DBShopifyPartner{
+    toDBRecord(id?:string): DBShopifyPartner{
         const record = {
             apps_published: this.appsPublished,
             avg_rating: this.avgRating,
@@ -63,9 +63,9 @@ class ShopifyPartner extends BaseScrapedTable {
 
 class ShopifyAppCategory extends BaseScrapedTable {
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public name?: string,
-        public parentCategoryId?: HttpUrl | number,
+        public parentCategoryId?: HttpUrl | string,
         public shopifyPage?: HttpUrl,
         public categoryType?: string,
     ) {
@@ -75,7 +75,7 @@ class ShopifyAppCategory extends BaseScrapedTable {
         this.shopifyPage = shopifyPage;
         this.categoryType = categoryType;
     }
-    toDBRecord(id?:number): DBShopifyAppCategory{
+    toDBRecord(id?:string): DBShopifyAppCategory{
         const record = {
             category_type: this.categoryType,
             name: this.name,
@@ -89,7 +89,7 @@ class ShopifyAppCategory extends BaseScrapedTable {
 }
 class ShopifyAppDetail extends BaseScrapedTable {
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public shopifyPage?: HttpUrl,
         public appName?: string,
         public reviewCount?: number,
@@ -101,7 +101,7 @@ class ShopifyAppDetail extends BaseScrapedTable {
         this.reviewCount = reviewCount;
         this.partnerId = partnerId;
     }
-    toDBRecord(id?:number): DBShopifyAppDetail{
+    toDBRecord(id?:string): DBShopifyAppDetail{
         const record = {
             app_name: this.appName, 
             avg_rating: this.avgRating, 
@@ -115,10 +115,10 @@ class ShopifyAppDetail extends BaseScrapedTable {
     }
 }
 class ShopifyAppReview extends BaseScrapedTable {
-    _eqFields: string[] = ['storeName', 'storeLocation', 'content'];
+    override _eqFields: string[] = ['storeName', 'storeLocation', 'content'];
 
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public appId?: string,
         public lastUpdatedPage?: number,
         public storeName?: string,
@@ -127,7 +127,7 @@ class ShopifyAppReview extends BaseScrapedTable {
         public approxDaysOnApp?: number,
         public rating?: number,
         public datePosted?: Date,
-        public id?: number,
+        public override id?: number,
         ) {
             super(scrapedAt, id);
             this.appId = appId;
@@ -156,15 +156,15 @@ class ShopifyAppReview extends BaseScrapedTable {
     }
 }
 class ShopifyPricingPlan extends BaseScrapedTable {
-    _eqFields: string[] = ['planName', 'price', 'offer'];
+    override _eqFields: string[] = ['planName', 'price', 'offer'];
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public planName?: string,
         public price?: string,
         public offer?: string,
         public appId?: string,
         public additionalPriceOption?: string,
-        public id?: number,
+        public override id?: number,
     ) {
         super(scrapedAt, id);
         this.planName = planName;
@@ -187,13 +187,13 @@ class ShopifyPricingPlan extends BaseScrapedTable {
     }
 }
 class ShopifyCategoryRankLog extends BaseScrapedTable {
-    _eqFields: string[] = ['rank', 'appId', 'categoryId'];
+    override _eqFields: string[] = ['rank', 'appId', 'categoryId'];
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public categoryId:string,
         public rank?: number,
         public appId?: string,
-        public id?: number,
+        public override id?: number,
     ) {
         super(scrapedAt, id);
         this.categoryId = categoryId;
@@ -211,13 +211,13 @@ class ShopifyCategoryRankLog extends BaseScrapedTable {
     }
 }
 class ShopifyAppDescriptionLog extends BaseScrapedTable {
-    _eqFields: string[] = ['description', 'appId'];
+    override _eqFields: string[] = ['description', 'appId'];
 
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public appId?: string,
         public description?: string,
-        public id?: number,
+        public override id?: number,
         ) {
             super(scrapedAt, id);
             this.appId = appId;
@@ -235,9 +235,9 @@ class ShopifyAppDescriptionLog extends BaseScrapedTable {
 }
 
 class ShopifyCommunityUserStats extends BaseScrapedTable {
-    _eqFields: string[] = ['communityUserPage'];
+    override _eqFields: string[] = ['communityUserPage'];
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public communityUserPage?: HttpUrl,
         public communityUserName?: string,
         public communityUserType?: string,
@@ -257,7 +257,7 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
         this.topicsStartedCount = topicsStartedCount;
         this.partnerId = partnerId;
     }
-    toDBRecord(id?:number): DBShopifyCommunityUserStats{
+    toDBRecord(id?:string): DBShopifyCommunityUserStats{
         const record = {
             community_user_name: this.communityUserName,
             community_user_page: this.communityUserPage,
@@ -275,7 +275,7 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
 }
 
 class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
-    _eqFields: string[] = [
+    override _eqFields: string[] = [
         'communityUserId',
         'postsCount',
         'solutionsCount',
@@ -283,13 +283,13 @@ class ShopifyCommunityUserStatsLog extends BaseScrapedTable {
         'topicsStartedCount',
     ];
     constructor(
-        public scrapedAt: Date,
+        public override scrapedAt: Date,
         public communityUserId?: string,
         public postsCount?: number,
         public solutionsCount?: number,
         public likesCount?: number,
         public topicsStartedCount?: number,
-        public id?: number,
+        public override id?: number,
     ) {
         super(scrapedAt, id);
         this.communityUserId = communityUserId;

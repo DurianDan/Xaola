@@ -90,15 +90,27 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         }
         return tmpScrapedResult;
     }
+    isAppsCategoryURL(url: string): boolean{
+        return (
+            url.startsWith(this.urls.appCategoryPrefix)
+            && !url.includes("?")
+        )
+    }
+    isPartnerLandingPageURL(url: string): boolean{
+        return (
+            url.startsWith(this.urls.appPartnerPrefix)
+            && !url.includes("?")
+        )
+    }
     async extractBasicCategoryInfo(): Promise<ShopifyAppCategory[]> {
         const allHrefTexts = await this.puppetMaster.allTagAHrefsTexts();
         const categoryDetails: ShopifyAppCategory[] = [];
         for (const { href: categoryUrl, text: name } of allHrefTexts) {
-            if (categoryUrl.startsWith(this.urls.appCategoryPrefix)) {
+            if (this.isAppsCategoryURL(categoryUrl)) {
                 categoryDetails.push(
                     new ShopifyAppCategory(
                         new Date(),
-                        name,
+                        name.trim(),
                         undefined,
                         categoryUrl,
                     ),
