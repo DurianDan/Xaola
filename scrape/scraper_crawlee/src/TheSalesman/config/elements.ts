@@ -5,7 +5,7 @@ const shopifyCommonElements = {
 };
 
 const fancyCategoryElements = {
-    videoTagsElements: '//video',
+    identifierElement: "video",
     appCateogryInfo: {
         positions: '//div[@data-app-card-handle-value]',
         innerTagASelector: 'a',
@@ -118,12 +118,30 @@ const sitemapElements = {
     partnerAreaElementPath: '//*[@id="ToolsSitemap"]/main/div/div[3]/div[*]',
 };
 
-const shopifyCategoryElements = {
-    /**
-     * @todo find elements on category pages
-     * */
+const shopifyStaticCategoryElements = {
+    identifierElement: '*[id="pagination_controls"]',
+    appCateogryInfo: {
+        positions: 'div[data-app-card-target]',
+        innerTagASelector: 'a',
+        innerAvgRatingSelector:
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
+        innerReviewCountSelector: 
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
+    },
 };
 
+
+const shopifyFancyStaticCategoryElements = {
+    identifierElement: "div > picture > source",
+    appCateogryInfo: {
+        positions: 'div[data-app-card-target]',
+        innerTagASelector: 'a',
+        innerAvgRatingSelector:
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
+        innerReviewCountSelector: 
+            'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
+    },
+}
 type XpathPageConfig =
     | typeof shopifyCommonElements
     | typeof shopifyReviewsElements
@@ -131,8 +149,10 @@ type XpathPageConfig =
     | typeof shopifyPartnerElements
     | typeof shopifySolutionElements
     | typeof sitemapElements
-    | typeof shopifyCategoryElements
-    | typeof fancyCategoryElements;
+    | typeof shopifyStaticCategoryElements
+    | typeof fancyCategoryElements
+    | typeof shopifyFancyStaticCategoryElements
+    | typeof shopifyStaticCategoryElements;
 
 export {
     shopifyCommonElements,
@@ -141,7 +161,8 @@ export {
     shopifyPartnerElements,
     shopifySolutionElements,
     sitemapElements,
-    shopifyCategoryElements,
     fancyCategoryElements,
+    shopifyFancyStaticCategoryElements,
+    shopifyStaticCategoryElements,
     XpathPageConfig,
 };

@@ -57,4 +57,6 @@
 
 // }
 
-// export default NoobMaster
+class NoobMaster{}
+
+export default NoobMaster
