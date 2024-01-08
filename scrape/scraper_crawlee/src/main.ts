@@ -1,48 +1,10 @@
-import { PuppeteerCrawler, Dataset, EnqueueLinksOptions, BatchAddRequestsResult } from 'crawlee';
-import SitemapTrick from './ThePuppetShow/PuppetTricks/SitemapTrick';
+import { PuppeteerCrawler } from 'crawlee';
 import ComplexMaster from './ThePuppetShow/PuppetMaster/ComplexMaster';
 import CrawleeWatcher from './TheWatcher/CrawleeWatcher';
-// import AppLandingPageTrick from './ThePuppetShow/PuppetTricks/AppLandingPageTrick';
+
+import sitemapAct from './ThePuppetShow/Acts/SitemapAct';
 
 const sitemapURL: string = 'https://apps.shopify.com/sitemap';
-type EnqueueLinksFunction = (options?: EnqueueLinksOptions) => any;
-
-async function sitemapCrawlee(
-    puppetMaster: ComplexMaster,
-    watcher: CrawleeWatcher,
-    enqueueLinks: EnqueueLinksFunction,
-){
-    const sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher)
-    const scrapeResult = await sitemapTrick.scrape();
-    const appsLPURL: string[] = []
-    for (const app of scrapeResult.shopifyAppDetail??[]){
-        app.shopifyPage? appsLPURL.push( app.shopifyPage):undefined
-    }
-    enqueueLinks({
-        label: "APP",
-        transformRequestFunction(req){
-            return appsLPURL.includes(req.url)?req:false
-        }
-    })
-    enqueueLinks({
-        label: "PARTNER",
-        transformRequestFunction(req){
-            if (sitemapTrick.isPartnerLandingPageURL(req.url)){
-                return req
-            }
-            return false
-        }
-    })
-    enqueueLinks({
-        label: 'CATEGORY',
-        transformRequestFunction(req){
-            if (sitemapTrick.isAppsCategoryURL(req.url)){
-                return req
-            }
-            return false
-        }
-    })
-}
 
 const crawler = new PuppeteerCrawler({
     maxRequestsPerCrawl: 2,
@@ -56,10 +18,10 @@ const crawler = new PuppeteerCrawler({
             )
 
         if (request.loadedUrl == sitemapURL){
-            await sitemapCrawlee(puppetMaster, watcher, enqueueLinks)
+            await sitemapAct(puppetMaster, watcher, enqueueLinks)
             // 3 labels: "APP", "PARTNER", "CATEGORY"
         }else if (request.label == "APP"){
-            
+
         }
     },
 });
