@@ -4,7 +4,21 @@ const shopifyCommonElements = {
     topNavbarElement: '//*[@id="AppStoreNavbar"]/nav',
 };
 
-const fancyCategoryElements = {
+type CategoryPageType = "fancy" | "fancy-static" | "static"
+
+interface CategoryXpathPageConfig {
+    categoryType: CategoryPageType,
+    identifierElement: string,
+    appCateogryInfo: {
+        positions: string,
+        innerTagASelector: string,
+        innerAvgRatingSelector:string,
+        innerReviewCountSelector: string,
+    },
+};
+
+const fancyCategoryElements: CategoryXpathPageConfig = {
+    categoryType: "fancy",
     identifierElement: "video",
     appCateogryInfo: {
         positions: '//div[@data-app-card-handle-value]',
@@ -118,7 +132,8 @@ const sitemapElements = {
     partnerAreaElementPath: '//*[@id="ToolsSitemap"]/main/div/div[3]/div[*]',
 };
 
-const shopifyStaticCategoryElements = {
+const shopifyStaticCategoryElements: CategoryXpathPageConfig = {
+    categoryType: "static",
     identifierElement: '*[id="pagination_controls"]',
     appCateogryInfo: {
         positions: 'div[data-app-card-target]',
@@ -131,7 +146,8 @@ const shopifyStaticCategoryElements = {
 };
 
 
-const shopifyFancyStaticCategoryElements = {
+const shopifyFancyStaticCategoryElements: CategoryXpathPageConfig = {
+    categoryType: "fancy-static",
     identifierElement: "div > picture > source",
     appCateogryInfo: {
         positions: 'div[data-app-card-target]',
@@ -142,6 +158,7 @@ const shopifyFancyStaticCategoryElements = {
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
     },
 }
+
 type XpathPageConfig =
     | typeof shopifyCommonElements
     | typeof shopifyReviewsElements
@@ -153,6 +170,7 @@ type XpathPageConfig =
     | typeof fancyCategoryElements
     | typeof shopifyFancyStaticCategoryElements
     | typeof shopifyStaticCategoryElements;
+    
 
 export {
     shopifyCommonElements,
@@ -164,5 +182,6 @@ export {
     fancyCategoryElements,
     shopifyFancyStaticCategoryElements,
     shopifyStaticCategoryElements,
+    CategoryXpathPageConfig,
     XpathPageConfig,
 };
