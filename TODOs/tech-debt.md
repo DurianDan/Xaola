@@ -1,0 +1,5 @@
+- `scrape/scraper_crawlee/src/TheSalesman/config/elements.ts`:
+    - problem: the map of elements has both **XPATH** and **CSS selectors** mixed in.
+    - recommend solutions:
+        - Modified all `PuppetMaster` to accept only **CSS selectors**
+        - Use the defined **CSS selectors alternatives**, in the comment section at the end of the `elements.ts` file
