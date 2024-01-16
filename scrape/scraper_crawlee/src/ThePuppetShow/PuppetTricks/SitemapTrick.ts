@@ -191,3 +191,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
 }
 
 export default SitemapTrick;
+//=============================TECH-DEBT==================================
+/* The SitemapTrick is only tested with ComplexMaster,
+which still use XPATH as element selector,
+when there's not parent element parsed */

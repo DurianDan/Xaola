@@ -366,3 +366,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
 }
 
 export default AppLandingPageTrick;
+//=============================TECH-DEBT==================================
+/* The AppLandingPageTrick is only tested with ComplexMaster,
+which still use XPATH as element selector,
+when there's not parent element parsed */

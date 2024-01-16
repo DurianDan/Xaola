@@ -286,3 +286,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
 }
 
 export { AppReviewsTrick, AppReviewsConfig };
+//=============================TECH-DEBT==================================
+/* The AppReviewsTrick is only tested with ComplexMaster,
+which still use XPATH as element selector,
+when there's not parent element parsed */
