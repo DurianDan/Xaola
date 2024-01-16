@@ -1,9 +1,18 @@
-import FancyCategoryTrick from "./ThePuppetShow/PuppetTricks/FancyCategoryTrick";
+// import FancyCategoryTrick from "./ThePuppetShow/PuppetTricks/FancyCategoryTrick";
+import isEmpty from "lodash/isEmpty";
 import NoobMaster from "./ThePuppetShow/PuppetMaster/NoobMaster";
 import ConsoleWatcher from "./TheWatcher/ConsoleWatcher";
 
 async function main(){
-
+    const testFancyCateURL = "https://apps.shopify.com/categories/orders-and-shipping";
+    const $ = await NoobMaster.loadCheerioAPI(testFancyCateURL)
+    console.log("Title of the loaded page: "+ $("title").text());
+    const watcher = new ConsoleWatcher({level: "info"});
+    const puppetMaster = new NoobMaster(
+      {logNullElement: true}, $,watcher,testFancyCateURL
+    )
+    const tagAHrefs = await puppetMaster.allTagAHrefsTexts();
+    console.log(`Number of tag href: ${tagAHrefs.length}, first is ${isEmpty(tagAHrefs)?[]:JSON.stringify(tagAHrefs[23])}`)
 }
 
 main()
