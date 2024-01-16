@@ -7,6 +7,11 @@ import isEmpty from 'lodash/isEmpty';
 
 type Miliseconds = number;
 
+/**
+ * Implementation of `PuppetMaster`,
+ * using `axios` to request static html, and load it into a `CheerioAPI` object,
+ * using `Cheerio` selectors to get `Element`
+ */
 class NoobMaster implements PuppetMaster<CheerioAPI, Element>{
   constructor(
     public config: PuppetMasterConfig,

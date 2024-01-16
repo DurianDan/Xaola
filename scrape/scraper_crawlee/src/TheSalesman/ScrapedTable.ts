@@ -44,6 +44,10 @@ class ShopifyPartner extends BaseScrapedTable {
         this.yearsBuiltApps = yearsBuiltApps
     }
     toDBRecord(id?:string): DBShopifyPartner{
+        let parsedId = id;
+        if (!id && this.shopifyPage){
+            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage);
+        }
         const record = {
             apps_published: this.appsPublished,
             avg_rating: this.avgRating,
@@ -55,7 +59,7 @@ class ShopifyPartner extends BaseScrapedTable {
             support_email: this.supportEmail,
             unknown_support_info: this.unknownSupportInfo,
             years_built_apps: this.yearsBuiltApps,
-            id:id
+            id:parsedId
         }
         return this.removeNullUndefinedFields(record as DBShopifyPartner);
     }
@@ -76,12 +80,16 @@ class ShopifyAppCategory extends BaseScrapedTable {
         this.categoryType = categoryType;
     }
     toDBRecord(id?:string): DBShopifyAppCategory{
+        let parsedId = id;
+        if (!id && this.shopifyPage){
+            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage);
+        }
         const record = {
             category_type: this.categoryType,
             name: this.name,
             parent_category_id: this.parentCategoryId ,
             shopify_page: this.shopifyPage,
-            id:id
+            id:parsedId
         }
         return this.removeNullUndefinedFields(
             record as DBShopifyAppCategory);
@@ -102,13 +110,17 @@ class ShopifyAppDetail extends BaseScrapedTable {
         this.partnerId = partnerId;
     }
     toDBRecord(id?:string): DBShopifyAppDetail{
+        let parsedId = id;
+        if (!id && this.shopifyPage){
+            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage);
+        }
         const record = {
             app_name: this.appName, 
             avg_rating: this.avgRating, 
             partner_id: this.partnerId, 
             review_count: this.reviewCount, 
             shopify_page: this.shopifyPage, 
-            id:id
+            id:parsedId
         }
         return this.removeNullUndefinedFields(
             record as DBShopifyAppDetail);
@@ -258,6 +270,10 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
         this.partnerId = partnerId;
     }
     toDBRecord(id?:string): DBShopifyCommunityUserStats{
+        let parsedId = id;
+        if (!id && this.communityUserPage){
+            parsedId = BaseScrapedTable.urlToIDPart(this.communityUserPage);
+        }
         const record = {
             community_user_name: this.communityUserName,
             community_user_page: this.communityUserPage,
@@ -267,7 +283,7 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
             posts_count: this.postsCount,
             solutions_count: this.solutionsCount,
             topics_started_count: this.topicsStartedCount,
-            id: id,
+            id: parsedId,
         }
         return this.removeNullUndefinedFields(
             record as DBShopifyCommunityUserStats);
