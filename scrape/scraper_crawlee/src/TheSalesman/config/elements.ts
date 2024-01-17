@@ -93,11 +93,17 @@ const shopifyAppElements = {
 };
 
 const shopifyPartnerElements = {
-    nameLineElement: '//*[@id="PartnersShow"]/main/div/section/div[1]/h1',
+    nameLineElement: 'main > div > section > div:nth-child(1) > h1',
     avgRatingElement:
-        '//*[@id="PartnersShow"]/main/div/section/div[1]/div/span[3]',
+        'main > div > section > div:nth-child(1) > div > span:nth-child(3)',
+        // No reviews
+        // 1 review
     appsPublishedCountElement:
-        '//*[@id="PartnersShow"]/main/div/section/div[1]/div/span[1]',
+        'main > div > section > div:nth-child(1) > div > span:nth-child(1)',
+    appsInfo: {
+      positions: 'main > div > section > div:nth-child(2) > div > div > div:first-child',
+      appName: 'a',
+    }
 };
 
 const shopifySolutionElements = {
