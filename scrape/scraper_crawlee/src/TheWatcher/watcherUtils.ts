@@ -1,4 +1,4 @@
-import isEmpty from "lodash/isEmpty";
+import isEmpty from 'lodash/isEmpty';
 /**
  * Check an object to be undefined/null/empty-object/blank-string
  * @param {any} toCheck:T object to check

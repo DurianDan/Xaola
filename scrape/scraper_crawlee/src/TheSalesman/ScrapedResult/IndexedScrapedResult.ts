@@ -2,7 +2,7 @@ import {
     ShopifyPartner,
     ShopifyAppCategory,
     ShopifyAppDetail,
-    HttpUrl
+    HttpUrl,
 } from '../ScrapedTable';
 
 interface IndexedScrapeResult {

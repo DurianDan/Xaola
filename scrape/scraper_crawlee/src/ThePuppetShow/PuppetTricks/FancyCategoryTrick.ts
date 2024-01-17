@@ -101,11 +101,11 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
         ).checkedObj;
         // '56 total reviews'
         const reviewCountString = await reviewCountElement?.text();
-        if (!reviewCountString || reviewCountString.includes("No reviews")){
-          return 0
+        if (!reviewCountString || reviewCountString.includes('No reviews')) {
+            return 0;
         }
         const foundNumberPart = reviewCountString.match(/\d+(\.\d+)?/g);
-        return foundNumberPart?Number(foundNumberPart):0;
+        return foundNumberPart ? Number(foundNumberPart) : 0;
     }
     async extractAppDetailFromRankElement(
         element: ScrapedElement<P, E>,

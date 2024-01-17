@@ -90,17 +90,13 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
         }
         return tmpScrapedResult;
     }
-    isAppsCategoryURL(url: string): boolean{
+    isAppsCategoryURL(url: string): boolean {
         return (
-            url.startsWith(this.urls.appCategoryPrefix)
-            && !url.includes("?")
-        )
+            url.startsWith(this.urls.appCategoryPrefix) && !url.includes('?')
+        );
     }
-    isPartnerLandingPageURL(url: string): boolean{
-        return (
-            url.startsWith(this.urls.appPartnerPrefix)
-            && !url.includes("?")
-        )
+    isPartnerLandingPageURL(url: string): boolean {
+        return url.startsWith(this.urls.appPartnerPrefix) && !url.includes('?');
     }
     async extractBasicCategoryInfo(): Promise<ShopifyAppCategory[]> {
         const allHrefTexts = await this.puppetMaster.allTagAHrefsTexts();

@@ -19,15 +19,24 @@
         "@types/node": "^20.0.0",
         "supabase": "^1.127.4",
         "tsx": "^4.4.0",
-        "typescript": "~5.3.0"
+        "typescript": "~5.3.0",
+        "prettier": "^3.0.3"
     },
     "scripts": {
         "start": "npm run start:dev",
         "start:prod": "node dist/main.js",
         "start:dev": "tsx src/main.ts",
         "build": "tsc",
-        "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
+        "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1",
+        "format": "prettier --write \"src/**/*.ts\""
     },
     "author": "It's not you it's me",
-    "license": "ISC"
+    "license": "ISC",
+    "prettier": {
+        "semi": true,
+        "trailingComma": "all",
+        "singleQuote": true,
+        "printWidth": 80,
+        "tabWidth": 4
+    }
 }

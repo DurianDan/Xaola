@@ -84,11 +84,11 @@ export function getIndexedScrapedResult(
 }
 
 /**
-* Return the unique substring part of an url, 
-* to be used as an id
-* @param {any} url:string
-* @returns {any}
-*/
-export function urlToId(url: string|undefined): string|undefined{
-   return url?url.split("/")[-1]:undefined;
+ * Return the unique substring part of an url,
+ * to be used as an id
+ * @param {any} url:string
+ * @returns {any}
+ */
+export function urlToId(url: string | undefined): string | undefined {
+    return url ? url.split('/')[-1] : undefined;
 }

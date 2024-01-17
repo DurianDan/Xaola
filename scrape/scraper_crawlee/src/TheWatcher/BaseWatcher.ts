@@ -8,9 +8,9 @@ interface WatchThings {
     msg: string;
     err?: Error;
 }
-interface CheckLogResult<T>{
-    needsLog: boolean,
-    checkedObj: T
+interface CheckLogResult<T> {
+    needsLog: boolean;
+    checkedObj: T;
 }
 interface BaseWatcher {
     config?: WatchConfig;

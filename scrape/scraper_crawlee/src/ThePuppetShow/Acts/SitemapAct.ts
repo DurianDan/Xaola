@@ -10,35 +10,31 @@ async function sitemapAct(
     puppetMaster: ComplexMaster,
     watcher: CrawleeWatcher,
     enqueueLinks: EnqueueLinksFunction,
-){
-    const sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher)
+) {
+    const sitemapTrick = new SitemapTrick(puppetMaster, {}, watcher);
     const scrapeResult = await sitemapTrick.scrape();
-    const appsLPURL: string[] = []
-    for (const app of scrapeResult.shopifyAppDetail??[]){
-        app.shopifyPage? appsLPURL.push( app.shopifyPage):undefined
+    const appsLPURL: string[] = [];
+    for (const app of scrapeResult.shopifyAppDetail ?? []) {
+        app.shopifyPage ? appsLPURL.push(app.shopifyPage) : undefined;
     }
     enqueueLinks({
-        label: "APP",
-        transformRequestFunction(req){
-            return appsLPURL.includes(req.url)?req:false
-        }
-    })
+        label: 'APP',
+        transformRequestFunction(req) {
+            return appsLPURL.includes(req.url) ? req : false;
+        },
+    });
     enqueueLinks({
-        label: "PARTNER",
-        transformRequestFunction(req){
-            return sitemapTrick.isPartnerLandingPageURL(
-                req.url
-            )?req:false
-        }
-    })
+        label: 'PARTNER',
+        transformRequestFunction(req) {
+            return sitemapTrick.isPartnerLandingPageURL(req.url) ? req : false;
+        },
+    });
     enqueueLinks({
         label: 'CATEGORY',
-        transformRequestFunction(req){
-            return sitemapTrick.isAppsCategoryURL(
-                req.url
-            )?req:false
-        }
-    })
+        transformRequestFunction(req) {
+            return sitemapTrick.isAppsCategoryURL(req.url) ? req : false;
+        },
+    });
 }
 
 export default sitemapAct;

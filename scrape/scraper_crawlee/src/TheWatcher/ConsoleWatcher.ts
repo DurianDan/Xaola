@@ -1,4 +1,9 @@
-import { WatchConfig, BaseWatcher, WatchThings, CheckLogResult } from './BaseWatcher';
+import {
+    WatchConfig,
+    BaseWatcher,
+    WatchThings,
+    CheckLogResult,
+} from './BaseWatcher';
 import { checkObjectToLog } from './watcherUtils';
 
 class ConsoleWatcher implements BaseWatcher {
@@ -36,20 +41,20 @@ class ConsoleWatcher implements BaseWatcher {
         }
     }
     checkInfo<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = checkObjectToLog(toCheck)
-        needsLog?this.info(watchThings):undefined
-        return {needsLog, checkedObj:toCheck};
+        const needsLog = checkObjectToLog(toCheck);
+        needsLog ? this.info(watchThings) : undefined;
+        return { needsLog, checkedObj: toCheck };
     }
     checkError<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = checkObjectToLog(toCheck)
-        needsLog?this.error(watchThings):undefined
-        return {needsLog, checkedObj: toCheck};
+        const needsLog = checkObjectToLog(toCheck);
+        needsLog ? this.error(watchThings) : undefined;
+        return { needsLog, checkedObj: toCheck };
     }
     checkWarn<T>(toCheck: T, watchThings: WatchThings): CheckLogResult<T> {
-        const needsLog = checkObjectToLog(toCheck)
-        needsLog?this.info(watchThings):undefined
-        return {needsLog, checkedObj: toCheck};
+        const needsLog = checkObjectToLog(toCheck);
+        needsLog ? this.info(watchThings) : undefined;
+        return { needsLog, checkedObj: toCheck };
     }
 }
 
-export default ConsoleWatcher ;
+export default ConsoleWatcher;

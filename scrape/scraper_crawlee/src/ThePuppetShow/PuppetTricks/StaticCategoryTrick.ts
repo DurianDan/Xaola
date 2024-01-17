@@ -1,4 +1,3 @@
-
-class StaticCategoryTrick{}
+class StaticCategoryTrick {}
 
 export default StaticCategoryTrick;

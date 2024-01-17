@@ -1,6 +1,3 @@
-
-class FancyStaticCategoryTrick{
-
-}
+class FancyStaticCategoryTrick {}
 
 export default FancyStaticCategoryTrick;

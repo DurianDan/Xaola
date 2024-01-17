@@ -12,20 +12,24 @@ class NoobScrapedElement implements ScrapedElement<CheerioAPI, Element> {
         this.selector = selector;
         this.page = page;
     }
-    checkRetrievedAttribute(attribute: undefined|string, attributeName: string): string{
-        if (attribute){
-            return attribute
-        }else{
-            throw Error(`Cant find element with selector: "${attributeName}"`)
+    checkRetrievedAttribute(
+        attribute: undefined | string,
+        attributeName: string,
+    ): string {
+        if (attribute) {
+            return attribute;
+        } else {
+            throw Error(`Cant find element with selector: "${attributeName}"`);
         }
     }
     async getProperty(propertyName: string): Promise<string> {
-        return await this.getAttribute(propertyName)
+        return await this.getAttribute(propertyName);
     }
     async getAttribute(attributeName: string): Promise<string> {
         return this.checkRetrievedAttribute(
-            this.element.attribs[attributeName], attributeName
-        )
+            this.element.attribs[attributeName],
+            attributeName,
+        );
     }
     async text(): Promise<string> {
         return this.page(this.element).text();
@@ -39,8 +43,8 @@ class NoobScrapedElement implements ScrapedElement<CheerioAPI, Element> {
         return { href, text };
     }
     async click(option?: ClickOptions): Promise<void> {
-        option
-        return    
+        option;
+        return;
     }
 }
 

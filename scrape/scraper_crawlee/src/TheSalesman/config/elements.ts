@@ -4,28 +4,28 @@ const shopifyCommonElements = {
     topNavbarElement: '//*[@id="AppStoreNavbar"]/nav',
 };
 
-type CategoryPageType = "fancy" | "fancy-static" | "static"
+type CategoryPageType = 'fancy' | 'fancy-static' | 'static';
 
 interface CategoryXpathPageConfig {
-    categoryType: CategoryPageType,
-    identifierElement: string,
+    categoryType: CategoryPageType;
+    identifierElement: string;
     appCateogryInfo: {
-        positions: string,
-        innerTagASelector: string,
-        innerAvgRatingSelector:string,
-        innerReviewCountSelector: string,
-    },
-};
+        positions: string;
+        innerTagASelector: string;
+        innerAvgRatingSelector: string;
+        innerReviewCountSelector: string;
+    };
+}
 
 const fancyCategoryElements: CategoryXpathPageConfig = {
-    categoryType: "fancy",
-    identifierElement: "video",
+    categoryType: 'fancy',
+    identifierElement: 'video',
     appCateogryInfo: {
         positions: 'div[data-app-card-handle-value]',
         innerTagASelector: 'a',
         innerAvgRatingSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-        innerReviewCountSelector: 
+        innerReviewCountSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
     },
 };
@@ -83,9 +83,11 @@ const shopifyAppElements = {
         '//*[@id="adp-hero"]/div/div/div[1]/div/div[1]/div[1]/div[2]/h1',
     pageCountElement: '//*[@id="adp-reviews"]/div/div/h2',
     pricingPlans: {
-        pricingPlanElements:'//div[@class="app-details-pricing-plan-card"]',
-        nameElement: 'div[class="app-details-pricing-plan-card__head"] > p:first-child',
-        nameElementAndOrAdditionalPriceOptionElement: 'div[class="app-details-pricing-plan-card__head"] >p',
+        pricingPlanElements: '//div[@class="app-details-pricing-plan-card"]',
+        nameElement:
+            'div[class="app-details-pricing-plan-card__head"] > p:first-child',
+        nameElementAndOrAdditionalPriceOptionElement:
+            'div[class="app-details-pricing-plan-card__head"] >p',
         priceElement: 'div[class="app-details-pricing-plan-card__head"] > h3',
         planOfferElement: 'div[class="app-details-pricing-plan-card"] > ul',
     },
@@ -96,14 +98,15 @@ const shopifyPartnerElements = {
     nameLineElement: 'main > div > section > div:nth-child(1) > h1',
     avgRatingElement:
         'main > div > section > div:nth-child(1) > div > span:nth-child(3)',
-        // No reviews
-        // 1 review
+    // No reviews
+    // 1 review
     appsPublishedCountElement:
         'main > div > section > div:nth-child(1) > div > span:nth-child(1)',
     appsInfo: {
-      positions: 'main > div > section > div:nth-child(2) > div > div > div:first-child',
-      appName: 'a',
-    }
+        positions:
+            'main > div > section > div:nth-child(2) > div > div > div:first-child',
+        appName: 'a',
+    },
 };
 
 const shopifySolutionElements = {
@@ -139,31 +142,30 @@ const sitemapElements = {
 };
 
 const shopifyStaticCategoryElements: CategoryXpathPageConfig = {
-    categoryType: "static",
+    categoryType: 'static',
     identifierElement: '*[id="pagination_controls"]',
     appCateogryInfo: {
         positions: 'div[data-app-card-target]',
         innerTagASelector: 'a',
         innerAvgRatingSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-        innerReviewCountSelector: 
+        innerReviewCountSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
     },
 };
 
-
 const shopifyFancyStaticCategoryElements: CategoryXpathPageConfig = {
-    categoryType: "fancy-static",
-    identifierElement: "div > picture > source",
+    categoryType: 'fancy-static',
+    identifierElement: 'div > picture > source',
     appCateogryInfo: {
         positions: 'div[data-app-card-target]',
         innerTagASelector: 'a',
         innerAvgRatingSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-        innerReviewCountSelector: 
+        innerReviewCountSelector:
             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
     },
-}
+};
 
 type XpathPageConfig =
     | typeof shopifyCommonElements
@@ -176,7 +178,6 @@ type XpathPageConfig =
     | typeof fancyCategoryElements
     | typeof shopifyFancyStaticCategoryElements
     | typeof shopifyStaticCategoryElements;
-    
 
 export {
     shopifyCommonElements,
@@ -221,7 +222,7 @@ export {
 //         innerTagASelector: 'a',
 //         innerAvgRatingSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-//         innerReviewCountSelector: 
+//         innerReviewCountSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
 //     },
 // };
@@ -264,7 +265,7 @@ export {
 //         websiteTagAElement:
 //             '[id="adp-developer"] > div > div > div > div:nth-child(1) > div:nth-child(2) > a',
 //         locationElement: '[id="adp-developer"] > div > div > div > div:nth-child(1) > p:nth-child(3)',
-//         /* 
+//         /*
 //         the `supportInfoElements` are email and phone number.
 //         Might contains more type of info if more unique cases found.
 
@@ -336,11 +337,10 @@ export {
 //         innerTagASelector: 'a',
 //         innerAvgRatingSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-//         innerReviewCountSelector: 
+//         innerReviewCountSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
 //     },
 // };
-
 
 // const shopifyFancyStaticCategoryElements: CategoryXpathPageConfig = {
 //     categoryType: "fancy-static",
@@ -350,7 +350,7 @@ export {
 //         innerTagASelector: 'a',
 //         innerAvgRatingSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(1)',
-//         innerReviewCountSelector: 
+//         innerReviewCountSelector:
 //             'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
 //     },
 // }
@@ -366,7 +366,6 @@ export {
 //     | typeof fancyCategoryElements
 //     | typeof shopifyFancyStaticCategoryElements
 //     | typeof shopifyStaticCategoryElements;
-    
 
 // export {
 //     shopifyCommonElements,
@@ -381,4 +380,3 @@ export {
 //     CategoryXpathPageConfig,
 //     XpathPageConfig,
 // };
-

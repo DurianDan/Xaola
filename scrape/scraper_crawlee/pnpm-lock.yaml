@@ -40,6 +40,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.0.0
     version: 20.10.5
+  prettier:
+    specifier: ^3.0.3
+    version: 3.2.3
   supabase:
     specifier: ^1.127.4
     version: 1.127.4
@@ -2387,6 +2390,12 @@ packages:
     dependencies:
       find-up: 4.1.0
     dev: false
+
+  /prettier@3.2.3:
+    resolution: {integrity: sha512-QNhUTBq+mqt1oH1dTfY3phOKNhcDdJkfttHI6u0kj7M2+c+7fmNKlgh2GhnHiqMcbxJ+a0j2igz/2jfl9QKLuw==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /progress@2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
