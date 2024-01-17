@@ -177,3 +177,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
 }
 
 export default FancyCategoryTrick;
+//=============================TECH-DEBT==================================
+/* The FancyCategoryTrick is only tested with NoobMaster,
+ComplexMaster still using XPATH as element selector,
+when there's not parent element parsed */

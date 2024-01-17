@@ -46,6 +46,8 @@ main()
 //         }else if (request.label == "APP"){
 
 //         }
+//         const scrapedURLs = [];
+//         crawler.addRequests(scrapedURLs);
 //     },
 // });
 
