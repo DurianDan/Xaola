@@ -4,38 +4,39 @@ import NoobMaster from './ThePuppetShow/PuppetMaster/NoobMaster';
 import ConsoleWatcher from './TheWatcher/ConsoleWatcher';
 
 async function main() {
-    const testFancyCateURL =
-        'https://apps.shopify.com/tiktok';
-    const $ = await NoobMaster.loadCheerioAPI(testFancyCateURL);
-    console.log('Title of the loaded page: ' + $('title').text());
-    const watcher = new ConsoleWatcher({ level: 'info' });
-    const puppetMaster = new NoobMaster(
-        { logNullElement: true },
-        $,
-        watcher,
-        testFancyCateURL,
-    );
-    const fancyCategoryTrick = new FancyCategoryTrick(
-        testFancyCateURL,
-        puppetMaster,
-        {},
-        watcher,
-    );
-    const partnerTrick = new PartnerPageTrick(
-        'shopify',
-        puppetMaster,
-        {},
-        watcher,
-        fancyCategoryTrick,
-    );
-    // const scrapedResultFancyCate = await fancyCategoryTrick.scrape();
-    // console.log(
-    //     (scrapedResultFancyCate.shopifyAppDetail ?? [])[0].toDBRecord(),
-    // );
+  const testFancyCateURL = 'https://apps.shopify.com/tiktok';
+  const $ = await NoobMaster.loadCheerioAPI(testFancyCateURL);
+  console.log('Title of the loaded page: ' + $('title').text());
+  const watcher = new ConsoleWatcher({ level: 'info' });
+  const puppetMaster = new NoobMaster(
+    { logNullElement: true },
+    $,
+    watcher,
+    testFancyCateURL,
+  );
+  const fancyCategoryTrick = new FancyCategoryTrick(
+    testFancyCateURL,
+    puppetMaster,
+    {},
+    watcher,
+  );
+  const partnerTrick = new PartnerPageTrick(
+    'shopify',
+    puppetMaster,
+    {},
+    watcher,
+    fancyCategoryTrick,
+  );
+  // const scrapedResultFancyCate = await fancyCategoryTrick.scrape();
+  // console.log(
+  //     (scrapedResultFancyCate.shopifyAppDetail ?? [])[0].toDBRecord(),
+  // );
 
-    const scrapedPartner = await partnerTrick.scrape();
-    console.log((scrapedPartner.shopifyAppDetail ?? [])[0].toDBRecord());
-    console.log((scrapedPartner.shopifyPartner ?? [])[0].toDBRecord());
+  const scrapedPartner = await partnerTrick.scrape();
+  console.log((scrapedPartner.shopifyAppDetail ?? [])
+      .map(scrapedObj =>scrapedObj.toDBRecord())
+  );
+  // console.log((scrapedPartner.shopifyPartner ?? [])[0].toDBRecord());
 }
 
 main();

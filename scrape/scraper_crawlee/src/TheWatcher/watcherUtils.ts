@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
  * @returns {any} boolean: true if needs to be log
  */
 function checkObjectToLog(toCheck: any): boolean {
-    return !toCheck || isEmpty(toCheck) || toCheck === '';
+  return !toCheck || isEmpty(toCheck) || toCheck === '';
 }
 
 export { checkObjectToLog };

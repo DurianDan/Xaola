@@ -1,14 +1,14 @@
 import {
-    ShopifyPartner,
-    ShopifyAppCategory,
-    ShopifyAppDetail,
-    HttpUrl,
+  ShopifyPartner,
+  ShopifyAppCategory,
+  ShopifyAppDetail,
+  HttpUrl,
 } from '../ScrapedTable';
 
 interface IndexedScrapeResult {
-    shopifyPartner: Map<HttpUrl, ShopifyPartner>;
-    shopifyAppCategory: Map<HttpUrl, ShopifyAppCategory>;
-    shopifyAppDetail: Map<HttpUrl, ShopifyAppDetail>;
+  shopifyPartner: Map<HttpUrl, ShopifyPartner>;
+  shopifyAppCategory: Map<HttpUrl, ShopifyAppCategory>;
+  shopifyAppDetail: Map<HttpUrl, ShopifyAppDetail>;
 }
 
 export default IndexedScrapeResult;
