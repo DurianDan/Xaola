@@ -67,7 +67,7 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
         return Number(foundAppCountLine.split('review')[0].trim());
     }
     async extractAppsInfo(): Promise<ShopifyAppDetail[]> {
-        const foundAppsDetail = (await this.appsInfoExtractor.scrape())
+        const foundAppsDetail = (await this.appsInfoExtractor.extractDerive())
             .shopifyAppDetail;
         this.watcher.checkWarn(foundAppsDetail, {
             msg: `Is the parsed \`appsInfoExtractor\` valid ? There isn't any apps details extracted, partner ${this.urls.appPartnerLandingPage}`,

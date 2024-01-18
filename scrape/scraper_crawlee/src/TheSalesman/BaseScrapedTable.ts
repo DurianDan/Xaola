@@ -80,12 +80,12 @@ class BaseScrapedTable {
      * @param {any} url:string
      * @returns {any}
      */
-    static urlToIDPart(url: string): string {
+    static urlToIDPart(url: string, indexofIDPart: number = 1): string {
         if (!url.includes('/')) {
             return url;
         }
         const parsedURL = new URL(url);
-        return parsedURL.pathname.split('/')[1];
+        return parsedURL.pathname.split('/')[indexofIDPart];
     }
 }
 
