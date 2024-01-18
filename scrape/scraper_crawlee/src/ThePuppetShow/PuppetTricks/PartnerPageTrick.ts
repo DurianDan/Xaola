@@ -40,8 +40,8 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
         return result;
     }
     async accessPage(): Promise<boolean> {
-        this.puppetMaster.goto(this.urls.appPartnerLandingPage.toString());
-        this.configAppsInfoExtractor(this.appsInfoExtractor);
+        await this.puppetMaster.goto(this.urls.appPartnerLandingPage.toString());
+        this.appsInfoExtractor.puppetMaster = this.puppetMaster
         return true;
     }
     async extractAvgRating(): Promise<number> {
@@ -116,7 +116,7 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
         ]);
     }
     async scrape(): Promise<RawScrapeResult> {
-        this.accessPage()
+        await this.accessPage()
         this.updateScrapeResult(await this.extractDerive());
         return this.scrapedResults;
     }
