@@ -2,7 +2,6 @@ import IndexedScrapeResult from './ScrapedResult/IndexedScrapedResult';
 import RawScrapeResult from './ScrapedResult/RawScrapeResult';
 import {
     HttpUrl,
-    ShopifyAppCategory,
     ShopifyAppDetail,
     ShopifyCategoryRankLog,
 } from './ScrapedTable';
@@ -58,7 +57,7 @@ export function appRankFromAppDetail(
         appDetail.scrapedAt,
         categoryId,
         rank,
-        appDetail.id ,
+        appDetail.id as string,
     );
 }
 

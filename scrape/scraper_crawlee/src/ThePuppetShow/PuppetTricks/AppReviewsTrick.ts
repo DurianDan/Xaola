@@ -9,7 +9,7 @@ import {
     ShopifyAppDetail,
     ShopifyAppReview,
 } from '../../TheSalesman/ScrapedTable';
-import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import { mergeScrapeResult, urlToId } from '../../TheSalesman/ScrapeResultUtilities';
 import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 import { getApproxDaysFromPeriodIndicatorString } from './SmallTricks';
@@ -150,7 +150,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
             this.urls.appLandingPage.toString(),
             await appName?.text(),
             reviewCount,
-            Number(await avgRating?.text()),
+            avgRating?Number(await avgRating.text()):undefined,
         );
     }
     /**
@@ -230,7 +230,7 @@ class AppReviewsTrick<P, E> implements BaseTrick<P, E> {
         const datePostedElement = await quickSelect(innerSelector.datePosted);
         return new ShopifyAppReview(
             new Date(),
-            this.urls.appLandingPage.toString(),
+            urlToId(this.urls.appLandingPage.toString()),
             pageNum,
             storeName ? (await storeName.text()).trim() : undefined,
             storeLocation ? (await storeLocation.text()).trim() : undefined,

@@ -9,7 +9,7 @@ import {
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
-import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import { mergeScrapeResult, urlToId } from '../../TheSalesman/ScrapeResultUtilities';
 import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 import {
@@ -161,7 +161,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
         const description = await this.extractDescription();
         return new ShopifyAppDescriptionLog(
             scrapedOn,
-            appCurrentURL,
+            urlToId(appCurrentURL),
             description,
         );
     }
@@ -244,7 +244,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             await this.extractAppName(),
             await this.extractReviewCount(),
             await this.extractAvgRating(),
-            partnerPage,
+            urlToId(partnerPage),
         );
     }
     async deriveCleanPlanOffer(
@@ -314,7 +314,7 @@ class AppLandingPageTrick<P, E> implements BaseTrick<P, E> {
             planName,
             (await priceElement?.text())?.trim(),
             (await planOfferElement?.text())?.trim(),
-            appURL,
+            urlToId(appURL),
             await this.derivePlanAdditionalPrice(planElement, planName),
         );
     }

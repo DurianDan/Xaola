@@ -8,7 +8,7 @@ import {
 } from '../../TheSalesman/ScrapedTable';
 import BaseTrick from './BaseTrick';
 import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
-import { mergeScrapeResult } from '../../TheSalesman/ScrapeResultUtilities';
+import { mergeScrapeResult, urlToId } from '../../TheSalesman/ScrapeResultUtilities';
 import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
 
@@ -84,7 +84,7 @@ class SitemapTrick<P, E> implements BaseTrick<P, E> {
                     hrefText.text.trim(),
                     undefined,
                     undefined,
-                    tmpPartner.shopifyPage,
+                    urlToId(tmpPartner.shopifyPage),
                 ),
             );
         }
