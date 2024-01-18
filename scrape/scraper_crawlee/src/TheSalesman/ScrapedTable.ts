@@ -44,10 +44,7 @@ class ShopifyPartner extends BaseScrapedTable {
         this.yearsBuiltApps = yearsBuiltApps;
     }
     toDBRecord(id?: string): DBShopifyPartner {
-        let parsedId = id;
-        if (!id && this.shopifyPage) {
-            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage,2);
-        }
+        let parsedId = id??this.id;
         const record = {
             apps_published: this.appsPublished,
             avg_rating: this.avgRating,
@@ -80,10 +77,7 @@ class ShopifyAppCategory extends BaseScrapedTable {
         this.categoryType = categoryType;
     }
     toDBRecord(id?: string): DBShopifyAppCategory {
-        let parsedId = id;
-        if (!id && this.shopifyPage) {
-            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage,2);
-        }
+        let parsedId = id??this.id;
         const record = {
             category_type: this.categoryType,
             name: this.name,
@@ -109,10 +103,7 @@ class ShopifyAppDetail extends BaseScrapedTable {
         this.partnerId = partnerId;
     }
     toDBRecord(id?: string): DBShopifyAppDetail {
-        let parsedId = id;
-        if (!id && this.shopifyPage) {
-            parsedId = BaseScrapedTable.urlToIDPart(this.shopifyPage);
-        }
+        let parsedId = id??this.id;
         const record = {
             app_name: this.appName,
             avg_rating: this.avgRating,
@@ -268,10 +259,7 @@ class ShopifyCommunityUserStats extends BaseScrapedTable {
         this.partnerId = partnerId;
     }
     toDBRecord(id?: string): DBShopifyCommunityUserStats {
-        let parsedId = id;
-        if (!id && this.communityUserPage) {
-            parsedId = BaseScrapedTable.urlToIDPart(this.communityUserPage, -1);
-        }
+        let parsedId = id??this.id;
         const record = {
             community_user_name: this.communityUserName,
             community_user_page: this.communityUserPage,

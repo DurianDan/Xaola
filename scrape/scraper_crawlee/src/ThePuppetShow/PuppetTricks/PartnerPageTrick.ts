@@ -66,13 +66,22 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
         }
         return Number(foundAppCountLine.split('review')[0].trim());
     }
-    async extractAppsInfo(): Promise<ShopifyAppDetail[]> {
+    async extractAppsInfo(partnerID: string|undefined): Promise<ShopifyAppDetail[]> {
         const foundAppsDetail = (await this.appsInfoExtractor.extractDerive())
             .shopifyAppDetail;
         this.watcher.checkWarn(foundAppsDetail, {
             msg: `Is the parsed \`appsInfoExtractor\` valid ? There isn't any apps details extracted, partner ${this.urls.appPartnerLandingPage}`,
         });
-        return foundAppsDetail ?? [];
+        return this.updatePartnerIDToAppsInfo(foundAppsDetail ?? [], partnerID);
+    }
+    updatePartnerIDToAppsInfo(
+      scrapedAppsInfo: ShopifyAppDetail[],
+      partnerID: string|undefined
+    ):ShopifyAppDetail[]{
+      return scrapedAppsInfo.map(appInfo =>{
+        appInfo.partnerId = partnerID
+        return appInfo
+      })
     }
     async extractPartnerName(): Promise<string | undefined> {
         const foundNameLine = await (
@@ -94,7 +103,7 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
     }
     async extractDerive(): Promise<RawScrapeResult> {
         const foundPartner = await this.extractPartnerInfo();
-        const appsInfo = await this.extractAppsInfo();
+        const appsInfo = await this.extractAppsInfo(foundPartner.id as string|undefined);
         return {
             shopifyAppDetail: appsInfo,
             shopifyPartner: [foundPartner],
@@ -107,6 +116,7 @@ export default class PartnerPageTrick<P, E> implements BaseTrick<P, E> {
         ]);
     }
     async scrape(): Promise<RawScrapeResult> {
+        this.accessPage()
         this.updateScrapeResult(await this.extractDerive());
         return this.scrapedResults;
     }

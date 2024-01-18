@@ -11,6 +11,7 @@ import { BaseWatcher } from '../../TheWatcher/BaseWatcher';
 import {
     appRankFromAppDetail,
     mergeScrapeResult,
+    urlToId,
 } from '../../TheSalesman/ScrapeResultUtilities';
 import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
@@ -142,7 +143,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
             appRank: appRankFromAppDetail(
                 appDetail,
                 rank,
-                this.urls.appCategoryPage.toString(),
+                urlToId(this.urls.appCategoryPage.toString()) as string,
             ),
         };
     }

@@ -52,13 +52,13 @@ export function mergeScrapeResult(
 export function appRankFromAppDetail(
     appDetail: ShopifyAppDetail,
     rank: number,
-    categoryId: number | HttpUrl,
+    categoryId: HttpUrl,
 ): ShopifyCategoryRankLog {
     return new ShopifyCategoryRankLog(
         appDetail.scrapedAt,
         categoryId,
         rank,
-        appDetail.id ?? appDetail.shopifyPage,
+        appDetail.id ,
     );
 }
 
@@ -90,5 +90,10 @@ export function getIndexedScrapedResult(
  * @returns {any}
  */
 export function urlToId(url: string | undefined): string | undefined {
-    return url ? url.split('/')[-1] : undefined;
+    if (url===undefined){return undefined}
+    const paramIdx = url.indexOf("?");
+    const urlWithoutParams = paramIdx>0?
+        url.slice(0, paramIdx)
+        : url;
+    return urlWithoutParams.split('/').slice(-1)[0];
 }

@@ -71,22 +71,6 @@ class BaseScrapedTable {
         }
         return newObj;
     }
-
-    /**
-     * Get the part of a Shopify Apps Store url that represents the ID of that url
-     *  E.g.1: "https://apps.shopify.com/meo" returns "meo"
-     *  E.g.2: "https://apps.shopify.com/first_subpath/second_subpath/last_subpath" returns "first_subpath"
-     *  E.g.3: "just-a-string-without-slashes" returns "just-a-string-without-slashes"
-     * @param {any} url:string
-     * @returns {any}
-     */
-    static urlToIDPart(url: string, indexofIDPart: number = 1): string {
-        if (!url.includes('/')) {
-            return url;
-        }
-        const parsedURL = new URL(url);
-        return parsedURL.pathname.split('/')[indexofIDPart];
-    }
 }
 
 export default BaseScrapedTable;
