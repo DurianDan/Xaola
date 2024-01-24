@@ -33,8 +33,10 @@ async function main() {
   // );
 
   const scrapedPartner = await partnerTrick.scrape();
-  console.log((scrapedPartner.shopifyAppDetail ?? [])
-      .map(scrapedObj =>scrapedObj.toDBRecord())
+  console.log(
+    (scrapedPartner.shopifyAppDetail ?? []).map((scrapedObj) =>
+      scrapedObj.toDBRecord(),
+    ),
   );
   // console.log((scrapedPartner.shopifyPartner ?? [])[0].toDBRecord());
 }

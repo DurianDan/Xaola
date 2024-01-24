@@ -138,9 +138,9 @@ const sitemapElements = {
   partnerAreaElementPath: '//*[@id="ToolsSitemap"]/main/div/div[3]/div[*]',
 };
 
-const shopifyStaticCategoryElements:
-  CategoryXpathPageConfig & {paginationButtons: string} = 
-{
+const shopifyStaticCategoryElements: CategoryXpathPageConfig & {
+  paginationButtons: string;
+} = {
   categoryType: 'static',
   identifierElement: '*[id="pagination_controls"]',
   appCateogryInfo: {
@@ -151,8 +151,8 @@ const shopifyStaticCategoryElements:
     innerReviewCountSelector:
       'div > div > div:first-child > div:nth-child(2) > span:nth-child(4)',
   },
-  paginationButtons: 'div[aria-label="pagination"]>a'
-}
+  paginationButtons: 'div[aria-label="pagination"]>a',
+};
 
 const shopifyFancyStaticCategoryElements: CategoryXpathPageConfig = {
   categoryType: 'fancy-static',
