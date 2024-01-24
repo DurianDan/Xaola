@@ -1,6 +1,6 @@
 import RawScrapeResult from '../../TheSalesman/ScrapedResult/RawScrapeResult';
 import { ShopifyPageURL } from '../../TheSalesman/config/pages';
-import * as ElementsCfg from '../../TheSalesman/config/elements';
+// import * as ElementsCfg from '../../TheSalesman/config/elements';
 import {
   ShopifyAppDetail,
   HttpUrl,
@@ -15,10 +15,11 @@ import {
 } from '../../TheSalesman/ScrapeResultUtilities';
 import { PuppetMaster } from '../PuppetMaster';
 import ScrapedElement from '../ScrapedElement.ts';
+import { fancyCategoryElements } from '../../TheSalesman/config/elements';
 
 class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
   public urls: ShopifyPageURL;
-  public elements = ElementsCfg.fancyCategoryElements;
+  public elements = fancyCategoryElements;
   constructor(
     categoryUrlId: string,
     public puppetMaster: PuppetMaster<P, E>,
