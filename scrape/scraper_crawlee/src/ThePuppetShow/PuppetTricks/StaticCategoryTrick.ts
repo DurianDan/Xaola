@@ -58,12 +58,12 @@ class StaticCategoryTrick<P, E> extends FancyCategoryTrick<P, E> {
     scrapedAppsRanks: ShopifyCategoryRankLog[],
   ): Promise<ShopifyCategoryRankLog[]> {
     const ranksBefore = await this.inferRanksBeforeCurrentPage();
-    return scrapedAppsRanks.map((appRank) => {
+    scrapedAppsRanks.forEach((appRank) => {
       if (appRank.rank) {
         appRank.rank += ranksBefore;
       }
-      return appRank;
-    });
+    })
+    return scrapedAppsRanks;
   }
   override async scrape(): Promise<RawScrapeResult> {
     await this.accessPage();

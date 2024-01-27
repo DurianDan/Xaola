@@ -44,7 +44,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     return true;
   }
   async extractAppRankElements(): Promise<
-    { element: ScrapedElement<P, E>; rank: number }[]
+    { element: ScrapedElement<P, E>; elementIdx: number }[]
   > {
     const elements = await this.puppetMaster.selectElements(
       this.elements.appCateogryInfo.positions,
@@ -52,7 +52,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     return elements.map((value, index) => {
       return {
         element: value,
-        rank: index,
+        elementIdx: index,
       };
     });
   }
@@ -126,10 +126,10 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     );
   }
   async extractAppRankInfo({
-    rank,
+    elementIdx,
     element,
   }: {
-    rank: number;
+    elementIdx: number;
     element: ScrapedElement<P, E>;
   }): Promise<{
     appDetail: ShopifyAppDetail;
@@ -140,7 +140,7 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
       appDetail,
       appRank: appRankFromAppDetail(
         appDetail,
-        rank,
+        elementIdx + 1, // rank is 1-indexed
         urlToId(this.urls.appCategoryPage.toString()) as string,
       ),
     };
@@ -156,9 +156,9 @@ class FancyCategoryTrick<P, E> implements BaseTrick<P, E> {
     const shopifyAppDetail: ShopifyAppDetail[] = [];
     const shopifyCategoryRankLog: ShopifyCategoryRankLog[] = [];
     await Promise.all(
-      appRankElements.map(async (elementRank) => {
+      appRankElements.map(async (elementIdx) => {
         const { appDetail, appRank } =
-          await this.extractAppRankInfo(elementRank);
+          await this.extractAppRankInfo(elementIdx);
         shopifyAppDetail.push(appDetail);
         shopifyCategoryRankLog.push(appRank);
       }),
