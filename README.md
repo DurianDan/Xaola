@@ -1,4 +1,4 @@
-### Shopify Partner Analytics (All-in-one)
+### Shopify Partner Analytics (All-in-one)(In-Progress)
 - Web-scraping using [Puppeteer][1]
 - Website built with [Svelte][2].
 - Headless CMS backend by [Supabase][3]
